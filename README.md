@@ -8,7 +8,7 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 
 ### Apps and Packages
 
-- `api`: an express erver
+- `api`: a nestjs server
 - `web`: a [Next.js](https://nextjs.org/) app, can be used for demo
 - `sdk`: a typescript library
 - `ui`: a React component library with Login component
