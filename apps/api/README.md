@@ -5,7 +5,7 @@
 $ yarn start
 
 # watch mode
-$ yarn start:dev
+$ yarn dev
 
 # production mode
 $ yarn start:prod
