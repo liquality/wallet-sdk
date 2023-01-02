@@ -7,7 +7,7 @@ export class AuthController {
 
   @Get(':address')
   async login(@Param('address') address: string) {
-    console.log('Got into NFT controller, endpoint calls class');
+    console.log('Got into AUTH controller, endpoint calls class');
     return await this.authService.login(address);
   }
 }
