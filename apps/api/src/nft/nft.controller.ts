@@ -1,5 +1,4 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiProperty } from '@nestjs/swagger';
 import { Nft } from 'alchemy-sdk';
 import { NftService } from './nft.service';
 
