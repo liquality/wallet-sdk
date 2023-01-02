@@ -3,13 +3,12 @@ import axios from "axios";
 
 export type { OwnedNft };
 
-const API_URL = "http://localhost:3001/v1";
+const API_URL = "http://localhost:3001";
 
 const sdk = {
   async getNfts(address: string): Promise<OwnedNft[]> {
-    const result = await axios.get(`${API_URL}/nfts/get`, {
-      params: { address },
-    });
+    let url = `${API_URL}/nft/${address}`
+    const result = await axios.get(url);
     return result.data;
   },
 };
