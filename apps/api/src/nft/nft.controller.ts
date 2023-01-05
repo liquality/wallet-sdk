@@ -4,7 +4,7 @@ import { NftService } from './nft.service';
 
 @Controller('nft')
 export class NftController {
-  constructor(private readonly nftService: NftService) {}
+  constructor(private readonly nftService: NftService) { }
 
   @Get(':address')
   async getNfts(@Param('address') address: string): Promise<Nft[]> {
