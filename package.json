@@ -20,8 +20,5 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {
-    "@nestjs/swagger": "^6.1.4"
-  },
   "packageManager": "yarn@1.22.19"
 }
