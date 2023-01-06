@@ -12,12 +12,12 @@ export class NftService {
   }
 
   // Get all the NFTs owned by an address
-  async getNfts(address: string): Promise<Nft[]> {
+  async getNfts(owner: string): Promise<Nft[]> {
     let nfts: Nft[];
 
     // Go through each nftProviders until one succeeds.
     for (let i = 0; i < this.nftProviders.length && !nfts; i++) {
-      nfts = await this.nftProviders[0].getNfts(address);
+      nfts = await this.nftProviders[0].getNfts(owner);
     }
 
     return nfts;

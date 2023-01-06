@@ -9,9 +9,9 @@ export class AlchemyNftProvider extends BaseNftProvider {
     super();
   }
 
-  public async getNfts(address: string): Promise<Nft[]> {
+  public async getNfts(owner: string): Promise<Nft[]> {
     try {
-      const nfts = (await this.alchemy.nft.getNftsForOwner(address)).ownedNfts;
+      const nfts = (await this.alchemy.nft.getNftsForOwner(owner)).ownedNfts;
       return nfts.map((nft) => {
         return {
           id: nft.tokenId,
