@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { Nft } from './nft.interface';
+import { Nft } from './nft.dto';
 import { NftService } from './nft.service';
 
 @Controller('nfts')

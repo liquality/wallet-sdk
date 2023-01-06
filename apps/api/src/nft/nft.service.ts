@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Nft } from './nft.interface';
+import { Nft } from './nft.dto';
 import { AlchemyNftProvider } from './providers/alchemy-nft.provider';
 import { BaseNftProvider } from './providers/base-nft.provider';
 
