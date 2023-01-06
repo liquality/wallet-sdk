@@ -17,7 +17,7 @@ export class NftService {
 
     // Go through each nftProviders until one succeeds.
     for (let i = 0; i < this.nftProviders.length && !nfts; i++) {
-      nfts = await this.nftProviders[0].getNft(address);
+      nfts = await this.nftProviders[0].getNfts(address);
     }
 
     return nfts;

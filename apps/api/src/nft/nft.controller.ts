@@ -2,7 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { Nft } from './nft.interface';
 import { NftService } from './nft.service';
 
-@Controller('nft')
+@Controller('nfts')
 export class NftController {
   constructor(private readonly nftService: NftService) {}
 
