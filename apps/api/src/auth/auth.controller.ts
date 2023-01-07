@@ -8,12 +8,12 @@ export class AuthController {
   @Get(':address')
   async createWallet(@Param('address') address: string) {
     console.log('Got into AUTH controller, endpoint calls class');
-    return await this.authService.login(address);
+    return await this.authService.createWallet(address);
   }
 
-  @Get(':address')
-  async login(@Param('address') address: string) {
-    console.log('Got into AUTH controller, endpoint calls class');
-    return await this.authService.login(address);
-  }
+  /*   @Get(':address')
+    async login(@Param('address') address: string) {
+      console.log('Got into AUTH controller, endpoint calls class');
+      return await this.authService.login(address);
+    } */
 }
