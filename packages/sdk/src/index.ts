@@ -12,7 +12,7 @@ import ShareTransferModule from "@tkey/share-transfer";
 
 export type { OwnedNft };
 
-/* const verifierMap: Record<string, any> = {
+const verifierMap: Record<string, any> = {
   google: {
     name: "Google",
     typeOfLogin: "google",
@@ -22,15 +22,6 @@ export type { OwnedNft };
   },
 };
 
-const tKey = new ThresholdKey({
-  serviceProvider: serviceProvider,
-  storageLayer: storageLayer,
-  modules: {
-    webStorage: webStorageModule,
-    securityQuestions: securityQuestion,
-  },
-});
- */
 
 
 //THIS WORKS AS EXPECTED
@@ -67,7 +58,7 @@ const sdk = {
 
 
   //AUTH FLOW (TODO: move these auth functions to seperate file)
-  async triggerSSOLogin() {
+  async triggerSSOLogin(tKey) {
     try {
       console.log("Triggering Login");
 
@@ -77,6 +68,7 @@ const sdk = {
 
       const { typeOfLogin, clientId, verifier } = verifierMap.google;
 
+      console.log(verifierMap, 'VERIFIER MAP')
       // 3. Trigger Login ==> opens the popup
       const loginResponse = await (
         tKey.serviceProvider as TorusServiceProvider
@@ -87,9 +79,10 @@ const sdk = {
         jwtParams,
       });
 
+      console.log(loginResponse, 'LOGIN RESP?')
       // setConsoleText(loginResponse);
     } catch (error) {
-      console.log(error);
+      console.log(error, 'GOT IN CATCH SSO');
     }
   },
 
@@ -118,17 +111,30 @@ const sdk = {
       },
     });
 
-
-    /*   try {
-        await this.triggerSSOLogin();
-        await tKey.initialize();
-        const res = await tKey._initializeNewKey({ initializeModules: true });
-        console.log("response from _initializeNewKey", res);
-  
-        return res.privKey
+    const init = async () => {
+      // Init Service Provider
+      await (tKey.serviceProvider as TorusServiceProvider).init({
+        skipSw: false,
+      });
+      try {
       } catch (error) {
-        console.error(error, "caught");
-      } */
+        console.error(error);
+      }
+    };
+    init()
+
+
+    try {
+      await this.triggerSSOLogin(tKey);
+      //await tKey.initialize();
+      //const res = await tKey._initializeNewKey({ initializeModules: true });
+      //console.log("response from _initializeNewKey", res);
+
+      //return res.privKey
+    } catch (error) {
+      console.log('GOT IN ERROOOOOOR')
+      console.error(error, "caught");
+    }
   },
 
 
