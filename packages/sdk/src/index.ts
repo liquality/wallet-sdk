@@ -1,35 +1,16 @@
 import { OwnedNft } from "alchemy-sdk"; // This is temporary, probably need custom types
 import axios from "axios";
 import ThresholdKey from "@tkey/default";
-import ServiceProviderBase from "@tkey/service-provider-base";
-import TorusStorageLayer from "@tkey/storage-layer-torus";
-import SecurityQuestionModule from "@tkey/security-questions";
-import WebStorageModule from "@tkey/web-storage";
-
-import { ShareStore, TkeyError } from "@tkey/common-types";
+import WebStorageModule, { WEB_STORAGE_MODULE_NAME } from "@tkey/web-storage";
 import TorusServiceProvider from "@tkey/service-provider-torus";
+import TorusStorageLayer from "@tkey/storage-layer-torus";
+import SecurityQuestionsModule from "@tkey/security-questions";
+import ShareTransferModule from "@tkey/share-transfer";
 
 
-// 1. Setup Service Provider
-const directParams = {
-  baseUrl: `http://localhost:3000/serviceworker`,
-  enableLogging: true,
-  networkUrl:
-    "https://small-long-brook.ropsten.quiknode.pro/e2fd2eb01412e80623787d1c40094465aa67624a",
-  network: "testnet" as any,
-};
-const serviceProvider = new TorusServiceProvider({
-  customAuthArgs: directParams,
-});
 
 
-const storageLayer = new TorusStorageLayer({
-  hostUrl: "https://metadata.tor.us",
-});
 
-
-const webStorageModule = new WebStorageModule();
-const securityQuestion = new SecurityQuestionModule();
 
 export type { OwnedNft };
 
@@ -53,6 +34,41 @@ const tKey = new ThresholdKey({
 });
  */
 
+
+//THIS WORKS AS EXPECTED
+// 1. Setup Service Provider
+const directParams = {
+  baseUrl: `http://localhost:3000/serviceworker`,
+  enableLogging: true,
+  networkUrl:
+    "https://small-long-brook.ropsten.quiknode.pro/e2fd2eb01412e80623787d1c40094465aa67624a",
+  network: "testnet" as any,
+};
+const serviceProvider = new TorusServiceProvider({
+  customAuthArgs: directParams,
+});
+
+
+// 2. Initializing tKey
+/* const webStorageModule = new WebStorageModule();
+const securityQuestionsModule = new SecurityQuestionsModule();
+const shareTransferModule = new ShareTransferModule();
+const storageLayer = new TorusStorageLayer({
+  hostUrl: "https://metadata.tor.us",
+});
+// Creating the ThresholdKey instance
+const tKey = new ThresholdKey({
+  serviceProvider: serviceProvider,
+  storageLayer,
+  modules: {
+    webStorage: webStorageModule,
+    securityQuestions: securityQuestionsModule,
+    shareTransfer: shareTransferModule,
+  },
+}); */
+//END OF THIS WORKS AS EXPECTED
+
+
 const API_URL = "http://localhost:3001";
 
 const sdk = {
@@ -65,7 +81,8 @@ const sdk = {
 
 
 
-  //AUTH FLOW
+
+  //AUTH FLOW (TODO: move these auth functions to seperate file)
   async triggerSSOLogin() {
     try {
       console.log("Triggering Login");
@@ -93,6 +110,8 @@ const sdk = {
   },
 
   async initializeNewKey() {
+    console.log(location.origin, 'LOC ORIGIN')
+
     /*   try {
         await this.triggerSSOLogin();
         await tKey.initialize();

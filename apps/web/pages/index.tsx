@@ -1,4 +1,4 @@
-import { Login } from "ui";
+import { Login, CreateWallet } from "ui";
 import sdk, { OwnedNft } from "sdk";
 import { useState } from "react";
 
@@ -15,6 +15,7 @@ export default function Web() {
   return (
     <div>
       <Login />
+      <CreateWallet />
       <hr />
       <div>
         NFT address:
