@@ -10,8 +10,6 @@ import ShareTransferModule from "@tkey/share-transfer";
 
 
 
-
-
 export type { OwnedNft };
 
 /* const verifierMap: Record<string, any> = {
@@ -49,23 +47,9 @@ const serviceProvider = new TorusServiceProvider({
 });
 
 
-// 2. Initializing tKey
-/* const webStorageModule = new WebStorageModule();
-const securityQuestionsModule = new SecurityQuestionsModule();
-const shareTransferModule = new ShareTransferModule();
-const storageLayer = new TorusStorageLayer({
-  hostUrl: "https://metadata.tor.us",
-});
-// Creating the ThresholdKey instance
-const tKey = new ThresholdKey({
-  serviceProvider: serviceProvider,
-  storageLayer,
-  modules: {
-    webStorage: webStorageModule,
-    securityQuestions: securityQuestionsModule,
-    shareTransfer: shareTransferModule,
-  },
-}); */
+
+
+
 //END OF THIS WORKS AS EXPECTED
 
 
@@ -111,6 +95,29 @@ const sdk = {
 
   async initializeNewKey() {
     console.log(location.origin, 'LOC ORIGIN')
+
+
+
+    // 2. Initializing tKey
+    let WebStorageModule = (await import('@tkey/web-storage')).default
+
+    const securityQuestionsModule = new SecurityQuestionsModule();
+    const shareTransferModule = new ShareTransferModule();
+    const storageLayer = new TorusStorageLayer({
+      hostUrl: "https://metadata.tor.us",
+    });
+
+    // Creating the ThresholdKey instance
+    const tKey = new ThresholdKey({
+      serviceProvider: serviceProvider,
+      storageLayer,
+      modules: {
+        webStorage: new WebStorageModule(),
+        securityQuestions: securityQuestionsModule,
+        shareTransfer: shareTransferModule,
+      },
+    });
+
 
     /*   try {
         await this.triggerSSOLogin();
