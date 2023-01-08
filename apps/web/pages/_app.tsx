@@ -3,6 +3,7 @@ import { useEffect } from "react";
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
+      //TODO: register the serviceworker from the SDK package here instead
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("/sw.js").then(
           function (registration) {
