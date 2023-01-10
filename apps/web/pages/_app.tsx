@@ -5,7 +5,7 @@ function MyApp({ Component, pageProps }) {
     if ("serviceWorker" in navigator) {
       //TODO: register the serviceworker from the SDK package here instead
       window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/service-worker.ts").then(
+        navigator.serviceWorker.register("/sw.js").then(
           function (registration) {
             console.log(
               "Service Worker registration successful with scope: ",
