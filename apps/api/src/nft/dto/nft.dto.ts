@@ -1,4 +1,4 @@
-export interface Nft {
+export class Nft {
   id: string;
   contract: {
     address: string;

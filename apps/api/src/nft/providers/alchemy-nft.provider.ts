@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Alchemy, NftTokenType, Nft as AlchemyNft } from 'alchemy-sdk';
-import { Nft, NftType } from '../nft.dto';
+import { Nft, NftType } from '../dto/nft.dto';
 import { BaseNftProvider } from './base-nft.provider';
 
 @Injectable()

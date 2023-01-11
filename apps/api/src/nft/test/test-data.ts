@@ -1,4 +1,4 @@
-import { NftType } from '../nft.dto';
+import { NftType } from '../dto/nft.dto';
 
 const alchemyNft = {
   contract: {

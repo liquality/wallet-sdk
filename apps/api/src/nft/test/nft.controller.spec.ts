@@ -3,7 +3,7 @@ import { Alchemy } from 'alchemy-sdk';
 import { randomBytes } from 'crypto';
 import { CommonModule } from '../../common/common.module';
 import { NftController } from '../nft.controller';
-import { Nft } from '../nft.dto';
+import { Nft } from '../dto/nft.dto';
 import { NftService } from '../nft.service';
 import { AlchemyNftProvider } from '../providers/alchemy-nft.provider';
 import {
