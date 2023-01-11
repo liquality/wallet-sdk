@@ -1,11 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { Alchemy, Nft } from 'alchemy-sdk';
+import { Nft } from './nft.dto';
+import { AlchemyNftProvider } from './providers/alchemy-nft.provider';
+import { BaseNftProvider } from './providers/base-nft.provider';
 
 @Injectable()
 export class NftService {
-  constructor(private readonly alchemy: Alchemy) {}
+  private nftProviders: BaseNftProvider[] = [];
+
+  constructor(private readonly alchemyNftProvider: AlchemyNftProvider) {
+    this.nftProviders.push(alchemyNftProvider);
+  }
+
   // Get all the NFTs owned by an address
-  async getNfts(address: string): Promise<Nft[]> {
-    return (await this.alchemy.nft.getNftsForOwner(address)).ownedNfts;
+  async getNfts(owner: string): Promise<Nft[]> {
+    let nfts: Nft[];
+
+    // Go through each nftProviders until one succeeds.
+    for (let i = 0; i < this.nftProviders.length && !nfts; i++) {
+      nfts = await this.nftProviders[0].getNfts(owner);
+    }
+
+    return nfts;
   }
 }

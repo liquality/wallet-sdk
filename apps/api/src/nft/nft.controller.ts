@@ -1,13 +1,13 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { Nft } from 'alchemy-sdk';
+import { Nft } from './nft.dto';
 import { NftService } from './nft.service';
 
-@Controller('nft')
+@Controller('nfts')
 export class NftController {
-  constructor(private readonly nftService: NftService) { }
+  constructor(private readonly nftService: NftService) {}
 
-  @Get(':address')
-  async getNfts(@Param('address') address: string): Promise<Nft[]> {
-    return await this.nftService.getNfts(address);
+  @Get(':owner')
+  async getNfts(@Param('owner') owner: string): Promise<Nft[]> {
+    return await this.nftService.getNfts(owner);
   }
 }
