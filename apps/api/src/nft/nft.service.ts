@@ -1,18 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { Nft } from './nft.dto';
+import { PopulatedTransaction } from '@ethersproject/contracts';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  ERC1155,
+  ERC1155__factory,
+  ERC721,
+  ERC721__factory,
+} from '../../typechain';
+import { Nft, NftType } from './dto/nft.dto';
 import { AlchemyNftProvider } from './providers/alchemy-nft.provider';
 import { BaseNftProvider } from './providers/base-nft.provider';
+import { TransferRequest } from './dto/transfer-request.dto';
+import { NftContract, NftInfo } from './types';
+import { AddressZero } from '@ethersproject/constants';
+import { Provider } from '@ethersproject/providers';
 
 @Injectable()
 export class NftService {
   private nftProviders: BaseNftProvider[] = [];
+  private _erc721: ERC721;
+  private _erc1155: ERC1155;
 
-  constructor(private readonly alchemyNftProvider: AlchemyNftProvider) {
+  private schemas: Record<string, NftContract>;
+  private cache: Record<string, NftInfo>;
+
+  constructor(
+    private readonly alchemyNftProvider: AlchemyNftProvider,
+    private readonly provider: Provider,
+  ) {
     this.nftProviders.push(alchemyNftProvider);
+    this._erc721 = ERC721__factory.connect(AddressZero, this.provider);
+    this._erc1155 = ERC1155__factory.connect(AddressZero, this.provider);
+    this.cache = {};
+    this.schemas = {
+      [NftType.ERC721]: this._erc721,
+      [NftType.ERC1155]: this._erc1155,
+    };
   }
 
   // Get all the NFTs owned by an address
   async getNfts(owner: string): Promise<Nft[]> {
+    console.log(await this.provider.resolveName(owner));
+
     let nfts: Nft[];
 
     // Go through each nftProviders until one succeeds.
@@ -21,5 +49,95 @@ export class NftService {
     }
 
     return nfts;
+  }
+
+  async populateTransfer(
+    transferRequest: TransferRequest,
+  ): Promise<PopulatedTransaction> {
+    const { contractAddress, owner, receiver, tokenIDs, amounts } =
+      transferRequest;
+    const { schema, contract } = await this.cacheGet(contractAddress);
+
+    let tx: PopulatedTransaction;
+    const data = '0x';
+
+    switch (schema) {
+      case NftType.ERC721: {
+        if (tokenIDs.length !== 1) {
+          throw new BadRequestException(
+            `ERC 721 transfer supports exactly 1 tokenID, received ${tokenIDs.join(
+              ', ',
+            )}`,
+          );
+        }
+        const _contract: ERC721 = contract as ERC721;
+        tx = await _contract.populateTransaction[
+          'safeTransferFrom(address,address,uint256)'
+        ](owner, receiver, tokenIDs[0]);
+        break;
+      }
+
+      case NftType.ERC1155: {
+        const _contract: ERC1155 = contract as ERC1155;
+        if (tokenIDs.length > 1) {
+          tx = await _contract.populateTransaction.safeBatchTransferFrom(
+            owner,
+            receiver,
+            tokenIDs,
+            amounts,
+            data,
+          );
+        } else {
+          tx = await _contract.populateTransaction.safeTransferFrom(
+            owner,
+            receiver,
+            tokenIDs[0],
+            amounts[0],
+            data,
+          );
+        }
+        break;
+      }
+
+      default: {
+        throw new BadRequestException(`Unsupported NFT type: ${schema}`);
+      }
+    }
+
+    return tx;
+  }
+
+  private async cacheGet(contractAddress: string): Promise<NftInfo> {
+    const _contractAddress = contractAddress.toString();
+
+    if (this.cache[_contractAddress]) {
+      return this.cache[_contractAddress];
+    }
+    const ERC721_INTERFACE = {
+      id: '0x80ac58cd',
+      type: NftType.ERC721,
+    };
+    const ERC1155_INTERFACE = {
+      id: '0xd9b67a26',
+      type: NftType.ERC1155,
+    };
+
+    for (const _interface of [ERC721_INTERFACE, ERC1155_INTERFACE]) {
+      // we can use erc721 because both erc721 and erc1155 implement supportsInterface
+      const isSupported = await this._erc721
+        .attach(_contractAddress)
+        .supportsInterface(_interface.id);
+
+      if (isSupported) {
+        this.cache[_contractAddress] = {
+          contract: this.schemas[_interface.type].attach(_contractAddress),
+          schema: _interface.type,
+        };
+
+        return this.cache[_contractAddress];
+      }
+    }
+
+    throw new BadRequestException(`${_contractAddress} is not an NFT contract`);
   }
 }
