@@ -1,18 +1,20 @@
+import { Provider } from '@ethersproject/providers';
 import { Module } from '@nestjs/common';
-import { Network, Alchemy } from 'alchemy-sdk';
-
-const settings = {
-  apiKey: process.env.ALCHEMY_API_KEY,
-  network: Network.ETH_MAINNET,
-};
+import { Alchemy } from 'alchemy-sdk';
+import alchemyProvider from './alchemy-provider';
+import chainProvider from './chain-provider';
 
 @Module({
   providers: [
     {
       provide: Alchemy,
-      useValue: new Alchemy(settings),
+      useValue: alchemyProvider,
+    },
+    {
+      provide: Provider,
+      useValue: chainProvider,
     },
   ],
-  exports: [Alchemy],
+  exports: [Alchemy, Provider],
 })
 export class CommonModule {}

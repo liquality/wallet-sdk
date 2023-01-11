@@ -16,6 +16,9 @@ build
 # misc
 .DS_Store
 *.pem
+typechain
+artifacts
+solidity-files-cache.json
 
 # debug
 npm-debug.log*
