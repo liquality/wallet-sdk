@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Alchemy } from 'alchemy-sdk';
-import { randomBytes } from 'crypto';
 import { CommonModule } from '../../common/common.module';
 import { NftController } from '../nft.controller';
 import { Nft } from '../dto/nft.dto';
@@ -10,9 +9,10 @@ import {
   SAMPLE_ALCHEMY_NFTS,
   SAMPLE_ALCHEMY_NFTS_IN_UNIFIED_FORMAT,
 } from './test-data';
+import { AddressZero } from '@ethersproject/constants';
 
 describe('NftController', () => {
-  let nftController: NftController;
+  let nftService: NftService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -21,7 +21,7 @@ describe('NftController', () => {
       imports: [CommonModule],
     }).compile();
 
-    nftController = app.get<NftController>(NftController);
+    nftService = app.get<NftService>(NftService);
 
     // Mock Alchemy SDK  - getNftsForOwner function
     const alchemySDK = app.get(Alchemy);
@@ -32,9 +32,7 @@ describe('NftController', () => {
 
   describe('view nft', () => {
     it('should return nfts', async () => {
-      const nfts: Nft[] = await nftController.getNfts(
-        randomBytes(20).toString(),
-      );
+      const nfts: Nft[] = await nftService.getNfts(AddressZero);
       expect(nfts).toBeDefined();
 
       // Expect the format of returned NFT to be the unified format

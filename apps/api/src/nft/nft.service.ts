@@ -1,5 +1,5 @@
 import { PopulatedTransaction } from '@ethersproject/contracts';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   ERC1155,
   ERC1155__factory,
@@ -39,8 +39,6 @@ export class NftService {
 
   // Get all the NFTs owned by an address
   async getNfts(owner: string): Promise<Nft[]> {
-    console.log(await this.provider.resolveName(owner));
-
     let nfts: Nft[];
 
     // Go through each nftProviders until one succeeds.
@@ -64,11 +62,13 @@ export class NftService {
     switch (schema) {
       case NftType.ERC721: {
         if (tokenIDs.length !== 1) {
-          throw new BadRequestException(
-            `ERC 721 transfer supports exactly 1 tokenID, received ${tokenIDs.join(
+          throw new BadRequestException({
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: `ERC 721 transfer supports exactly 1 tokenID, received ${tokenIDs.join(
               ', ',
             )}`,
-          );
+            error: 'Bad Request',
+          });
         }
         const _contract: ERC721 = contract as ERC721;
         tx = await _contract.populateTransaction[
@@ -100,7 +100,11 @@ export class NftService {
       }
 
       default: {
-        throw new BadRequestException(`Unsupported NFT type: ${schema}`);
+        throw new BadRequestException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: `Unsupported NFT type: ${schema}`,
+          error: 'Bad Request',
+        });
       }
     }
 
@@ -138,6 +142,10 @@ export class NftService {
       }
     }
 
-    throw new BadRequestException(`${_contractAddress} is not an NFT contract`);
+    throw new BadRequestException({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: `${_contractAddress} is not an NFT contract`,
+      error: 'Bad Request',
+    });
   }
 }
