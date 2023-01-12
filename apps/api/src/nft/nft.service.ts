@@ -1,5 +1,10 @@
 import { PopulatedTransaction } from '@ethersproject/contracts';
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import {
   ERC1155,
   ERC1155__factory,
@@ -25,11 +30,11 @@ export class NftService {
 
   constructor(
     private readonly alchemyNftProvider: AlchemyNftProvider,
-    private readonly provider: Provider,
+    @Inject('CHAIN_PROVIDER') private readonly chainProvider: Provider,
   ) {
     this.nftProviders.push(alchemyNftProvider);
-    this._erc721 = ERC721__factory.connect(AddressZero, this.provider);
-    this._erc1155 = ERC1155__factory.connect(AddressZero, this.provider);
+    this._erc721 = ERC721__factory.connect(AddressZero, this.chainProvider);
+    this._erc1155 = ERC1155__factory.connect(AddressZero, this.chainProvider);
     this.cache = {};
     this.schemas = {
       [NftType.ERC721]: this._erc721,

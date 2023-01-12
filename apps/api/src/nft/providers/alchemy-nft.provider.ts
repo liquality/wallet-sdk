@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Alchemy, NftTokenType, Nft as AlchemyNft } from 'alchemy-sdk';
 import { Nft, NftType } from '../dto/nft.dto';
 import { BaseNftProvider } from './base-nft.provider';
 
 @Injectable()
 export class AlchemyNftProvider extends BaseNftProvider {
-  constructor(private readonly alchemy: Alchemy) {
+  constructor(@Inject('ALCHEMY_PROVIDER') private readonly alchemy: Alchemy) {
     super();
   }
 

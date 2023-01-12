@@ -20,7 +20,6 @@ const chainProviderOptions = {
   }),
 };
 
-export default ethers.getDefaultProvider(
-  getNetwork('homestead'),
-  chainProviderOptions,
-);
+export default (chainId: string) => {
+  return ethers.getDefaultProvider(getNetwork(chainId), chainProviderOptions);
+};
