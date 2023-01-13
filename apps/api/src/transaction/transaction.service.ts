@@ -13,13 +13,15 @@ export class TransactionService {
 
   public async prepareTransaction(
     txRequest: PopulatedTransaction,
-    speed = TransactionSpeed.Fast,
+    speed = TransactionSpeed.Average,
   ): Promise<PopulatedTransaction> {
+    const fees = await this.getFees(speed);
     return {
       ...txRequest,
-      ...(await this.getFees(speed)),
+      ...fees,
       gasLimit: await this.estimateGas(txRequest),
       nonce: await this.chainProvider.getTransactionCount(txRequest.from),
+      ...(!!fees.maxFeePerGas && { type: 2 }),
     };
   }
 
@@ -29,19 +31,24 @@ export class TransactionService {
 
   private async getFees(speed: TransactionSpeed): Promise<Partial<FeeData>> {
     const fees = await this.chainProvider.getFeeData();
+
     const extractedFees: Partial<FeeData> = {};
-    if (fees.gasPrice) {
-      console.log('Fetched Gas price => ', fees.gasPrice.toNumber());
+    if (fees.maxFeePerGas) {
+      extractedFees.maxFeePerGas = this.calculateFee(
+        fees.maxFeePerGas,
+        GasPriceMultipliers[speed],
+      );
+      extractedFees.maxPriorityFeePerGas = this.calculateFee(
+        fees.maxPriorityFeePerGas,
+        GasPriceMultipliers[speed],
+      );
+    } else {
       extractedFees.gasPrice = this.calculateFee(
         fees.gasPrice,
         GasPriceMultipliers[speed],
       );
-      console.log('Computed Gas price => ', extractedFees.gasPrice.toNumber());
-    } else {
-      extractedFees.maxFeePerGas = fees.maxFeePerGas;
-      extractedFees.maxPriorityFeePerGas =
-        speed == TransactionSpeed.Slow ? undefined : fees.maxPriorityFeePerGas;
     }
+
     return extractedFees;
   }
 
