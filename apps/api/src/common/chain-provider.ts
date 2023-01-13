@@ -1,4 +1,3 @@
-import { getNetwork } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import {
   ALCHEMY_API_KEY,
@@ -20,6 +19,6 @@ const chainProviderOptions = {
   }),
 };
 
-export default (chainId: string) => {
-  return ethers.getDefaultProvider(getNetwork(chainId), chainProviderOptions);
+export default (chainId: number) => {
+  return ethers.getDefaultProvider(chainId, chainProviderOptions);
 };

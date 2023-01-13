@@ -14,10 +14,10 @@ const chainIdToNetwork = {
   [CHAIN_IDS.ASTAR_MAINNET]: Network.ASTAR_MAINNET,
 };
 
-export default (chainId: string) => {
+export default (chainId: number) => {
   const settings = {
     apiKey: ALCHEMY_API_KEY,
-    network: chainIdToNetwork[Number(chainId).valueOf()],
+    network: chainIdToNetwork[chainId],
   };
   return new Alchemy(settings);
 };

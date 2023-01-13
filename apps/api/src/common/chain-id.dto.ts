@@ -1,8 +1,10 @@
-import { IsIn, IsNumberString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsNumber } from 'class-validator';
 import { CHAIN_IDS } from './chain-ids';
 
 export class ChainId {
-  @IsNumberString()
+  @IsNumber()
   @IsIn(Object.values(CHAIN_IDS))
-  chainId: string;
+  @Type(() => Number)
+  chainId: number;
 }

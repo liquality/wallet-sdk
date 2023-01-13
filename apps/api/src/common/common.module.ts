@@ -12,12 +12,12 @@ import chainProvider from './chain-provider';
     },
     {
       provide: 'CHAIN_PROVIDER',
-      useFactory: (req) => chainProvider(req.query.chainId),
+      useFactory: (req) => chainProvider(parseInt(req.query.chainId)),
       inject: [REQUEST],
     },
     {
       provide: 'ALCHEMY_PROVIDER',
-      useFactory: (req) => alchemyProvider(req.query.chainId),
+      useFactory: (req) => alchemyProvider(parseInt(req.query.chainId)),
       inject: [REQUEST],
     },
   ],

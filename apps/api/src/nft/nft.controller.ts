@@ -7,12 +7,12 @@ import { Nft } from './dto/nft.dto';
 import { TransferRequest } from './dto/transfer-request.dto';
 import { NftService } from './nft.service';
 
-@Controller('nfts')
+@Controller('nft')
 export class NftController {
   constructor(private readonly nftService: NftService) {}
 
   @ApiBadRequestResponse()
-  @Get(':address')
+  @Get('collections/:address')
   async getNfts(
     @Param() owner: Address,
     @Query() chainId: ChainId,
@@ -22,12 +22,14 @@ export class NftController {
   }
 
   @ApiBadRequestResponse()
-  @Post('/transfer/transaction')
+  @Post('/transfer/unsigned-transactions')
   async populateTransfer(
     @Body() transferRequest: TransferRequest,
-    @Query() chainId: ChainId,
+    @Query() query: ChainId,
   ): Promise<PopulatedTransaction> {
-    ~chainId;
-    return await this.nftService.populateTransfer(transferRequest);
+    return await this.nftService.populateTransfer(
+      transferRequest,
+      +query.chainId,
+    );
   }
 }

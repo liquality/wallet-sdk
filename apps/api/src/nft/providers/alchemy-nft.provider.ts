@@ -12,6 +12,7 @@ export class AlchemyNftProvider extends BaseNftProvider {
   public async getNfts(owner: string): Promise<Nft[]> {
     try {
       const nfts = (await this.alchemy.nft.getNftsForOwner(owner)).ownedNfts;
+
       return nfts.map((nft) => {
         return {
           id: nft.tokenId,
@@ -19,7 +20,7 @@ export class AlchemyNftProvider extends BaseNftProvider {
             address: nft.contract.address,
             name: nft.contract.name || '',
             symbol: nft.contract.symbol || '',
-            type: this.getNftType(nft) || undefined,
+            type: this.extractNftType(nft.tokenType) || undefined,
           },
           metadata: {
             name: nft.rawMetadata.name || '',
@@ -34,11 +35,15 @@ export class AlchemyNftProvider extends BaseNftProvider {
     }
   }
 
-  private getNftType(nft: AlchemyNft): NftType {
-    if (nft.contract.tokenType === NftTokenType.ERC1155) return NftType.ERC1155;
-    else if (nft.contract.tokenType === NftTokenType.ERC721)
-      return NftType.ERC721;
-    else return null;
+  public async getNftType(contractAddress: string): Promise<NftType> {
+    const nft = await this.alchemy.nft.getContractMetadata(contractAddress);
+    return this.extractNftType(nft.tokenType);
+  }
+
+  private extractNftType(alchemyNftType: NftTokenType): NftType {
+    if (alchemyNftType === NftTokenType.ERC1155) return NftType.ERC1155;
+    else if (alchemyNftType === NftTokenType.ERC721) return NftType.ERC721;
+    else return NftType.UNKNOWN;
   }
 
   private isERC1155(nft: AlchemyNft): boolean {
