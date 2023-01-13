@@ -18,6 +18,7 @@ import { TransferRequest } from './dto/transfer-request.dto';
 import { NftContract, NftInfo } from './types';
 import { AddressZero } from '@ethersproject/constants';
 import { Provider } from '@ethersproject/providers';
+import { TransactionService } from 'src/transaction/transaction.service';
 
 @Injectable()
 export class NftService {
@@ -29,7 +30,7 @@ export class NftService {
   private cache: Record<string, NftInfo>;
 
   constructor(
-    private readonly alchemyNftProvider: AlchemyNftProvider,
+    private readonly transactionService: TransactionService,
     @Inject('CHAIN_PROVIDER') private readonly chainProvider: Provider,
   ) {
     this.nftProviders.push(alchemyNftProvider);
@@ -56,6 +57,7 @@ export class NftService {
 
   async populateTransfer(
     transferRequest: TransferRequest,
+    chainId: number,
   ): Promise<PopulatedTransaction> {
     const { contractAddress, owner, receiver, tokenIDs, amounts } =
       transferRequest;
@@ -113,7 +115,11 @@ export class NftService {
       }
     }
 
-    return tx;
+    return this.transactionService.prepareTransaction({
+      ...tx,
+      from: transferRequest.owner,
+      chainId,
+    });
   }
 
   private async cacheGet(contractAddress: string): Promise<NftInfo> {

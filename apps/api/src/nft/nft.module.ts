@@ -7,6 +7,6 @@ import { AlchemyNftProvider } from './providers/alchemy-nft.provider';
 @Module({
   providers: [NftService, AlchemyNftProvider],
   controllers: [NftController],
-  imports: [CommonModule],
+  imports: [CommonModule, TransactionModule],
 })
 export class NftModule {}
