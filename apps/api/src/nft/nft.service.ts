@@ -114,26 +114,24 @@ export class NftService {
   }
 
   private async cacheGet(contractAddress: string): Promise<NftInfo> {
-    const _contractAddress = contractAddress.toString();
-
-    if (this.cache[_contractAddress]) {
-      return this.cache[_contractAddress];
+    if (this.cache[contractAddress]) {
+      return this.cache[contractAddress];
     }
 
-    const nftType = await this.nftProvider.getNftType(_contractAddress);
+    const nftType = await this.nftProvider.getNftType(contractAddress);
 
     if (nftType !== NftType.UNKNOWN) {
-      this.cache[_contractAddress] = {
-        contract: this.schemas[nftType].attach(_contractAddress),
+      this.cache[contractAddress] = {
+        contract: this.schemas[nftType].attach(contractAddress),
         schema: nftType,
       };
 
-      return this.cache[_contractAddress];
+      return this.cache[contractAddress];
     }
 
     throw new BadRequestException({
       statusCode: HttpStatus.BAD_REQUEST,
-      message: `${_contractAddress} is not an NFT contract`,
+      message: `${contractAddress} is not an NFT contract`,
       error: 'Bad Request',
     });
   }

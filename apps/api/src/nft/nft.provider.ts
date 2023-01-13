@@ -18,7 +18,7 @@ export class NftProvider extends BaseNftProvider {
 
     // Go through each nftProviders until one succeeds.
     for (let i = 0; i < this.nftProviders.length && !nfts; i++) {
-      nfts = await this.nftProviders[0].getNfts(owner);
+      nfts = await this.nftProviders[i].getNfts(owner);
     }
 
     return nfts;
@@ -29,7 +29,7 @@ export class NftProvider extends BaseNftProvider {
     let nftType: NftType;
 
     for (let i = 0; i < this.nftProviders.length && !nftType; i++) {
-      nftType = await this.nftProviders[0].getNftType(contractAddress);
+      nftType = await this.nftProviders[i].getNftType(contractAddress);
     }
     return nftType;
   }
