@@ -12,17 +12,15 @@ import {
   ERC721__factory,
 } from '../../typechain';
 import { Nft, NftType } from './dto/nft.dto';
-import { AlchemyNftProvider } from './providers/alchemy-nft.provider';
-import { BaseNftProvider } from './providers/base-nft.provider';
 import { TransferRequest } from './dto/transfer-request.dto';
 import { NftContract, NftInfo } from './types';
 import { AddressZero } from '@ethersproject/constants';
 import { Provider } from '@ethersproject/providers';
 import { TransactionService } from 'src/transaction/transaction.service';
+import { NftProvider } from './nft.provider';
 
 @Injectable()
 export class NftService {
-  private nftProviders: BaseNftProvider[] = [];
   private _erc721: ERC721;
   private _erc1155: ERC1155;
 
@@ -30,10 +28,10 @@ export class NftService {
   private cache: Record<string, NftInfo>;
 
   constructor(
+    private readonly nftProvider: NftProvider,
     private readonly transactionService: TransactionService,
     @Inject('CHAIN_PROVIDER') private readonly chainProvider: Provider,
   ) {
-    this.nftProviders.push(alchemyNftProvider);
     this._erc721 = ERC721__factory.connect(AddressZero, this.chainProvider);
     this._erc1155 = ERC1155__factory.connect(AddressZero, this.chainProvider);
     this.cache = {};
@@ -45,14 +43,7 @@ export class NftService {
 
   // Get all the NFTs owned by an address
   async getNfts(owner: string): Promise<Nft[]> {
-    let nfts: Nft[];
-
-    // Go through each nftProviders until one succeeds.
-    for (let i = 0; i < this.nftProviders.length && !nfts; i++) {
-      nfts = await this.nftProviders[0].getNfts(owner);
-    }
-
-    return nfts;
+    return this.nftProvider.getNfts(owner);
   }
 
   async populateTransfer(
@@ -128,29 +119,16 @@ export class NftService {
     if (this.cache[_contractAddress]) {
       return this.cache[_contractAddress];
     }
-    const ERC721_INTERFACE = {
-      id: '0x80ac58cd',
-      type: NftType.ERC721,
-    };
-    const ERC1155_INTERFACE = {
-      id: '0xd9b67a26',
-      type: NftType.ERC1155,
-    };
 
-    for (const _interface of [ERC721_INTERFACE, ERC1155_INTERFACE]) {
-      // we can use erc721 because both erc721 and erc1155 implement supportsInterface
-      const isSupported = await this._erc721
-        .attach(_contractAddress)
-        .supportsInterface(_interface.id);
+    const nftType = await this.nftProvider.getNftType(_contractAddress);
 
-      if (isSupported) {
-        this.cache[_contractAddress] = {
-          contract: this.schemas[_interface.type].attach(_contractAddress),
-          schema: _interface.type,
-        };
+    if (nftType !== NftType.UNKNOWN) {
+      this.cache[_contractAddress] = {
+        contract: this.schemas[nftType].attach(_contractAddress),
+        schema: nftType,
+      };
 
-        return this.cache[_contractAddress];
-      }
+      return this.cache[_contractAddress];
     }
 
     throw new BadRequestException({
