@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "allowJs": true,
@@ -12,12 +16,17 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "sourceMap": true,
     "outDir": "./.next/server/static",
     "rootDir": "./",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "incremental": true
   },
-  "include": ["pages"],
-  "exclude": ["node_modules"]
+  "include": [
+    "pages"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
