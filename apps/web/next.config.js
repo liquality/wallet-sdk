@@ -13,7 +13,21 @@ module.exports = {
           new InjectManifest({
             swSrc: "./pages/service-worker.ts",
             swDest: "../public/sw.js",
-            include: ["__nothing__"],
+            runtimeCaching: [
+              {
+                // cache requests to the following url patterns
+                urlPattern: /^https?.*/,
+                // use the network first strategy
+                handler: "NetworkFirst",
+                options: {
+                  cacheName: "offlineCache",
+                  expiration: {
+                    maxEntries: 200,
+                  },
+                },
+              },
+              // ... other runtime caching rules
+            ],
           })
         );
       }
