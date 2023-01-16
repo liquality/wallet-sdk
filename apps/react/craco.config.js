@@ -3,8 +3,8 @@ const { getLoader, loaderByName } = require("@craco/craco");
 
 const packages = [];
 console.log(__dirname, "DIIIIRNAAME");
-//packages.push(path.join(__dirname, "../../packages/ui"));
-//packages.push(path.join(__dirname, "../../packages/sdk")); //you can add as many as you need, but this gets slightly annoying
+packages.push(path.join(__dirname, "../../packages/ui"));
+packages.push(path.join(__dirname, "../../packages/sdk")); //you can add as many as you need, but this gets slightly annoying
 
 module.exports = {
   webpack: {
@@ -20,6 +20,20 @@ module.exports = {
 
         match.loader.include = include.concat(packages);
       }
+
+      webpackConfig.resolve.alias = {
+        ...webpackConfig.resolve.alias,
+        fallback: {
+          crypto: require.resolve("crypto-browserify"),
+          stream: require.resolve("stream-browserify"),
+          assert: require.resolve("assert"),
+          http: require.resolve("stream-http"),
+          https: require.resolve("https-browserify"),
+          os: require.resolve("os-browserify"),
+          url: require.resolve("url"),
+        },
+      };
+
       return webpackConfig;
     },
   },
