@@ -27,7 +27,7 @@ const verifierMap: Record<string, any> = {
 //THIS WORKS AS EXPECTED
 // 1. Setup Service Provider
 const directParams = {
-  baseUrl: `http://localhost:3000/serviceworker`,
+  baseUrl: `http://localhost:3005/serviceworker`,
   enableLogging: true,
   networkUrl:
     "https://small-long-brook.ropsten.quiknode.pro/e2fd2eb01412e80623787d1c40094465aa67624a",
@@ -118,7 +118,7 @@ const sdk = {
       });
       try {
       } catch (error) {
-        console.error(error);
+        console.error(error, 'ERROR INITING TKEY');
       }
     };
     init()
