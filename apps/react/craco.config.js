@@ -1,5 +1,6 @@
 const path = require("path");
 const { getLoader, loaderByName } = require("@craco/craco");
+const webpack = require("webpack");
 
 const packages = [];
 console.log(__dirname, "DIIIIRNAAME");
@@ -23,16 +24,21 @@ module.exports = {
 
       webpackConfig.resolve.alias = {
         ...webpackConfig.resolve.alias,
-        fallback: {
-          crypto: require.resolve("crypto-browserify"),
-          stream: require.resolve("stream-browserify"),
-          assert: require.resolve("assert"),
-          http: require.resolve("stream-http"),
-          https: require.resolve("https-browserify"),
-          os: require.resolve("os-browserify"),
-          url: require.resolve("url"),
-        },
+        crypto: require.resolve("crypto-browserify"),
+        stream: require.resolve("stream-browserify"),
+        assert: require.resolve("assert"),
+        http: require.resolve("stream-http"),
+        https: require.resolve("https-browserify"),
+        os: require.resolve("os-browserify"),
+        url: require.resolve("url"),
       };
+
+      webpackConfig.plugins = (webpackConfig.plugins || []).concat([
+        new webpack.ProvidePlugin({
+          process: "process/browser",
+          Buffer: ["buffer", "Buffer"],
+        }),
+      ]);
 
       return webpackConfig;
     },
