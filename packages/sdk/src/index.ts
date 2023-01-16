@@ -29,8 +29,9 @@ const verifierMap: Record<string, any> = {
 const directParams = {
   baseUrl: `http://localhost:3005/serviceworker`,
   enableLogging: true,
+  //TODO: change to use GOERLI instead of ROPSTEN
   networkUrl:
-    "https://small-long-brook.ropsten.quiknode.pro/e2fd2eb01412e80623787d1c40094465aa67624a",
+    "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
   network: "testnet" as any,
 };
 const serviceProvider = new TorusServiceProvider({
@@ -121,7 +122,7 @@ const sdk = {
         console.error(error, 'ERROR INITING TKEY');
       }
     };
-    init()
+    await init()
 
 
     try {
