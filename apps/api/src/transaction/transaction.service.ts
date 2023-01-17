@@ -76,7 +76,6 @@ export class TransactionService {
     const estimate = this.toEthersBigNumber(
       offset.plus(value.toString()).toFixed(0),
     );
-    console.log('Gas  Estimate  => ', estimate.toNumber());
     return estimate;
   }
 

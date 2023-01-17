@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiBadRequestResponse } from '@nestjs/swagger';
 import { PopulatedTransaction } from 'ethers';
-import { ChainId } from 'src/common/chain-id.dto';
+import { ChainId } from '../common/chain-id.dto';
 import { Address } from './dto/address.dto';
 import { Nft } from './dto/nft.dto';
 import { TransferRequest } from './dto/transfer-request.dto';

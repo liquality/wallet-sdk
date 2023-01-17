@@ -1,4 +1,6 @@
 import TransactionSpeed from '../types/transaction-speed';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const GasPriceMultipliers: Record<TransactionSpeed, number> = {
   [TransactionSpeed.Slow]: Number(

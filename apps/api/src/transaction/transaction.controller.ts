@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers';
 import { Body, Controller, Post, Query } from '@nestjs/common';
-import { ChainId } from 'src/common/chain-id.dto';
+import { ChainId } from '../common/chain-id.dto';
 import { SignedTransaction } from './dto/signed-transaction.dto';
 import { TransactionService } from './transaction.service';
 

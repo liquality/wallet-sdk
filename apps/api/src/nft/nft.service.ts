@@ -16,7 +16,7 @@ import { TransferRequest } from './dto/transfer-request.dto';
 import { NftContract, NftInfo } from './types';
 import { AddressZero } from '@ethersproject/constants';
 import { Provider } from '@ethersproject/providers';
-import { TransactionService } from 'src/transaction/transaction.service';
+import { TransactionService } from '../transaction/transaction.service';
 import { NftProvider } from './nft.provider';
 
 @Injectable()
