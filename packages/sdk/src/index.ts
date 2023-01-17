@@ -29,7 +29,6 @@ const verifierMap: Record<string, any> = {
 const directParams = {
   baseUrl: `http://localhost:3005/serviceworker`,
   enableLogging: true,
-  //TODO: change to use GOERLI instead of ROPSTEN
   networkUrl:
     "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
   network: "testnet" as any,
