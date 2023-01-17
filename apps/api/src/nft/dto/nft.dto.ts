@@ -1,4 +1,4 @@
-export interface Nft {
+export class Nft {
   id: string;
   contract: {
     address: string;
@@ -17,4 +17,5 @@ export interface Nft {
 export enum NftType {
   ERC721 = 'ERC721',
   ERC1155 = 'ERC1155',
+  UNKNOWN = 'UNKNOWN',
 }
