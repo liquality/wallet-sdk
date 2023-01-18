@@ -12,30 +12,6 @@ import ShareTransferModule from "@tkey/share-transfer";
 
 export type { OwnedNft };
 
-const verifierMap: Record<string, any> = {
-  google: {
-    name: "Google",
-    typeOfLogin: "google",
-    clientId:
-      "852640103435-0qhvrgpkm66c9hu0co6edkhao3hrjlv3.apps.googleusercontent.com",
-    verifier: "liquality-google-testnet",
-  },
-};
-
-
-
-//THIS WORKS AS EXPECTED
-// 1. Setup Service Provider
-const directParams = {
-  baseUrl: `http://localhost:3005/serviceworker`,
-  enableLogging: true,
-  networkUrl:
-    "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
-  network: "testnet" as any,
-};
-const serviceProvider = new TorusServiceProvider({
-  customAuthArgs: directParams,
-});
 
 
 
@@ -58,7 +34,8 @@ const sdk = {
 
 
   //AUTH FLOW (TODO: move these auth functions to seperate file)
-  async triggerSSOLogin(tKey) {
+  async triggerSSOLogin(tKey, verifierMap) {
+
     try {
       console.log("Triggering Login");
 
@@ -86,8 +63,14 @@ const sdk = {
     }
   },
 
-  async initializeNewKey() {
+  async initializeNewKey(directParams, verifierMap) {
     console.log(location.origin, 'LOC ORIGIN')
+
+    const serviceProvider = new TorusServiceProvider({
+      customAuthArgs: directParams,
+    });
+
+
 
 
 
@@ -125,7 +108,7 @@ const sdk = {
 
 
     try {
-      await this.triggerSSOLogin(tKey);
+      await this.triggerSSOLogin(tKey, verifierMap);
       //await tKey.initialize();
       //const res = await tKey._initializeNewKey({ initializeModules: true });
       //console.log("response from _initializeNewKey", res);
