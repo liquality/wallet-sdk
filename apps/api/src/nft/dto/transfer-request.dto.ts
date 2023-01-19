@@ -1,10 +1,10 @@
 import {
-  IsEthereumAddress,
   IsNumberString,
   IsNumber,
   ArrayNotEmpty,
   IsOptional,
 } from 'class-validator';
+import { IsEthereumAddress } from '../../common/validators/is-ethereum-address';
 
 export class TransferRequest {
   @IsEthereumAddress()
