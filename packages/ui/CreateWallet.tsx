@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import sdk from "sdk";
+import { auth, nft } from "sdk";
 
 export const CreateWallet = () => {
   const [shareToggle, setShareToggle] = useState<string>("split");
@@ -24,7 +24,7 @@ export const CreateWallet = () => {
         "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
       network: "testnet" as any,
     };
-    sdk.initializeNewKey(verifierMap, directParams);
+    await auth.initializeNewKey(directParams, verifierMap);
   };
 
   return (

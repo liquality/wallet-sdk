@@ -1,5 +1,5 @@
 import { Login, CreateWallet } from "ui";
-import sdk, { OwnedNft } from "sdk";
+import { nft, OwnedNft } from "sdk";
 import { useState } from "react";
 
 export default function Web() {
@@ -8,7 +8,7 @@ export default function Web() {
 
   async function updateNfts() {
     if (!address) throw new Error("set address first");
-    const nfts = await sdk.getNfts(address);
+    const nfts = await nft.getNfts(address);
     setNfts(nfts);
   }
 

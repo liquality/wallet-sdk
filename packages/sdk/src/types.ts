@@ -1,0 +1,27 @@
+
+
+export type DirectParams = {
+    baseUrl: string,
+    enableLogging: boolean,
+    networkUrl:
+    string,
+    network: TORUS_NETWORK_TYPE | undefined,
+};
+
+
+
+export declare const TORUS_NETWORK: {
+    readonly TESTNET: "testnet";
+    readonly MAINNET: "mainnet";
+    readonly CYAN: "cyan";
+    readonly AQUA: "aqua";
+    readonly CELESTE: "celeste";
+};
+export declare const NETWORK_MAP: {
+    mainnet: string;
+    testnet: string;
+    cyan: string;
+    aqua: string;
+    celeste: string;
+};
+export type TORUS_NETWORK_TYPE = typeof TORUS_NETWORK[keyof typeof TORUS_NETWORK];
