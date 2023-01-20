@@ -1,30 +1,18 @@
 import * as React from "react";
 import { useState } from "react";
-import { auth, nft } from "sdk";
+import { auth } from "sdk";
+import { DirectParams } from "sdk/src/types";
 
-export const CreateWallet = () => {
+type Props = {
+  directParams: DirectParams;
+  verifierMap: Record<string, any>;
+};
+
+export const CreateWallet: React.FC<Props> = (props) => {
   const [shareToggle, setShareToggle] = useState<string>("split");
 
   const initializeNewKey = async () => {
-    const verifierMap: Record<string, any> = {
-      google: {
-        name: "Google",
-        typeOfLogin: "google",
-        clientId:
-          "852640103435-0qhvrgpkm66c9hu0co6edkhao3hrjlv3.apps.googleusercontent.com",
-        verifier: "liquality-google-testnet",
-      },
-    };
-
-    // 1. Setup Service Provider
-    const directParams = {
-      baseUrl: `http://localhost:3005/serviceworker`,
-      enableLogging: true,
-      networkUrl:
-        "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
-      network: "testnet" as any,
-    };
-    await auth.initializeNewKey(directParams, verifierMap);
+    await auth.initializeNewKey(props.directParams, props.verifierMap);
   };
 
   return (

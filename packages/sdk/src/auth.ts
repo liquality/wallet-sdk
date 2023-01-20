@@ -1,27 +1,106 @@
 
 
 import ThresholdKey from "@tkey/default";
-import WebStorageModule, { WEB_STORAGE_MODULE_NAME } from "@tkey/web-storage";
 import TorusServiceProvider from "@tkey/service-provider-torus";
 import TorusStorageLayer from "@tkey/storage-layer-torus";
 import SecurityQuestionsModule from "@tkey/security-questions";
 import ShareTransferModule from "@tkey/share-transfer";
+import WebStorageModule, { WEB_STORAGE_MODULE_NAME } from "@tkey/web-storage";
+
 import { DirectParams } from "./types";
+import swal from "sweetalert";
+
 
 
 
 
 export const auth = {
 
-    //AUTH FLOW (TODO: move these auth functions to seperate file)
-    async triggerSSOLogin(tKey: ThresholdKey, verifierMap: Record<string, any>) {
+    async getTKeyDetails(tKey: ThresholdKey) {
+        let details = tKey.getKeyDetails()
+        console.log("Tkey details", details);
+        return details
+    },
+
+
+    async initializeNewKey(directParams: DirectParams, verifierMap: Record<string, any>) {
+        const serviceProvider = new TorusServiceProvider({
+            customAuthArgs: directParams,
+        });
+
+        // 2. Initializing tKey
+        const webStorageModule = new WebStorageModule();
+        const securityQuestionsModule = new SecurityQuestionsModule();
+        const shareTransferModule = new ShareTransferModule();
+        const storageLayer = new TorusStorageLayer({
+            hostUrl: "https://metadata.tor.us",
+        });
+
+        // Creating the ThresholdKey instance
+        const tKey = new ThresholdKey({
+            serviceProvider: serviceProvider,
+            storageLayer,
+            modules: {
+                webStorage: webStorageModule,
+                securityQuestions: securityQuestionsModule,
+                shareTransfer: shareTransferModule,
+            },
+        });
+
+        const init = async () => {
+            // Init Service Provider
+            await (tKey.serviceProvider as TorusServiceProvider).init({
+                skipSw: false,
+            });
+            try {
+            } catch (error) {
+                console.error(error, 'ERROR initing tkey serviceprovider');
+            }
+        };
+        await init()
 
         try {
+            await this.triggerSSOLogin(tKey, verifierMap);
+            await tKey.initialize();
+            const res = await tKey._initializeNewKey({ initializeModules: true });
+            console.log("response from _initializeNewKey", res);
+            const { requiredShares } = this.getTKeyDetails(tKey);
+            tKey.getKeyDetails()
+            if (requiredShares <= 0) {
+                console.log("All shares are present, you can reconstruct your private key and do operations on the tKey", tKey.getKeyDetails());
+            } else {
+                console.log("You need to generate more shares to reconstruct your private key");
+            }
 
+            //return res.privKey
+        } catch (error) {
+            console.error(error, "ERROR calling triggerSSOLogin");
+        }
+    },
+
+
+    async generateNewShareWithPassword(tKey: ThresholdKey) {
+        console.log("Generating new share with password");
+        swal("Enter password (>10 characters)", {
+            content: "input" as any,
+        }).then(async (value) => {
+            if (value.length > 10) {
+                await (
+                    tKey.modules.securityQuestions as SecurityQuestionsModule
+                ).generateNewShareWithSecurityQuestions(value, "whats your password?");
+                console.log("Successfully generated new share with password.");
+            } else {
+                swal("Error", "Password must be > 10 characters", "error");
+            }
+        });
+        await this.getTKeyDetails(tKey);
+    },
+
+    async triggerSSOLogin(tKey: ThresholdKey, verifierMap: Record<string, any>) {
+        try {
             // 2. Set jwtParameters depending on the verifier (google / facebook / linkedin etc)
             //Not needed for google
             const jwtParams = {};
-
             const { typeOfLogin, clientId, verifier } = verifierMap.google;
 
             console.log(verifierMap, 'VERIFIER MAP')
@@ -39,58 +118,6 @@ export const auth = {
             // setConsoleText(loginResponse);
         } catch (error) {
             console.log(error, 'GOT IN CATCH SSO');
-        }
-    },
-
-    async initializeNewKey(directParams: DirectParams, verifierMap: Record<string, any>) {
-        const serviceProvider = new TorusServiceProvider({
-            customAuthArgs: directParams,
-        });
-
-
-        // 2. Initializing tKey
-        let WebStorageModule = (await import('@tkey/web-storage')).default
-
-        const securityQuestionsModule = new SecurityQuestionsModule();
-        const shareTransferModule = new ShareTransferModule();
-        const storageLayer = new TorusStorageLayer({
-            hostUrl: "https://metadata.tor.us",
-        });
-
-        // Creating the ThresholdKey instance
-        const tKey = new ThresholdKey({
-            serviceProvider: serviceProvider,
-            storageLayer,
-            modules: {
-                webStorage: new WebStorageModule(),
-                securityQuestions: securityQuestionsModule,
-                shareTransfer: shareTransferModule,
-            },
-        });
-
-
-        const init = async () => {
-            // Init Service Provider
-            await (tKey.serviceProvider as TorusServiceProvider).init({
-                skipSw: false,
-            });
-            try {
-            } catch (error) {
-                console.error(error, 'ERROR initing tkey serviceprovider');
-            }
-        };
-        await init()
-
-
-        try {
-            await this.triggerSSOLogin(tKey, verifierMap);
-            //await tKey.initialize();
-            //const res = await tKey._initializeNewKey({ initializeModules: true });
-            //console.log("response from _initializeNewKey", res);
-
-            //return res.privKey
-        } catch (error) {
-            console.error(error, "ERROR calling triggerSSOLogin");
         }
     },
 

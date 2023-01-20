@@ -8,6 +8,18 @@ export type DirectParams = {
     network: TORUS_NETWORK_TYPE | undefined,
 };
 
+export type KeyDetails = {
+    pubKey: any;
+    requiredShares: number;
+    threshold: number;
+    totalShares: number;
+    shareDescriptions: ShareDescriptionMap;
+};
+
+export type ShareDescriptionMap = {
+    [shareIndexStr: string]: string[];
+};
+
 
 
 export declare const TORUS_NETWORK: {

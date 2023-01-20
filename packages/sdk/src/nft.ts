@@ -13,6 +13,8 @@ export const nft = {
         const result = await axios.get(url);
         return result.data;
     },
+
+
 }
 
 //export default nft
