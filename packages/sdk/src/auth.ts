@@ -60,40 +60,62 @@ export const auth = {
         await init()
 
         try {
-            await this.triggerSSOLogin(tKey, verifierMap);
+            let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
             await tKey.initialize();
             const res = await tKey._initializeNewKey({ initializeModules: true });
             console.log("response from _initializeNewKey", res);
-            const { requiredShares } = this.getTKeyDetails(tKey);
-            tKey.getKeyDetails()
-            if (requiredShares <= 0) {
+            const details = await this.getTKeyDetails(tKey);
+            if (details.requiredShares <= 0) {
                 console.log("All shares are present, you can reconstruct your private key and do operations on the tKey", tKey.getKeyDetails());
             } else {
                 console.log("You need to generate more shares to reconstruct your private key");
             }
 
-            //return res.privKey
+            return {
+                tKey, loginResponse, tKeyDetails: details,
+            }
         } catch (error) {
             console.error(error, "ERROR calling triggerSSOLogin");
         }
     },
 
 
-    async generateNewShareWithPassword(tKey: ThresholdKey) {
+    async generateNewShareWithPassword(tKey: ThresholdKey, password: string) {
         console.log("Generating new share with password");
         swal("Enter password (>10 characters)", {
             content: "input" as any,
-        }).then(async (value) => {
-            if (value.length > 10) {
+        }).then(async (password) => {
+            if (password.length > 10) {
                 await (
                     tKey.modules.securityQuestions as SecurityQuestionsModule
-                ).generateNewShareWithSecurityQuestions(value, "whats your password?");
+                ).generateNewShareWithSecurityQuestions(password, "whats your password?");
                 console.log("Successfully generated new share with password.");
             } else {
                 swal("Error", "Password must be > 10 characters", "error");
             }
         });
         await this.getTKeyDetails(tKey);
+    },
+
+
+    async loginUsingLocalShare(tKey, directParams, verifierMap) {
+        try {
+            console.log("Logging in");
+            await this.triggerSSOLogin(directParams, verifierMap);
+            await tKey.initialize();
+
+            console.log("Adding local webstorage share");
+            const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
+            await webStorageModule.inputShareFromWebStorage();
+
+            const indexes = tKey.getCurrentShareIndexes();
+            console.log(indexes);
+            console.log("Total number of available shares: " + indexes.length);
+            const reconstructedKey = await tKey.reconstructKey();
+            console.log("tkey: " + reconstructedKey.privKey.toString("hex"));
+        } catch (error) {
+            console.error(error, "caught");
+        }
     },
 
     async triggerSSOLogin(tKey: ThresholdKey, verifierMap: Record<string, any>) {
@@ -113,8 +135,10 @@ export const auth = {
                 clientId,
                 jwtParams,
             });
-
             console.log(loginResponse, 'LOGIN RESP?')
+
+            return loginResponse
+
             // setConsoleText(loginResponse);
         } catch (error) {
             console.log(error, 'GOT IN CATCH SSO');

@@ -10,11 +10,17 @@ type Props = {
 
 export const CreateWallet: React.FC<Props> = (props) => {
   const [shareToggle, setShareToggle] = useState<string>("split");
+  const [loginResponse, setLoginResponse] = useState<any>({});
 
   const initializeNewKey = async () => {
-    await auth.initializeNewKey(props.directParams, props.verifierMap);
+    const response = await auth.initializeNewKey(
+      props.directParams,
+      props.verifierMap
+    );
+    setLoginResponse(response);
   };
 
+  console.log(loginResponse, "LOGINRESPONSE IN REACT COMÅPNENT");
   return (
     <div style={{ border: "1px solid black", padding: 10 }}>
       <h3>Liquality & tKey Create Wallet</h3>
