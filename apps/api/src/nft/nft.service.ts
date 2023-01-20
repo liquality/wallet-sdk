@@ -5,12 +5,6 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import {
-  ERC1155,
-  ERC1155__factory,
-  ERC721,
-  ERC721__factory,
-} from '../../typechain';
 import { Nft, NftType } from './dto/nft.dto';
 import { TransferRequest } from './dto/transfer-request.dto';
 import { NftContract, NftInfo } from './types';
@@ -27,11 +21,13 @@ import { CreateERC721CollectionRequest } from './dto/create-erc721-collection-re
 import { MintERC1155Request } from './dto/mint-erc1155-request.dto';
 import { LiqERC721 } from 'typechain/contracts/nft/LIQ_ERC721.sol';
 import { MintERC721Request } from './dto/mint-erc721-request.dto';
+import { ERC721 } from 'typechain/@openzeppelin/contracts/token/ERC721/ERC721';
+import { ERC1155 } from 'typechain/@openzeppelin/contracts/token/ERC1155/ERC1155';
 
 @Injectable()
 export class NftService {
   private liqERC721: LiqERC721;
-  private liqERC1155: LiqERC1155
+  private liqERC1155: LiqERC1155;
 
   private schemas: Record<string, NftContract>;
   private cache: Record<string, NftInfo>;
@@ -41,13 +37,19 @@ export class NftService {
     private readonly transactionService: TransactionService,
     @Inject('CHAIN_PROVIDER') private readonly chainProvider: Provider,
   ) {
-    this.liqERC721 = LiqERC721__factory.connect(AddressZero, this.chainProvider);
-    this.liqERC1155 = LiqERC1155__factory.connect(AddressZero, this.chainProvider);
+    this.liqERC721 = LiqERC721__factory.connect(
+      AddressZero,
+      this.chainProvider,
+    );
+    this.liqERC1155 = LiqERC1155__factory.connect(
+      AddressZero,
+      this.chainProvider,
+    );
 
     this.cache = {};
     this.schemas = {
       [NftType.ERC721]: this.liqERC721,
-      [NftType.ERC1155]: this.liqERC1155,  
+      [NftType.ERC1155]: this.liqERC1155,
     };
   }
 
@@ -147,61 +149,73 @@ export class NftService {
   }
 
   async createERC1155Collection(
-    {uri, creator}: CreateERC1155CollectionRequest,
+    { uri, creator }: CreateERC1155CollectionRequest,
     chainId: number,
   ): Promise<PopulatedTransaction> {
-
-    const contractFactory = new ethers.ContractFactory(LiqERC1155__factory.abi, LiqERC1155__factory.bytecode);
-    const deployTx  = contractFactory.getDeployTransaction(uri);
+    const contractFactory = new ethers.ContractFactory(
+      LiqERC1155__factory.abi,
+      LiqERC1155__factory.bytecode,
+    );
+    const deployTx = contractFactory.getDeployTransaction(uri);
 
     return this.transactionService.prepareTransaction({
       data: deployTx.data.toString(),
       from: creator,
       chainId,
-      to: AddressZero
+      to: AddressZero,
     });
   }
 
   async mintERC1155Token(
-    {contractAddress, owner, recipient, id, amount}: MintERC1155Request,
+    { contractAddress, owner, recipient, id, amount }: MintERC1155Request,
     chainId: number,
   ): Promise<PopulatedTransaction> {
-    const contract =  this.liqERC1155.attach(contractAddress);
+    const contract = this.liqERC1155.attach(contractAddress);
     const data = '0x';
-    const tx = await contract.populateTransaction.mint(recipient,id,amount,data);
+    const tx = await contract.populateTransaction.mint(
+      recipient,
+      id,
+      amount,
+      data,
+    );
 
     return this.transactionService.prepareTransaction({
-     ...tx,
+      ...tx,
       from: owner,
       chainId,
     });
   }
 
   async createERC721Collection(
-    {tokenName, tokenSymbol, creator}: CreateERC721CollectionRequest,
+    { tokenName, tokenSymbol, creator }: CreateERC721CollectionRequest,
     chainId: number,
   ): Promise<PopulatedTransaction> {
-
-    const contractFactory = new ethers.ContractFactory(LiqERC721__factory.abi, LiqERC721__factory.bytecode);
-    const deployTx  = contractFactory.getDeployTransaction(tokenName, tokenSymbol);
+    const contractFactory = new ethers.ContractFactory(
+      LiqERC721__factory.abi,
+      LiqERC721__factory.bytecode,
+    );
+    const deployTx = contractFactory.getDeployTransaction(
+      tokenName,
+      tokenSymbol,
+    );
 
     return this.transactionService.prepareTransaction({
       data: deployTx.data.toString(),
       from: creator,
       chainId,
-      to: AddressZero
+      to: AddressZero,
     });
   }
-    
+
   async mintERC721Token(
-    {contractAddress, owner, recipient, uri}: MintERC721Request,
+    { contractAddress, owner, recipient, uri }: MintERC721Request,
     chainId: number,
   ): Promise<PopulatedTransaction> {
-    const contract =  this.liqERC721.attach(contractAddress);
-    const tx = await contract.populateTransaction.safeMint(recipient,uri);
+    const contract = this.liqERC721.attach(contractAddress);
+    const tx = await contract.populateTransaction.safeMint(recipient, uri);
 
     return this.transactionService.prepareTransaction({
-     ...tx,
+      ...tx,
       from: owner,
       chainId,
     });
