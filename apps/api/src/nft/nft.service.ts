@@ -18,11 +18,20 @@ import { AddressZero } from '@ethersproject/constants';
 import { Provider } from '@ethersproject/providers';
 import { TransactionService } from '../transaction/transaction.service';
 import { NftProvider } from './nft.provider';
+import { CreateERC1155CollectionRequest } from './dto/create-erc1155-collection-request.dto';
+import { LiqERC1155 } from 'typechain/contracts/nft/LIQ_ERC1155.sol';
+import { LiqERC721__factory } from 'typechain/factories/contracts/nft/LIQ_ERC721.sol';
+import { ethers } from 'ethers';
+import { LiqERC1155__factory } from 'typechain/factories/contracts/nft/LIQ_ERC1155.sol';
+import { CreateERC721CollectionRequest } from './dto/create-erc721-collection-request.dto';
+import { MintERC1155Request } from './dto/mint-erc1155-request.dto';
+import { LiqERC721 } from 'typechain/contracts/nft/LIQ_ERC721.sol';
+import { MintERC721Request } from './dto/mint-erc721-request.dto';
 
 @Injectable()
 export class NftService {
-  private _erc721: ERC721;
-  private _erc1155: ERC1155;
+  private liqERC721: LiqERC721;
+  private liqERC1155: LiqERC1155
 
   private schemas: Record<string, NftContract>;
   private cache: Record<string, NftInfo>;
@@ -32,12 +41,13 @@ export class NftService {
     private readonly transactionService: TransactionService,
     @Inject('CHAIN_PROVIDER') private readonly chainProvider: Provider,
   ) {
-    this._erc721 = ERC721__factory.connect(AddressZero, this.chainProvider);
-    this._erc1155 = ERC1155__factory.connect(AddressZero, this.chainProvider);
+    this.liqERC721 = LiqERC721__factory.connect(AddressZero, this.chainProvider);
+    this.liqERC1155 = LiqERC1155__factory.connect(AddressZero, this.chainProvider);
+
     this.cache = {};
     this.schemas = {
-      [NftType.ERC721]: this._erc721,
-      [NftType.ERC1155]: this._erc1155,
+      [NftType.ERC721]: this.liqERC721,
+      [NftType.ERC1155]: this.liqERC1155,  
     };
   }
 
@@ -133,6 +143,67 @@ export class NftService {
       statusCode: HttpStatus.BAD_REQUEST,
       message: `${contractAddress} is not an NFT contract`,
       error: 'Bad Request',
+    });
+  }
+
+  async createERC1155Collection(
+    {uri, creator}: CreateERC1155CollectionRequest,
+    chainId: number,
+  ): Promise<PopulatedTransaction> {
+
+    const contractFactory = new ethers.ContractFactory(LiqERC1155__factory.abi, LiqERC1155__factory.bytecode);
+    const deployTx  = contractFactory.getDeployTransaction(uri);
+
+    return this.transactionService.prepareTransaction({
+      data: deployTx.data.toString(),
+      from: creator,
+      chainId,
+      to: AddressZero
+    });
+  }
+
+  async mintERC1155Token(
+    {contractAddress, owner, recipient, id, amount}: MintERC1155Request,
+    chainId: number,
+  ): Promise<PopulatedTransaction> {
+    const contract =  this.liqERC1155.attach(contractAddress);
+    const data = '0x';
+    const tx = await contract.populateTransaction.mint(recipient,id,amount,data);
+
+    return this.transactionService.prepareTransaction({
+     ...tx,
+      from: owner,
+      chainId,
+    });
+  }
+
+  async createERC721Collection(
+    {tokenName, tokenSymbol, creator}: CreateERC721CollectionRequest,
+    chainId: number,
+  ): Promise<PopulatedTransaction> {
+
+    const contractFactory = new ethers.ContractFactory(LiqERC721__factory.abi, LiqERC721__factory.bytecode);
+    const deployTx  = contractFactory.getDeployTransaction(tokenName, tokenSymbol);
+
+    return this.transactionService.prepareTransaction({
+      data: deployTx.data.toString(),
+      from: creator,
+      chainId,
+      to: AddressZero
+    });
+  }
+    
+  async mintERC721Token(
+    {contractAddress, owner, recipient, uri}: MintERC721Request,
+    chainId: number,
+  ): Promise<PopulatedTransaction> {
+    const contract =  this.liqERC721.attach(contractAddress);
+    const tx = await contract.populateTransaction.safeMint(recipient,uri);
+
+    return this.transactionService.prepareTransaction({
+     ...tx,
+      from: owner,
+      chainId,
     });
   }
 }
