@@ -14,6 +14,10 @@ export const CreateWallet: React.FC<Props> = (props) => {
   const [loginResponse, setLoginResponse] = useState<any>({});
   const [password, setPassword] = useState<string>("");
 
+  React.useEffect(() => {
+    console.log("UPDATED!! useffect");
+  }, [loginResponse]);
+
   const initializeNewKey = async () => {
     const response = await auth.initializeNewKey(directParams, verifierMap);
     setLoginResponse(response);
@@ -49,16 +53,31 @@ export const CreateWallet: React.FC<Props> = (props) => {
         <h3 style={{ color: "green" }}>
           Your wallet was created successfully!
         </h3>
+        <p>
+          <b>Public Address:</b> <br></br>
+          {loginResponse.loginResponse?.publicAddress}
+        </p>
+        <p>
+          <b>Private Key:</b> <br></br>
+          {loginResponse.loginResponse?.privateKey}
+        </p>
+        <p>
+          <b>User email:</b> <br></br>{" "}
+          {loginResponse.loginResponse?.userInfo?.email}
+        </p>
       </div>
     );
   };
-  console.log(loginResponse, "LOGINRESPONSE IN REACT COMÅPNENT");
+  console.log(
+    loginResponse.loginResponse?.publicAddress,
+    "LOGINRESPONSE IN REACT COMÅPNENT ADDRESS"
+  );
   return (
     <div style={{ border: "1px solid black", padding: 10 }}>
       <h3>Liquality & tKey Create Wallet</h3>
       <button onClick={initializeNewKey}>Create Wallet</button>
-      {loginResponse.tkey ? _renderCreatedWalletDetails() : null}
-      {loginResponse.tkey ? _renderPasswordInput() : null}
+      {loginResponse.loginResponse ? _renderCreatedWalletDetails() : null}
+      {loginResponse.loginResponse ? _renderPasswordInput() : null}
     </div>
   );
 };
