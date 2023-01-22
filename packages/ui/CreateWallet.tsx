@@ -50,6 +50,11 @@ export const CreateWallet: React.FC<Props> = (props) => {
         <button onClick={() => generatePassword(password)}>Set password</button>
         <br></br>
         {errorMsg ? <p style={{ color: "red" }}> {errorMsg}</p> : null}
+        {passwordResponse.startsWith("Error") ? (
+          <p style={{ color: "red" }}> {passwordResponse}</p>
+        ) : (
+          <p style={{ color: "green" }}>{passwordResponse}</p>
+        )}
       </div>
     );
   };
