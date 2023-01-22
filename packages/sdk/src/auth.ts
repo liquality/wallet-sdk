@@ -6,9 +6,7 @@ import TorusStorageLayer from "@tkey/storage-layer-torus";
 import SecurityQuestionsModule from "@tkey/security-questions";
 import ShareTransferModule from "@tkey/share-transfer";
 import WebStorageModule, { WEB_STORAGE_MODULE_NAME } from "@tkey/web-storage";
-
 import { DirectParams } from "./types";
-import swal from "sweetalert";
 
 
 
@@ -80,6 +78,7 @@ export const auth = {
     },
 
 
+    //This function generates a new share with password that user chooses
     async generateNewShareWithPassword(tKey: ThresholdKey, password: string) {
         console.log(tKey, 'TKEY GENERETARED AND SENTs')
         if (password.length > 10) {
@@ -88,9 +87,10 @@ export const auth = {
             ).generateNewShareWithSecurityQuestions(password, "whats your password?");
             console.log("Successfully generated new share with password.");
         } else {
-            swal("Error", "Password must be > 10 characters", "error");
+            return "Error, password must be minimum 10 characters"
         }
         await this.getTKeyDetails(tKey);
+        return "Successfully set password share"
     },
 
 

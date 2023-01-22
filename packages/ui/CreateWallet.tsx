@@ -13,14 +13,24 @@ export const CreateWallet: React.FC<Props> = (props) => {
   const [shareToggle, setShareToggle] = useState<string>("split");
   const [loginResponse, setLoginResponse] = useState<any>({});
   const [password, setPassword] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [passwordResponse, setPasswordResponse] = useState<string>("");
 
   React.useEffect(() => {
     console.log("UPDATED!! useffect");
-  }, [loginResponse]);
+  }, [loginResponse, passwordResponse]);
 
   const initializeNewKey = async () => {
     const response = await auth.initializeNewKey(directParams, verifierMap);
     setLoginResponse(response);
+  };
+
+  const generatePassword = async (password: string) => {
+    let response = await auth.generateNewShareWithPassword(
+      loginResponse.tKey,
+      password
+    );
+    setPasswordResponse(response);
   };
 
   const _renderPasswordInput = () => {
@@ -28,21 +38,18 @@ export const CreateWallet: React.FC<Props> = (props) => {
       <div>
         Set password minimum 10 characters:
         <input
-          type="text"
+          type="password"
           placeholder="Address"
           value={password}
           onChange={(e) => {
-            e.target.value.length >= 10;
-            setPassword(e.target.value);
+            e.target.value.length >= 10
+              ? setPassword(e.target.value)
+              : setErrorMsg("Password needs to be minimum 10 characters");
           }}
         />
-        <button
-          onClick={() =>
-            auth.generateNewShareWithPassword(loginResponse.tKey, password)
-          }
-        >
-          Set password
-        </button>
+        <button onClick={() => generatePassword(password)}>Set password</button>
+        <br></br>
+        {errorMsg ? <p style={{ color: "red" }}> {errorMsg}</p> : null}
       </div>
     );
   };
