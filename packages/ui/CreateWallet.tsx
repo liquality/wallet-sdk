@@ -42,9 +42,7 @@ export const CreateWallet: React.FC<Props> = (props) => {
           placeholder="Address"
           value={password}
           onChange={(e) => {
-            e.target.value.length >= 10
-              ? setPassword(e.target.value)
-              : setErrorMsg("Password needs to be minimum 10 characters");
+            setPassword(e.target.value);
           }}
         />
         <button onClick={() => generatePassword(password)}>Set password</button>

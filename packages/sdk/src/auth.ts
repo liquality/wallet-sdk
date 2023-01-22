@@ -94,6 +94,19 @@ export const auth = {
     },
 
 
+    async inputShareFromSecurityQuestions(tKey: ThresholdKey, password: string) {
+        console.log("Importing Share from Security Question");
+        if (password.length > 10) {
+            await (
+                tKey.modules.securityQuestions as SecurityQuestionsModule
+            ).inputShareFromSecurityQuestions(password);
+            console.log("Imported Share using the security question");
+        } else {
+            console.log("Error", "Password must be > 10 characters", "error");
+        }
+    },
+
+
     async loginUsingLocalShare(tKey, directParams, verifierMap) {
         try {
             console.log("Logging in");
