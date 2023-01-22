@@ -38,7 +38,7 @@ export const CreateWallet: React.FC<Props> = (props) => {
         />
         <button
           onClick={() =>
-            auth.generateNewShareWithPassword(loginResponse.tkey, password)
+            auth.generateNewShareWithPassword(loginResponse.tKey, password)
           }
         >
           Set password

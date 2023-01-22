@@ -81,19 +81,15 @@ export const auth = {
 
 
     async generateNewShareWithPassword(tKey: ThresholdKey, password: string) {
-        console.log("Generating new share with password");
-        swal("Enter password (>10 characters)", {
-            content: "input" as any,
-        }).then(async (password) => {
-            if (password.length > 10) {
-                await (
-                    tKey.modules.securityQuestions as SecurityQuestionsModule
-                ).generateNewShareWithSecurityQuestions(password, "whats your password?");
-                console.log("Successfully generated new share with password.");
-            } else {
-                swal("Error", "Password must be > 10 characters", "error");
-            }
-        });
+        console.log(tKey, 'TKEY GENERETARED AND SENTs')
+        if (password.length > 10) {
+            await (
+                tKey.modules.securityQuestions as SecurityQuestionsModule
+            ).generateNewShareWithSecurityQuestions(password, "whats your password?");
+            console.log("Successfully generated new share with password.");
+        } else {
+            swal("Error", "Password must be > 10 characters", "error");
+        }
         await this.getTKeyDetails(tKey);
     },
 
