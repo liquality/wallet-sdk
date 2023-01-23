@@ -21,7 +21,11 @@ export const CreateWallet: React.FC<Props> = (props) => {
   }, [loginResponse, passwordResponse]);
 
   const initializeNewKey = async () => {
-    const response = await auth.initializeNewKey(directParams, verifierMap);
+    const response = await auth.initializeNewKey(
+      directParams,
+      verifierMap,
+      true
+    );
     setLoginResponse(response);
   };
 

@@ -21,7 +21,7 @@ export const auth = {
     },
 
 
-    async initializeNewKey(directParams: DirectParams, verifierMap: Record<string, any>) {
+    async initializeNewKey(directParams: DirectParams, verifierMap: Record<string, any>, login: boolean) {
         const serviceProvider = new TorusServiceProvider({
             customAuthArgs: directParams,
         });
@@ -57,24 +57,27 @@ export const auth = {
         };
         await init()
 
-        try {
-            let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
-            await tKey.initialize();
-            const res = await tKey._initializeNewKey({ initializeModules: true });
-            console.log("response from _initializeNewKey", res);
-            const details = await this.getTKeyDetails(tKey);
-            if (details.requiredShares <= 0) {
-                console.log("All shares are present, you can reconstruct your private key and do operations on the tKey", tKey.getKeyDetails());
-            } else {
-                console.log("You need to generate more shares to reconstruct your private key");
-            }
+        if (login) {
+            try {
+                let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
+                await tKey.initialize();
+                const res = await tKey._initializeNewKey({ initializeModules: true });
+                console.log("response from _initializeNewKey", res);
+                const details = await this.getTKeyDetails(tKey);
+                if (details.requiredShares <= 0) {
+                    console.log("All shares are present, you can reconstruct your private key and do operations on the tKey", tKey.getKeyDetails());
+                } else {
+                    console.log("You need to generate more shares to reconstruct your private key");
+                }
 
-            return {
-                tKey, loginResponse, tKeyDetails: details,
+                return {
+                    tKey, loginResponse, tKeyDetails: details,
+                }
+            } catch (error) {
+                console.error(error, "ERROR calling triggerSSOLogin");
             }
-        } catch (error) {
-            console.error(error, "ERROR calling triggerSSOLogin");
         }
+        //else we just init the key and no login is triggered
     },
 
 

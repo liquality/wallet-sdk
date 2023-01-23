@@ -15,7 +15,8 @@ export const Login: React.FC<Props> = (props) => {
   const logInUsingGoogleSSO = async () => {
     const response = await auth.initializeNewKey(
       props.directParams,
-      props.verifierMap
+      props.verifierMap,
+      true
     );
     setLoginResponse(response);
   };
