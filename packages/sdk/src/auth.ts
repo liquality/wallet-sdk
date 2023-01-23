@@ -77,6 +77,7 @@ export const auth = {
                 console.error(error, "ERROR calling triggerSSOLogin");
             }
         }
+        return tKey
         //else we just init the key and no login is triggered
     },
 

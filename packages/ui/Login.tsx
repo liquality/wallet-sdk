@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "sdk";
 import { DirectParams } from "sdk/src/types";
 
@@ -10,6 +10,8 @@ type Props = {
 
 export const Login: React.FC<Props> = (props) => {
   const [loginResponse, setLoginResponse] = useState<any>({});
+  const [tKeyResponse, setTkeyResponse] = useState<any>({});
+
   const [password, setPassword] = useState<string>("");
 
   const logInUsingGoogleSSO = async () => {
@@ -22,6 +24,23 @@ export const Login: React.FC<Props> = (props) => {
   };
 
   console.log(loginResponse, "LOGINRESPONSE IN REACT COMÅPNENT LOGIIIN");
+
+  //useeffect here and call initializeNewKey
+  useEffect(() => {
+    const fetchTkey = async () => {
+      try {
+        const tKeyResponseWithoutLogin = await auth.initializeNewKey(
+          props.directParams,
+          props.verifierMap,
+          false
+        );
+        setTkeyResponse(tKeyResponseWithoutLogin);
+      } catch (error) {
+        console.log(error, "error tkey init");
+      }
+    };
+    fetchTkey();
+  }, []);
 
   const _renderPasswordInput = () => {
     return (
@@ -40,7 +59,7 @@ export const Login: React.FC<Props> = (props) => {
           onClick={() =>
             //Where I left of: What to do here since I cant access tKey init variable if im not logged in?
             //Create a function for the sdk to just return the tkey instance passing in directParams & possibly verifierMap (last one prob not neccessary)
-            auth.inputShareFromSecurityQuestions(loginResponse.tKey, password)
+            auth.inputShareFromSecurityQuestions(tKeyResponse.tKey, password)
           }
         >
           Login with password
