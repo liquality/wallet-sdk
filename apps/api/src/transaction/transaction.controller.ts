@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/providers';
 import { Body, Controller, Post, Query } from '@nestjs/common';
 import { ChainId } from '../common/chain-id.dto';
 import { SignedTransaction } from './dto/signed-transaction.dto';
@@ -12,7 +11,7 @@ export class TransactionController {
   async sendTransaction(
     @Body() payload: SignedTransaction,
     @Query() query: ChainId,
-  ): Promise<TransactionResponse> {
+  ): Promise<string> {
     ~query;
     return await this.transactionService.sendTransaction(payload.tx);
   }

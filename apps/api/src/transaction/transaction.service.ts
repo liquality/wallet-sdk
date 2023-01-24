@@ -26,7 +26,7 @@ export class TransactionService {
   }
 
   public async sendTransaction(transaction: string) {
-    return this.chainProvider.sendTransaction(transaction);
+    return (await this.chainProvider.sendTransaction(transaction)).hash;
   }
 
   private async getFees(speed: TransactionSpeed): Promise<Partial<FeeData>> {
