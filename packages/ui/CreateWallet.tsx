@@ -10,22 +10,23 @@ type Props = {
 
 export const CreateWallet: React.FC<Props> = (props) => {
   const { directParams, verifierMap } = props;
-  const [shareToggle, setShareToggle] = useState<string>("split");
+  const [tKey, setTKey] = useState<any>({});
   const [loginResponse, setLoginResponse] = useState<any>({});
   const [password, setPassword] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [passwordResponse, setPasswordResponse] = useState<string>("");
 
   React.useEffect(() => {
-    console.log("UPDATED!! useffect");
+    const init = async () => {
+      const tKeyResponse = await auth.init(directParams);
+      setTKey(tKeyResponse);
+    };
+
+    init();
   }, [loginResponse, passwordResponse]);
 
   const initializeNewKey = async () => {
-    const response = await auth.initializeNewKey(
-      directParams,
-      verifierMap,
-      true
-    );
+    const response = await auth.initializeNewKey(tKey, verifierMap);
     setLoginResponse(response);
   };
 
@@ -82,10 +83,7 @@ export const CreateWallet: React.FC<Props> = (props) => {
       </div>
     );
   };
-  console.log(
-    loginResponse.loginResponse?.publicAddress,
-    "LOGINRESPONSE IN REACT COMÅPNENT ADDRESS"
-  );
+
   return (
     <div style={{ border: "1px solid black", padding: 10 }}>
       <h3>Liquality & tKey Create Wallet</h3>

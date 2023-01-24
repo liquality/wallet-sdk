@@ -20,12 +20,10 @@ export const auth = {
         return details
     },
 
-
-    async initializeNewKey(directParams: DirectParams, verifierMap: Record<string, any>, login: boolean) {
+    async init(directParams: DirectParams) {
         const serviceProvider = new TorusServiceProvider({
             customAuthArgs: directParams,
         });
-
         // 2. Initializing tKey
         const webStorageModule = new WebStorageModule();
         const securityQuestionsModule = new SecurityQuestionsModule();
@@ -44,7 +42,6 @@ export const auth = {
                 shareTransfer: shareTransferModule,
             },
         });
-
         const init = async () => {
             // Init Service Provider
             await (tKey.serviceProvider as TorusServiceProvider).init({
@@ -56,29 +53,30 @@ export const auth = {
             }
         };
         await init()
-
-        if (login) {
-            try {
-                let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
-                await tKey.initialize();
-                const res = await tKey._initializeNewKey({ initializeModules: true });
-                console.log("response from _initializeNewKey", res);
-                const details = await this.getTKeyDetails(tKey);
-                if (details.requiredShares <= 0) {
-                    console.log("All shares are present, you can reconstruct your private key and do operations on the tKey", tKey.getKeyDetails());
-                } else {
-                    console.log("You need to generate more shares to reconstruct your private key");
-                }
-
-                return {
-                    tKey, loginResponse, tKeyDetails: details,
-                }
-            } catch (error) {
-                console.error(error, "ERROR calling triggerSSOLogin");
-            }
-        }
         return tKey
-        //else we just init the key and no login is triggered
+    },
+
+
+
+    async initializeNewKey(tKey: ThresholdKey, verifierMap: Record<string, any>) {
+        try {
+            let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
+            const res = await tKey._initializeNewKey({ initializeModules: true });
+            console.log("response from _initializeNewKey", res);
+            const details = await this.getTKeyDetails(tKey);
+            if (details.requiredShares <= 0) {
+                console.log("All shares are present, you can reconstruct your private key and do operations on the tKey", tKey.getKeyDetails());
+            } else {
+                console.log("You need to generate more shares to reconstruct your private key");
+            }
+
+            return {
+                tKey, loginResponse, tKeyDetails: details,
+            }
+        } catch (error) {
+            console.error(error, "ERROR calling triggerSSOLogin");
+        }
+
     },
 
 
@@ -99,12 +97,17 @@ export const auth = {
 
 
     async inputShareFromSecurityQuestions(tKey: ThresholdKey, password: string) {
-        console.log("Importing Share from Security Question");
-        if (password.length > 10) {
-            await (
-                tKey.modules.securityQuestions as SecurityQuestionsModule
-            ).inputShareFromSecurityQuestions(password);
-            console.log("Imported Share using the security question");
+        console.log("Importing Share from Security Question", tKey, 'TKEY MODULES', tKey)
+        if (password.length > 10 && tKey) {
+            try {
+                console.log(tKey, 'TEEEEKEEEYß')
+                await (
+                    tKey.modules.securityQuestions as SecurityQuestionsModule
+                ).inputShareFromSecurityQuestions(password);
+                console.log("Imported Share using the security question");
+            } catch (error) {
+                console.log('ERROOÖÖÖÖÖ ', error, 'TKEEY:', tKey)
+            }
         } else {
             console.log("Error", "Password must be > 10 characters", "error");
         }

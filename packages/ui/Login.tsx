@@ -10,37 +10,28 @@ type Props = {
 
 export const Login: React.FC<Props> = (props) => {
   const [loginResponse, setLoginResponse] = useState<any>({});
-  const [tKeyResponse, setTkeyResponse] = useState<any>({});
+  const [tKey, setTKey] = useState<any>({});
 
   const [password, setPassword] = useState<string>("");
 
   const logInUsingGoogleSSO = async () => {
-    const response = await auth.initializeNewKey(
-      props.directParams,
-      props.verifierMap,
-      true
-    );
+    const response = await auth.initializeNewKey(tKey, props.verifierMap);
     setLoginResponse(response);
   };
 
-  console.log(loginResponse, "LOGINRESPONSE IN REACT COMÅPNENT LOGIIIN");
+  const logInUsingPassword = async () => {
+    console.log("GOT HERE AT LEST", tKey);
+    await auth.inputShareFromSecurityQuestions(tKey, password);
+  };
 
-  //useeffect here and call initializeNewKey
-  useEffect(() => {
-    const fetchTkey = async () => {
-      try {
-        const tKeyResponseWithoutLogin = await auth.initializeNewKey(
-          props.directParams,
-          props.verifierMap,
-          false
-        );
-        setTkeyResponse(tKeyResponseWithoutLogin);
-      } catch (error) {
-        console.log(error, "error tkey init");
-      }
+  //Init tkey instance
+  React.useEffect(() => {
+    const init = async () => {
+      const tKeyResponse = await auth.init(props.directParams);
+      setTKey(tKeyResponse);
     };
-    fetchTkey();
-  }, []);
+    init();
+  }, [loginResponse]);
 
   const _renderPasswordInput = () => {
     return (
@@ -59,7 +50,7 @@ export const Login: React.FC<Props> = (props) => {
           onClick={() =>
             //Where I left of: What to do here since I cant access tKey init variable if im not logged in?
             //Create a function for the sdk to just return the tkey instance passing in directParams & possibly verifierMap (last one prob not neccessary)
-            auth.inputShareFromSecurityQuestions(tKeyResponse.tKey, password)
+            logInUsingPassword()
           }
         >
           Login with password
