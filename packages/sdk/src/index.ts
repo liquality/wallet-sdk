@@ -1,17 +1,13 @@
-import { OwnedNft } from "alchemy-sdk"; // This is temporary, probably need custom types
-import axios from "axios";
+import { createERC1155Collection, createERC721Collection, getNfts, mintERC1155Token, mintERC721Token, transferNft } from "./nft"
 
-export type { OwnedNft };
+const nft = {
+    getNfts,
+    transferNft,
+    createERC1155Collection,
+    createERC721Collection,
+    mintERC1155Token,
+    mintERC721Token
+}
 
-const API_URL = "http://localhost:3001/v1";
+export const sdk =  {nft}
 
-const sdk = {
-  async getNfts(address: string): Promise<OwnedNft[]> {
-    const result = await axios.get(`${API_URL}/nfts/get`, {
-      params: { address },
-    });
-    return result.data;
-  },
-};
-
-export default sdk;

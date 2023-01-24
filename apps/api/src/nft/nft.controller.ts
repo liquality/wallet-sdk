@@ -43,7 +43,10 @@ export class NftController {
     @Body() creationRequest: CreateERC1155CollectionRequest,
     @Query() query: ChainId,
   ): Promise<PopulatedTransaction> {
-    return await this.nftService.createERC1155Collection(creationRequest,+query.chainId);
+    return await this.nftService.createERC1155Collection(
+      creationRequest,
+      +query.chainId,
+    );
   }
 
   @ApiBadRequestResponse()
@@ -52,7 +55,7 @@ export class NftController {
     @Body() mintRequest: MintERC1155Request,
     @Query() query: ChainId,
   ): Promise<PopulatedTransaction> {
-    return await this.nftService.mintERC1155Token(mintRequest,+query.chainId);
+    return await this.nftService.mintERC1155Token(mintRequest, +query.chainId);
   }
 
   @ApiBadRequestResponse()
@@ -61,7 +64,10 @@ export class NftController {
     @Body() creationRequest: CreateERC721CollectionRequest,
     @Query() query: ChainId,
   ): Promise<PopulatedTransaction> {
-    return await this.nftService.createERC721Collection(creationRequest,+query.chainId);
+    return await this.nftService.createERC721Collection(
+      creationRequest,
+      +query.chainId,
+    );
   }
 
   @ApiBadRequestResponse()
@@ -70,6 +76,6 @@ export class NftController {
     @Body() mintRequest: MintERC721Request,
     @Query() query: ChainId,
   ): Promise<PopulatedTransaction> {
-    return await this.nftService.mintERC721Token(mintRequest,+query.chainId);
+    return await this.nftService.mintERC721Token(mintRequest, +query.chainId);
   }
 }
