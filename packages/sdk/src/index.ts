@@ -1,13 +1,18 @@
-import { createERC1155Collection, createERC721Collection, getNfts, mintERC1155Token, mintERC721Token, transferNft } from "./nft"
+import { Config } from "./common/config"
+import { NftService } from "./nft/nft.service";
+import { ConfigParams } from "./types";
 
-const nft = {
-    getNfts,
-    transferNft,
-    createERC1155Collection,
-    createERC721Collection,
-    mintERC1155Token,
-    mintERC721Token
+function setup(config: ConfigParams)  {
+    Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
+    Config.ETHERSCAN_API_KEY  = config.etherscanApiKey!;
+    Config.INFURA_PROJECT_ID = config.infuraProjectId!;
+    Config.POCKET_NETWORK_APPLICATION_ID  = config.pocketNetworkApplicationID!;
+    Config.QUORUM = config.quorum!;
+    Config.SLOW_GAS_PRICE_MULTIPLIER = config.slowGasPriceMultiplier!;
+    Config.AVERAGE_GAS_PRICE_MULTIPLIER = config.averageGasPriceMultiplier!;
+    Config.FAST_GAS_PRICE_MULTIPLIER = config.fastGasPriceMultiplier!;
+    Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
 }
 
-export const sdk =  {nft}
 
+export const sdk =  { nft: NftService, setup}

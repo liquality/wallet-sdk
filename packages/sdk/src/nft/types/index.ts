@@ -1,3 +1,6 @@
+import {LiqERC1155, LiqERC721} from '../../../typechain-types'
+export type NftContract = LiqERC721 | LiqERC1155;
+export type NftInfo = { contract: NftContract; schema: NftType };
 export interface Nft {
     id: string;
     contract: {
@@ -52,17 +55,5 @@ export interface Nft {
     owner: string;
     recipient: string;  
     uri: string;
-  }
-
-  export interface ConfigParams {
-    alchemyApiKey?: string;
-    etherscanApiKey?: string;
-    infuraProjectId?: string; 
-    pocketNetworkApplicationID?:string; 
-    quorum?: number; 
-    slowGasPriceMultiplier?: number;
-    averageGasPriceMultiplier?: number;
-    fastGasPriceMultiplier?: number;
-    gasLimitMargin?: number;
   }
   
