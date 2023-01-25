@@ -58,7 +58,7 @@ export const auth = {
 
 
 
-    async initializeNewKey(tKey: ThresholdKey, verifierMap: Record<string, any>) {
+    async initNewKey(tKey: ThresholdKey, verifierMap: Record<string, any>) {
         try {
             let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
             const res = await tKey._initializeNewKey({ initializeModules: true });
@@ -69,7 +69,6 @@ export const auth = {
             } else {
                 console.log("You need to generate more shares to reconstruct your private key");
             }
-
             return {
                 tKey, loginResponse, tKeyDetails: details,
             }
@@ -96,11 +95,11 @@ export const auth = {
     },
 
 
-    async inputShareFromSecurityQuestions(tKey: ThresholdKey, password: string) {
+    async inputShareFromSecurityQuestions(tKey: ThresholdKey, password: string,) {
         console.log("Importing Share from Security Question", tKey, 'TKEY MODULES', tKey)
         if (password.length > 10 && tKey) {
             try {
-                console.log(tKey, 'TEEEEKEEEYß')
+                await tKey.initialize();
                 await (
                     tKey.modules.securityQuestions as SecurityQuestionsModule
                 ).inputShareFromSecurityQuestions(password);
@@ -114,10 +113,10 @@ export const auth = {
     },
 
 
-    async loginUsingLocalShare(tKey, directParams, verifierMap) {
+    async loginUsingLocalShare(tKey: ThresholdKey, directParams: DirectParams, verifierMap: Record<string, any>) {
         try {
-            console.log("Logging in");
-            await this.triggerSSOLogin(directParams, verifierMap);
+            console.log("Logging in", tKey, 'bee',);
+            await this.triggerSSOLogin(tKey, verifierMap);
             await tKey.initialize();
 
             console.log("Adding local webstorage share");

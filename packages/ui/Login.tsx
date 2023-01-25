@@ -15,7 +15,11 @@ export const Login: React.FC<Props> = (props) => {
   const [password, setPassword] = useState<string>("");
 
   const logInUsingGoogleSSO = async () => {
-    const response = await auth.initializeNewKey(tKey, props.verifierMap);
+    const response = await auth.loginUsingLocalShare(
+      tKey,
+      props.directParams,
+      props.verifierMap
+    );
     setLoginResponse(response);
   };
 
