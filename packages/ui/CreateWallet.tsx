@@ -37,7 +37,9 @@ export const CreateWallet: React.FC<Props> = (props) => {
       password
     );
     setNewPasswordShare(response.result);
-    setPasswordResponse(response.msg);
+    response.msg.startsWith("Error")
+      ? setErrorMsg(response.msg)
+      : setPasswordResponse(response.msg);
   };
 
   const _renderPasswordInput = () => {
