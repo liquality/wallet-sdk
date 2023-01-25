@@ -105,12 +105,13 @@ export const auth = {
 
     async loginUsingLocalShare(tKey: ThresholdKey, directParams: DirectParams, verifierMap: Record<string, any>) {
         try {
-            await this.triggerSSOLogin(tKey, verifierMap);
+            let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
             await tKey.initialize();
             const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
             await webStorageModule.inputShareFromWebStorage();
             const indexes = tKey.getCurrentShareIndexes();
             console.log("Total number of available shares: " + indexes.length, 'Shareinfo:', indexes);
+            return loginResponse
         } catch (error) {
             console.error(error, "caught");
         }

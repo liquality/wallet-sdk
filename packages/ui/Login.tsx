@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const Login: React.FC<Props> = (props) => {
-  const [loginResponse, setLoginResponse] = useState<any>({});
+  const [loginResponse, setLoginResponse] = useState<any>(null);
   const [tKey, setTKey] = useState<any>({});
 
   const [password, setPassword] = useState<string>("");
@@ -35,6 +35,27 @@ export const Login: React.FC<Props> = (props) => {
     };
     init();
   }, [loginResponse]);
+
+  const _renderLoggedInWalletDetails = () => {
+    return (
+      <div>
+        <h3 style={{ color: "green" }}>
+          Your wallet was logged in successfully!
+        </h3>
+        <p>
+          <b>Public Address:</b> <br></br>
+          {loginResponse.publicAddress}
+        </p>
+        <p>
+          <b>Private Key:</b> <br></br>
+          {loginResponse.privateKey}
+        </p>
+        <p>
+          <b>User email:</b> <br></br> {loginResponse.userInfo?.email}
+        </p>
+      </div>
+    );
+  };
 
   const _renderPasswordInput = () => {
     return (
@@ -69,6 +90,7 @@ export const Login: React.FC<Props> = (props) => {
       <h3>Liquality Login with Password</h3>
 
       {_renderPasswordInput()}
+      {loginResponse ? _renderLoggedInWalletDetails() : null}
     </div>
   );
 };
