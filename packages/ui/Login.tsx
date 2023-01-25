@@ -11,7 +11,6 @@ type Props = {
 export const Login: React.FC<Props> = (props) => {
   const [loginResponse, setLoginResponse] = useState<any>(null);
   const [tKey, setTKey] = useState<any>({});
-
   const [password, setPassword] = useState<string>("");
 
   const logInUsingGoogleSSO = async () => {
