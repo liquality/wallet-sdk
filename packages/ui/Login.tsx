@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth } from "sdk";
 import { DirectParams } from "sdk/src/types";
 
@@ -24,8 +24,7 @@ export const Login: React.FC<Props> = (props) => {
   };
 
   const logInUsingPassword = async () => {
-    console.log("GOT HERE AT LEST", tKey);
-    await auth.inputShareFromSecurityQuestions(tKey, password);
+    await auth.loginUsingPassword(tKey, password);
   };
 
   //Init tkey instance
@@ -50,18 +49,11 @@ export const Login: React.FC<Props> = (props) => {
             setPassword(e.target.value);
           }}
         />
-        <button
-          onClick={() =>
-            //Where I left of: What to do here since I cant access tKey init variable if im not logged in?
-            //Create a function for the sdk to just return the tkey instance passing in directParams & possibly verifierMap (last one prob not neccessary)
-            logInUsingPassword()
-          }
-        >
-          Login with password
+        <button onClick={() => logInUsingPassword()}>
+          Login & Recover with password
         </button>
         <br></br>
-        {/*      //Set success msg here
-         */}
+        {/* // TODO Set success msg here */}
       </div>
     );
   };

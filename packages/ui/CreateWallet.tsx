@@ -15,6 +15,7 @@ export const CreateWallet: React.FC<Props> = (props) => {
   const [password, setPassword] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [passwordResponse, setPasswordResponse] = useState<string>("");
+  const [newPasswordShare, setNewPasswordShare] = useState<any>({});
 
   React.useEffect(() => {
     const init = async () => {
@@ -35,7 +36,8 @@ export const CreateWallet: React.FC<Props> = (props) => {
       loginResponse.tKey,
       password
     );
-    setPasswordResponse(response);
+    setNewPasswordShare(response.result);
+    setPasswordResponse(response.msg);
   };
 
   const _renderPasswordInput = () => {

@@ -5,18 +5,14 @@ import TorusServiceProvider from "@tkey/service-provider-torus";
 import TorusStorageLayer from "@tkey/storage-layer-torus";
 import SecurityQuestionsModule from "@tkey/security-questions";
 import ShareTransferModule from "@tkey/share-transfer";
-import WebStorageModule, { WEB_STORAGE_MODULE_NAME } from "@tkey/web-storage";
+import WebStorageModule from "@tkey/web-storage";
 import { DirectParams } from "./types";
-
-
-
 
 
 export const auth = {
 
     async getTKeyDetails(tKey: ThresholdKey) {
         let details = tKey.getKeyDetails()
-        console.log("Tkey details", details);
         return details
     },
 
@@ -26,7 +22,7 @@ export const auth = {
         });
         // 2. Initializing tKey
         const webStorageModule = new WebStorageModule();
-        const securityQuestionsModule = new SecurityQuestionsModule();
+        const securityQuestionsModule = new SecurityQuestionsModule(true);
         const shareTransferModule = new ShareTransferModule();
         const storageLayer = new TorusStorageLayer({
             hostUrl: "https://metadata.tor.us",
@@ -42,17 +38,11 @@ export const auth = {
                 shareTransfer: shareTransferModule,
             },
         });
-        const init = async () => {
-            // Init Service Provider
-            await (tKey.serviceProvider as TorusServiceProvider).init({
-                skipSw: false,
-            });
-            try {
-            } catch (error) {
-                console.error(error, 'ERROR initing tkey serviceprovider');
-            }
-        };
-        await init()
+
+        await (tKey.serviceProvider as TorusServiceProvider).init({
+            skipSw: false,
+        });
+
         return tKey
     },
 
@@ -73,7 +63,7 @@ export const auth = {
                 tKey, loginResponse, tKeyDetails: details,
             }
         } catch (error) {
-            console.error(error, "ERROR calling triggerSSOLogin");
+            console.error(error, "Error calling triggerSSOLogin");
         }
 
     },
@@ -81,17 +71,17 @@ export const auth = {
 
     //This function generates a new share with password that user chooses
     async generateNewShareWithPassword(tKey: ThresholdKey, password: string) {
-        console.log(tKey, 'TKEY GENERETARED AND SENTs')
         if (password.length > 10) {
-            await (
+            const result = await (
                 tKey.modules.securityQuestions as SecurityQuestionsModule
             ).generateNewShareWithSecurityQuestions(password, "whats your password?");
             console.log("Successfully generated new share with password.");
+            return { result, msg: "Successfully set password share" }
         } else {
-            return "Error, password must be minimum 10 characters"
+            return { result: {}, msg: "Error, could not set password share, password needs to be mininum 10 chars" }
         }
-        await this.getTKeyDetails(tKey);
-        return "Successfully set password share"
+
+
     },
 
 
@@ -115,23 +105,36 @@ export const auth = {
 
     async loginUsingLocalShare(tKey: ThresholdKey, directParams: DirectParams, verifierMap: Record<string, any>) {
         try {
-            console.log("Logging in", tKey, 'bee',);
             await this.triggerSSOLogin(tKey, verifierMap);
             await tKey.initialize();
-
-            console.log("Adding local webstorage share");
             const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
             await webStorageModule.inputShareFromWebStorage();
-
             const indexes = tKey.getCurrentShareIndexes();
-            console.log(indexes);
-            console.log("Total number of available shares: " + indexes.length);
-            const reconstructedKey = await tKey.reconstructKey();
-            console.log("tkey: " + reconstructedKey.privKey.toString("hex"));
+            console.log("Total number of available shares: " + indexes.length, 'Shareinfo:', indexes);
         } catch (error) {
             console.error(error, "caught");
         }
     },
+
+    async loginUsingPassword(tKey: ThresholdKey, password: string) {
+        try {
+
+            await tKey.initialize();
+
+            //TODO: You need the password share to recover without social, this would be stored
+            // on game devs 'backend' or however they want to store it. For the purpose of this demo
+            // user needs to store it themselves
+            const securityQuestionsModule = tKey.modules["securityQuestions"] as SecurityQuestionsModule;
+            await securityQuestionsModule.inputShareFromSecurityQuestions(password);
+            const indexes = tKey.getCurrentShareIndexes();
+            console.log("Total number of available shares: " + indexes.length, 'Shareinfo:', indexes);
+
+        } catch (error) {
+            console.error(error, "Error logging in using password");
+        }
+    },
+
+
 
     async triggerSSOLogin(tKey: ThresholdKey, verifierMap: Record<string, any>) {
         try {
@@ -140,7 +143,6 @@ export const auth = {
             const jwtParams = {};
             const { typeOfLogin, clientId, verifier } = verifierMap.google;
 
-            console.log(verifierMap, 'VERIFIER MAP')
             // 3. Trigger Login ==> opens the popup
             const loginResponse = await (
                 tKey.serviceProvider as TorusServiceProvider
@@ -150,8 +152,7 @@ export const auth = {
                 clientId,
                 jwtParams,
             });
-            console.log(loginResponse, 'LOGIN RESP?')
-
+            console.log('Login response:', loginResponse)
             return loginResponse
 
             // setConsoleText(loginResponse);
@@ -163,4 +164,3 @@ export const auth = {
 
 };
 
-//export default auth
