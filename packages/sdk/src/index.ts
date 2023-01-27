@@ -1,3 +1,4 @@
+import { Account } from "./account";
 import { Config } from "./common/config"
 import { NftService } from "./nft/nft.service";
 import { ConfigParams } from "./types";
@@ -12,7 +13,8 @@ function setup(config: ConfigParams)  {
     Config.AVERAGE_GAS_PRICE_MULTIPLIER = config.averageGasPriceMultiplier!;
     Config.FAST_GAS_PRICE_MULTIPLIER = config.fastGasPriceMultiplier!;
     Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
+    Config.ADDRESS_GENERATION_COUNT = config.addressGenerationCount!;
 }
 
 
-export const sdk =  { nft: NftService, setup}
+export const sdk =  { nft: NftService, setup, account: Account}

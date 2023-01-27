@@ -64,5 +64,6 @@ export interface Nft {
     averageGasPriceMultiplier?: number;
     fastGasPriceMultiplier?: number;
     gasLimitMargin?: number;
+    addressGenerationCount?: number;
   }
   
