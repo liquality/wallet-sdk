@@ -1,12 +1,14 @@
 import { Config } from "./common/config"
 import { NftService } from "./nft/nft.service";
 import { ConfigParams } from "./types";
+export * from "./auth";
+export * from "./nft";
 
-function setup(config: ConfigParams)  {
+function setup(config: ConfigParams) {
     Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
-    Config.ETHERSCAN_API_KEY  = config.etherscanApiKey!;
+    Config.ETHERSCAN_API_KEY = config.etherscanApiKey!;
     Config.INFURA_PROJECT_ID = config.infuraProjectId!;
-    Config.POCKET_NETWORK_APPLICATION_ID  = config.pocketNetworkApplicationID!;
+    Config.POCKET_NETWORK_APPLICATION_ID = config.pocketNetworkApplicationID!;
     Config.QUORUM = config.quorum!;
     Config.SLOW_GAS_PRICE_MULTIPLIER = config.slowGasPriceMultiplier!;
     Config.AVERAGE_GAS_PRICE_MULTIPLIER = config.averageGasPriceMultiplier!;
@@ -15,4 +17,4 @@ function setup(config: ConfigParams)  {
 }
 
 
-export const sdk =  { nft: NftService, setup}
+export const sdk = { nft: NftService, setup }
