@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { auth } from "sdk";
+import { AuthService } from "sdk/src/auth/auth.service";
 import { DirectParams } from "sdk/src/types";
 
 type Props = {
@@ -16,10 +16,12 @@ export const CreateWallet: React.FC<Props> = (props) => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [passwordResponse, setPasswordResponse] = useState<string>("");
   const [newPasswordShare, setNewPasswordShare] = useState<any>({});
+  const authService = new AuthService();
 
   React.useEffect(() => {
     const init = async () => {
-      const tKeyResponse = await auth.init(directParams);
+      const tKeyResponse = await authService.init(directParams);
+      console.log();
       setTKey(tKeyResponse);
     };
 
@@ -27,12 +29,12 @@ export const CreateWallet: React.FC<Props> = (props) => {
   }, [loginResponse, passwordResponse]);
 
   const initializeNewKey = async () => {
-    const response = await auth.initNewKey(tKey, verifierMap);
+    const response = await authService.initNewKey(tKey, verifierMap);
     setLoginResponse(response);
   };
 
   const generatePassword = async (password: string) => {
-    let response = await auth.generateNewShareWithPassword(
+    let response = await authService.generateNewShareWithPassword(
       loginResponse.tKey,
       password
     );

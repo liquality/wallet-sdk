@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { auth } from "sdk";
+import { AuthService } from "sdk/src/auth/auth.service";
 import { DirectParams } from "sdk/src/types";
 
 type Props = {
@@ -12,9 +12,10 @@ export const Login: React.FC<Props> = (props) => {
   const [loginResponse, setLoginResponse] = useState<any>(null);
   const [tKey, setTKey] = useState<any>({});
   const [password, setPassword] = useState<string>("");
+  const authService = new AuthService();
 
   const logInUsingGoogleSSO = async () => {
-    const response = await auth.loginUsingLocalShare(
+    const response = await authService.loginUsingLocalShare(
       tKey,
       props.directParams,
       props.verifierMap
@@ -23,13 +24,13 @@ export const Login: React.FC<Props> = (props) => {
   };
 
   const logInUsingPassword = async () => {
-    await auth.loginUsingPassword(tKey, password);
+    await authService.loginUsingPassword(tKey, password);
   };
 
   //Init tkey instance
   React.useEffect(() => {
     const init = async () => {
-      const tKeyResponse = await auth.init(props.directParams);
+      const tKeyResponse = await authService.init(props.directParams);
       setTKey(tKeyResponse);
     };
     init();

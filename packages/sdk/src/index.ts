@@ -1,8 +1,9 @@
 import { Config } from "./common/config"
 import { NftService } from "./nft/nft.service";
+import { AuthService } from "./auth/auth.service";
+
 import { ConfigParams } from "./types";
-export * from "./auth";
-export * from "./nft";
+//export * from "./auth";
 
 function setup(config: ConfigParams) {
     Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
@@ -17,4 +18,4 @@ function setup(config: ConfigParams) {
 }
 
 
-export const sdk = { nft: NftService, setup }
+export const sdk = { nft: NftService, auth: AuthService, setup }
