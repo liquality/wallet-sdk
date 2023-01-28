@@ -28,8 +28,8 @@ export const CreateWallet: React.FC<Props> = (props) => {
     init();
   }, [loginResponse, passwordResponse]);
 
-  const initializeNewKey = async () => {
-    const response = await authService.initNewKey(tKey, verifierMap);
+  const createNewWallet = async () => {
+    const response = await authService.createWallet(tKey, verifierMap);
     setLoginResponse(response);
   };
 
@@ -93,7 +93,7 @@ export const CreateWallet: React.FC<Props> = (props) => {
   return (
     <div style={{ border: "1px solid black", padding: 10 }}>
       <h3>Liquality & tKey Create Wallet</h3>
-      <button onClick={initializeNewKey}>Create Wallet</button>
+      <button onClick={createNewWallet}>Create Wallet</button>
       {loginResponse.loginResponse ? _renderCreatedWalletDetails() : null}
       {loginResponse.loginResponse ? _renderPasswordInput() : null}
     </div>

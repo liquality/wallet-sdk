@@ -43,7 +43,7 @@ export class AuthService {
     return tKey
   }
 
-  public async initNewKey(tKey: ThresholdKey, verifierMap: Record<string, any>) {
+  public async createWallet(tKey: ThresholdKey, verifierMap: Record<string, any>) {
     try {
       let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
       const res = await tKey._initializeNewKey({ initializeModules: true });
