@@ -95,7 +95,7 @@ export class AuthService {
   }
 
 
-  public async loginUsingLocalShare(tKey: ThresholdKey, directParams: DirectParams, verifierMap: Record<string, any>) {
+  public async loginUsingSSO(tKey: ThresholdKey, verifierMap: Record<string, any>) {
     try {
       let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
       await tKey.initialize();

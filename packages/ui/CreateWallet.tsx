@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthService } from "sdk/src/auth/auth.service";
 import { DirectParams } from "sdk/src/types";
 
@@ -18,10 +18,9 @@ export const CreateWallet: React.FC<Props> = (props) => {
   const [newPasswordShare, setNewPasswordShare] = useState<any>({});
   const authService = new AuthService();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const init = async () => {
       const tKeyResponse = await authService.init(directParams);
-      console.log();
       setTKey(tKeyResponse);
     };
 
