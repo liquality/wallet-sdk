@@ -136,6 +136,7 @@ export class AuthService {
       const jwtParams = {};
       const { typeOfLogin, clientId, verifier } = verifierMap.google;
 
+
       // 3. Trigger Login ==> opens the popup
       const loginResponse = await (
         tKey.serviceProvider as TorusServiceProvider
