@@ -3,6 +3,7 @@ import { NftService } from "./nft/nft.service";
 import { AuthService } from "./auth/auth.service";
 
 import { ConfigParams } from "./types";
+import { ERC20 } from "./erc20/erc.service";
 //export * from "./auth";
 
 function setup(config: ConfigParams) {
@@ -18,4 +19,4 @@ function setup(config: ConfigParams) {
 }
 
 
-export const sdk = { nft: NftService, auth: AuthService, setup }
+export const sdk = { nft: NftService, erc20: ERC20, auth: AuthService, setup }
