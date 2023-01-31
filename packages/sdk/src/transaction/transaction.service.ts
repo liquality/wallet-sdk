@@ -1,6 +1,7 @@
 import { FeeData, Provider } from '@ethersproject/providers';
 import BigNumber from 'bignumber.js';
-import { BigNumber as EthersBigNumber, PopulatedTransaction } from 'ethers';
+import { BigNumber as EthersBigNumber, PopulatedTransaction, Wallet } from 'ethers';
+import { parseEther } from 'ethers/lib/utils';
 import { Config } from '../common/config';
 import { getChainProvider } from '../factory/chain-provider';
 import GasPriceMultipliers from './constants/gas-price-multipliers';
@@ -81,5 +82,24 @@ export abstract class TransactionService {
     return this.toEthersBigNumber(
       new BigNumber(base.toString()).times(multiplier),
     );
+  }
+
+  public static async transfer(
+    sender: string,
+    recipient: string,
+    amount: string,
+    chainId: number,
+    pk: string,
+  ): Promise<string> {
+
+   
+    const preparedTx = await TransactionService.prepareTransaction({
+      from: sender,
+      to: recipient,
+      value: parseEther(amount),
+      chainId,
+    }, chainId);
+
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
   }
 }

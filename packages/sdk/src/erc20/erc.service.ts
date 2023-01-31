@@ -1,6 +1,11 @@
 import { getAlchemyProvider } from "../factory/alchemy-provider";
 import BigNumber from 'bignumber.js';
-
+import { TransferERC20Request } from "./types";
+import { ERC20 as ERC20Contract, ERC20__factory } from "../../typechain-types";
+import { AddressZero } from '@ethersproject/constants';
+import { getChainProvider } from "../factory/chain-provider";
+import { TransactionService } from "../transaction/transaction.service";
+import { Wallet } from "ethers";
 export abstract class ERC20 {
 
   public static async listAccountTokens(address: string, chainID: number) {
@@ -60,5 +65,25 @@ export abstract class ERC20 {
         rawBalance: balance,
         formattedBalance,
       }; 
+  }
+
+  public static async transfer(
+    transferRequest: TransferERC20Request,
+    chainId: number,
+    pk: string,
+  ): Promise<string> {
+    const { contractAddress, owner, receiver, amount } =
+      transferRequest;
+    const contract: ERC20Contract = ERC20__factory.connect(AddressZero, getChainProvider(chainId)).attach(contractAddress);
+   
+    const tx = await contract.populateTransaction.transfer(receiver, amount);
+
+    const preparedTx = await TransactionService.prepareTransaction({
+      ...tx,
+      from: owner,
+      chainId,
+    }, chainId);
+
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
   }
 }
