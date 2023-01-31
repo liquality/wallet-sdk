@@ -26,16 +26,12 @@
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
-    "eslint": "^7.32.0",
-    "eslint-config-custom": "*",
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
     "process": "^0.11.10",
     "react-app-rewired": "^2.2.1",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
-    "tsconfig": "*",
-    "typescript": "^4.5.2",
     "url": "^0.11.0",
     "@types/hdkey": "^2.0.1"
 

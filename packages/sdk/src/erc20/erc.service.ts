@@ -37,4 +37,28 @@ export abstract class ERC20 {
 
     return accountTokens;
   }
+
+  public static async getBalance(contractAddress: string, ownerAddress: string, chainID: number) {
+    
+    const alchemyProvider = getAlchemyProvider(chainID);
+
+    const balance = (await alchemyProvider.core.getTokenBalances(ownerAddress, [contractAddress])).tokenBalances[0].tokenBalance;
+    
+      // Get metadata of token
+      const metadata = await alchemyProvider.core.getTokenMetadata(contractAddress);
+
+      // Compute token balance in human-readable format
+      let formattedBalance;
+      if(balance && metadata.decimals) {
+        formattedBalance = new BigNumber(balance).div(Math.pow(10, metadata.decimals));
+        formattedBalance = formattedBalance.toFixed(2);
+      }
+
+      return {
+        tokenName: metadata.name,
+        tokenSymbol: metadata.symbol,
+        rawBalance: balance,
+        formattedBalance,
+      }; 
+  }
 }
