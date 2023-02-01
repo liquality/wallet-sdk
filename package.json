@@ -1,5 +1,5 @@
 {
-  "name": "liquality",
+  "name": "wallet-api",
   "version": "1.0.0",
   "scripts": {
     "build": "turbo run build",
@@ -31,5 +31,8 @@
   "dependencies": {
     "crypto-browserify": "^3.12.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "packages/*"
+  ]
 }
