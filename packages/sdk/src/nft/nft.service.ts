@@ -69,11 +69,11 @@ export abstract class NftService {
 
     const preparedTx = await TransactionService.prepareTransaction({
       ...tx,
-      from: transferRequest.owner,
+      from: owner,
       chainId,
     }, chainId);
 
-    return (await new Wallet(pk).sendTransaction(preparedTx)).hash;
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
   }
 
   private static async cacheGet(contractAddress: string, chainID: number): Promise<NftInfo> {
@@ -116,7 +116,7 @@ export abstract class NftService {
       to: AddressZero,
     }, chainId);
 
-    return (await new Wallet(pk).sendTransaction(preparedTx)).hash;
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
   }
 
   public static async mintERC1155Token(
@@ -141,7 +141,7 @@ export abstract class NftService {
       chainId,
     }, chainId);
 
-    return (await new Wallet(pk).sendTransaction(preparedTx)).hash;
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
   }
 
   public static async createERC721Collection(
@@ -164,7 +164,7 @@ export abstract class NftService {
       to: AddressZero,
     }, chainId);
 
-    return (await new Wallet(pk).sendTransaction(preparedTx)).hash;
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
 
   }
 
@@ -184,6 +184,6 @@ export abstract class NftService {
       chainId,
     }, chainId);
 
-    return (await new Wallet(pk).sendTransaction(preparedTx)).hash;
+    return (await new Wallet(pk, getChainProvider(chainId)).sendTransaction(preparedTx)).hash;
   }
 }
