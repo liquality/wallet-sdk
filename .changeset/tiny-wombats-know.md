@@ -1,5 +1,0 @@
----
-"sdk": major
----
-
-First release
