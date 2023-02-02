@@ -17,8 +17,10 @@ build
 .DS_Store
 *.pem
 typechain
+typechain-types
 artifacts
 solidity-files-cache.json
+dist
 
 # debug
 npm-debug.log*
