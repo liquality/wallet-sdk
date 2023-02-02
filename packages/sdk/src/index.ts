@@ -3,8 +3,8 @@ import { NftService } from "./nft/nft.service";
 import { AuthService } from "./auth/auth.service";
 
 import { ConfigParams } from "./types";
-//export * from "./auth";
-
+export { AuthService } from './auth/auth.service';
+export { NftService } from "./nft/nft.service";
 function setup(config: ConfigParams) {
     Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
     Config.ETHERSCAN_API_KEY = config.etherscanApiKey!;
