@@ -1,5 +1,11 @@
 # sdk
 
+## 4.0.0
+
+### Major Changes
+
+- Fix type errors
+
 ## 3.0.0
 
 ### Major Changes
