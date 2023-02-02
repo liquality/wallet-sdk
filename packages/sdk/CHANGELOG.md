@@ -1,5 +1,11 @@
 # sdk
 
+## 3.0.0
+
+### Major Changes
+
+- Add export to individual modules
+
 ## 2.0.0
 
 ### Major Changes
