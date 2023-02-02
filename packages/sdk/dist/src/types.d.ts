@@ -58,12 +58,6 @@ export interface ConfigParams {
     fastGasPriceMultiplier?: number;
     gasLimitMargin?: number;
 }
-export type DirectParams = {
-    baseUrl: string;
-    enableLogging: boolean;
-    networkUrl: string;
-    network: TORUS_NETWORK_TYPE | undefined;
-};
 export type KeyDetails = {
     pubKey: any;
     requiredShares: number;
