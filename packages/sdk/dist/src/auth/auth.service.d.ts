@@ -1,6 +1,5 @@
 import ThresholdKey from "@tkey/default";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
-
 export declare class AuthService {
     getTKeyDetails(tKey: ThresholdKey): Promise<import("@tkey/common-types").KeyDetails>;
     init(directParams: CustomAuthArgs): Promise<ThresholdKey>;
