@@ -1,12 +1,14 @@
 /* {
   "compilerOptions": {
     "target": "es2017",
-    "module": "commonjs"
+    "module": "commonjs",
+    "resolveJsonModule": true,
   },
 
   "extends": "tsconfig/base.json",
   "include": ["src/"],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["dist", "build", "node_modules", ]
+  
 }
  */
 {
