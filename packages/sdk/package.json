@@ -1,13 +1,13 @@
 {
-  "name": "sdk",
-  "version": "0.0.0",
+  "name": "@liquality/wallet",
+  "version": "4.0.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "license": "MIT",
   "scripts": {
     "compile": "hardhat compile && hardhat typechain",
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "tsc",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "lint": "TIMING=1 eslint \"**/*.ts*\""
@@ -19,6 +19,11 @@
     "@typechain/hardhat": "^6.1.5",
     "@types/hdkey": "^2.0.1",
     "@types/lodash": "^4.14.191",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "hardhat": "^2.12.6",
+    "tsconfig": "*",
+    "typechain": "^8.1.1",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
@@ -28,13 +33,12 @@
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
     "process": "^0.11.10",
-    "react-app-rewired": "^2.2.1",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "tsconfig": "*",
     "typechain": "^8.1.1",
-    "typescript": "^4.5.2",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "@types/hdkey": "^2.0.1"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -84,5 +88,8 @@
     "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.5.4",
     "workbox-streams": "^6.5.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

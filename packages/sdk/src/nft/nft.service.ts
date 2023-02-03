@@ -1,5 +1,5 @@
 import { PopulatedTransaction } from '@ethersproject/contracts';
-import { CreateERC1155CollectionRequest, CreateERC721CollectionRequest, Nft, NftContract, NftInfo, NftType, TransferRequest } from './types';
+import { CreateERC1155CollectionRequest, CreateERC721CollectionRequest, Nft, NftInfo, NftType, TransferRequest } from './types';
 import { AddressZero } from '@ethersproject/constants';
 import { NftProvider } from './nft.provider';
 import { ethers, Wallet } from 'ethers';
@@ -84,7 +84,7 @@ export abstract class NftService {
     const nftType = await NftProvider.getNftType(contractAddress, chainID);
 
     if (nftType !== NftType.UNKNOWN) {
-      const contractFactory = nftType == NftType.ERC1155 ? LiqERC1155__factory  : LiqERC721__factory;
+      const contractFactory = nftType == NftType.ERC1155 ? LiqERC1155__factory : LiqERC721__factory;
       NftService.cache[contractAddress] = {
         contract: contractFactory.connect(
           AddressZero,
@@ -109,7 +109,7 @@ export abstract class NftService {
     );
     const deployTx = contractFactory.getDeployTransaction(uri);
 
-    const preparedTx  = await TransactionService.prepareTransaction({
+    const preparedTx = await TransactionService.prepareTransaction({
       data: deployTx.data!.toString(),
       from: creator,
       chainId,

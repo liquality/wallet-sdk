@@ -68,13 +68,7 @@ export interface ConfigParams {
 
 
 
-export type DirectParams = {
-    baseUrl: string,
-    enableLogging: boolean,
-    networkUrl:
-    string,
-    network: TORUS_NETWORK_TYPE | undefined,
-};
+
 
 export type KeyDetails = {
     pubKey: any;

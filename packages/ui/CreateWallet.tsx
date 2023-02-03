@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { AuthService } from "sdk/src/auth/auth.service";
-import { DirectParams } from "sdk/src/types";
+import type { CustomAuthArgs } from "@toruslabs/customauth";
 
 type Props = {
-  directParams: DirectParams;
+  directParams: CustomAuthArgs;
   verifierMap: Record<string, any>;
 };
 
