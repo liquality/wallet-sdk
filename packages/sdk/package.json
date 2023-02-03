@@ -6,9 +6,8 @@
   "license": "MIT",
   "scripts": {
     "compile": "hardhat compile && hardhat typechain",
-    "start": "react-app-rewired start",
     "build": "tsc",
-    "test": "react-app-rewired test",
+    "watch": "tsc -w",
     "eject": "react-scripts eject",
     "lint": "TIMING=1 eslint \"**/*.ts*\""
   },
