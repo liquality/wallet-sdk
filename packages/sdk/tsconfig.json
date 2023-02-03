@@ -1,4 +1,4 @@
-{
+/* {
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs"
@@ -7,4 +7,26 @@
   "extends": "tsconfig/base.json",
   "include": ["src/"],
   "exclude": ["dist", "build", "node_modules"]
+}
+ */
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "importHelpers": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "rootDir": ".",
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "package.json", "src/**/*.json"]
 }

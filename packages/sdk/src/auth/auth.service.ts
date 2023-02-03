@@ -4,7 +4,8 @@ import TorusStorageLayer from "@tkey/storage-layer-torus";
 import SecurityQuestionsModule from "@tkey/security-questions";
 import ShareTransferModule from "@tkey/share-transfer";
 import WebStorageModule from "@tkey/web-storage";
-import { DirectParams } from "../types";
+import type { CustomAuthArgs } from "@toruslabs/customauth";
+
 
 
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     return details
   }
 
-  public async init(directParams: DirectParams) {
+  public async init(directParams: CustomAuthArgs) {
     const serviceProvider = new TorusServiceProvider({
       customAuthArgs: directParams,
     });

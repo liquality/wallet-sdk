@@ -1,11 +1,7 @@
 {
   "name": "wallet-api",
-  "version": "0.0.0",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "version": "1.0.0",
+  "private": "true",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -36,5 +32,8 @@
   "dependencies": {
     "crypto-browserify": "^3.12.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "packages/*"
+  ]
 }
