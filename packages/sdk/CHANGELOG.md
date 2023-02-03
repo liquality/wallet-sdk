@@ -1,5 +1,11 @@
 # sdk
 
+## 4.0.1
+
+### Patch Changes
+
+- merged feat swap changes and cleaned up package.json, removed react-rewired
+
 ## 4.0.0
 
 ### Major Changes
