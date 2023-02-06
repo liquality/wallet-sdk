@@ -9,7 +9,7 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 ### Apps and Packages
 
 - `api`: a nestjs server
-- `web`: a [Next.js](https://nextjs.org/) app, can be used for demo
+- `react`: a creact-react-app, can be used for demo
 - `sdk`: a typescript library
 - `ui`: a React component library with Login component
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
@@ -31,7 +31,7 @@ To build all apps and packages, run the following command:
 
 ```
 cd my-turborepo
-npm run build
+yarn run build
 ```
 
 ### Develop
@@ -40,7 +40,7 @@ To develop all apps and packages, run the following command:
 
 ```
 cd my-turborepo
-npm run dev
+yarn run dev
 ```
 
 ### Remote Caching
