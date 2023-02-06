@@ -1,5 +1,11 @@
 # sdk
 
+## 4.0.2
+
+### Patch Changes
+
+- 487baa2: fix release error
+
 ## 4.0.1
 
 ### Patch Changes
