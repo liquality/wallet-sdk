@@ -3,7 +3,6 @@ const { getLoader, loaderByName } = require("@craco/craco");
 const webpack = require("webpack");
 
 const packages = [];
-console.log(__dirname, "DIIIIRNAAME");
 packages.push(path.join(__dirname, "../../packages/ui"));
 packages.push(path.join(__dirname, "../../packages/sdk")); //you can add as many as you need, but this gets slightly annoying
 
