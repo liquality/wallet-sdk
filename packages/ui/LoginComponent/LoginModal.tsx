@@ -43,7 +43,10 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
         <p className="modalOr">or</p>
 
         <p className="modalConnectWallet">Connect a Wallet</p>
-
+        <div className="modalRow">
+          <Button onClick={metamaskLogin}>MM</Button>{" "}
+          <Button onClick={metamaskLogin}>WC</Button>
+        </div>
         <p className="modalOr">Powered by [LOGO] Liquality</p>
         <p className="modalTerms">Terms & Conditions</p>
       </div>

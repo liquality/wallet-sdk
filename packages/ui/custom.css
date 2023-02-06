@@ -3,43 +3,23 @@
 
 .modal-content {
   transition: border-color 0.2s linear;
-
   background: #ffffff;
   padding: 2rem;
-  background-repeat: no-repeat;
-  background-size: 100% 3px;
-  box-shadow: none;
-  color: #000;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
   padding: 0.45rem 0;
   width: 100%;
   text-align: center;
-  color: #ffdd9e;
-}
-.closeButton {
-  color: white !important;
+  color: #000d35;
+  width: 406px;
+  height: 509px;
 }
 
 .modalTitle {
+  margin-top: 30px;
   color: #000d35;
   font-weight: 600;
-  -webkit-font-smoothing: antialiased;
-  font-size: 20px;
-  padding: 0.45 rem 0;
-  width: 100%;
-  text-align: center;
-  text-transform: uppercase;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 26px;
-}
-
-.modal-header {
-  color: #000d35;
-  font-weight: 900;
   -webkit-font-smoothing: antialiased;
   font-size: 20px;
   padding: 0.45 rem 0;
@@ -102,4 +82,10 @@
   text-decoration: underline;
 
   color: #878787;
+}
+
+.modalRow {
+  flex: 1;
+  flex-direction: row;
+  margin-bottom: 15px;
 }
