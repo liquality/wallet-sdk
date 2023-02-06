@@ -1,7 +1,7 @@
 import { Login, CreateWallet } from "ui";
 import { useState } from "react";
-import { NftService } from "sdk/src/nft/nft.service";
-import { Nft } from "sdk/src/nft/types";
+import { NftService } from "@liquality/wallet";
+import { Nft } from "@liquality/wallet";
 
 const verifierMap: Record<string, any> = {
   google: {
