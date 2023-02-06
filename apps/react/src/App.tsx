@@ -1,7 +1,8 @@
-import { Login, CreateWallet } from "ui";
+import { Login, CreateWallet, LoginModal } from "ui";
 import { useState } from "react";
 import { NftService } from "@liquality/wallet";
 import { Nft } from "@liquality/wallet";
+import Button from "react-bootstrap/Button";
 
 const verifierMap: Record<string, any> = {
   google: {
@@ -23,6 +24,8 @@ const directParams = {
 
 export default function Web() {
   const [address, setAddress] = useState<string>();
+  const [showLiqualityModal, setShowLiqualityModal] = useState(false);
+
   const [nfts, setNfts] = useState<Nft[] | null>([]);
 
   async function updateNfts() {
@@ -57,6 +60,19 @@ export default function Web() {
           ))}
         </div>
       )}
+
+      <br></br>
+      <br></br>
+      <br></br>
+      <Button onClick={() => setShowLiqualityModal(true)}>
+        Show Liq Modal
+      </Button>
+
+      <LoginModal
+        children={""}
+        show={showLiqualityModal}
+        onAction={setShowLiqualityModal}
+      ></LoginModal>
     </div>
   );
 }
