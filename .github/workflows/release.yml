@@ -58,7 +58,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && steps.changed-files-specific.outputs.any_changed == 'true' || steps.changed-files-specific.outputs.any_deleted == 'true'
         uses: changesets/action@v1
         with:
-          publish: yarn build-release
+          publish: yarn release
           commit: 'chore: entering version change mode'
           title: ':rocket: Release ${{ steps.date.outputs.date }} :rocket:'
           createGithubReleases: true
