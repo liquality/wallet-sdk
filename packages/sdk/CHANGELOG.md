@@ -1,5 +1,11 @@
 # sdk
 
+## 1.0.0
+
+### Major Changes
+
+- db20025: Implemented all initial SDK functions, cleaned up codebase and automate release
+
 ## 4.0.2
 
 ### Patch Changes
