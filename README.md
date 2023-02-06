@@ -9,7 +9,7 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 ### Apps and Packages
 
 - `api`: a nestjs server
-- `react`: a creact-react-app, can be used for demo
+- `react`: a create-react-app, can be used for demo
 - `sdk`: a typescript library
 - `ui`: a React component library with Login component
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
