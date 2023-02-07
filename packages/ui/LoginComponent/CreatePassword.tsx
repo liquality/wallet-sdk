@@ -16,6 +16,7 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const checkPasswordLength = (password: string) => {
     return password.length >= 8;
@@ -39,6 +40,10 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
     setConfirmPassword(e.target.value);
   };
 
+  const handleAcceptTermsChange = (e) => {
+    setAcceptTerms(e.target.checked);
+  };
+
   useEffect(() => {
     /*   const init = async () => {
       const tKeyResponse = await authService.init(directParams);
@@ -53,6 +58,9 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
     setLoading(false);
     setLoginResponse(response); */
   };
+
+  //check to see if password is the same within the two input boxes
+  const isPasswordMatch = password === confirmPassword;
 
   const renderInitialScreen = () => {
     return (
@@ -136,6 +144,35 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
             </svg>{" "}
             At least one upper case letter
           </div>
+        </div>
+
+        <div className="userInfoContainer">
+          <p className="userInfoText">
+            [application name] uses tKey to securely set-up and access your
+            in-game wallet with authentication factors. Keep your password safe.
+          </p>
+
+          <div
+            style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
+          >
+            {/*   <input type="checkbox" onChange={handleAcceptTermsChange} />
+            <label style={{ fontSize: "12px", marginLeft: "5px" }}>
+              Accept terms & conditions
+            </label> */}
+
+            <label className="container-checkbox modalOr">
+              I Agree to the <u>Terms & Conditions</u>
+              <input type="checkbox" onChange={handleAcceptTermsChange} />
+              <span className="checkmark"></span>
+            </label>
+          </div>
+          <button
+            disabled={!acceptTerms}
+            className="modalButtonSignIn"
+            style={{ marginTop: "10px" }}
+          >
+            Next
+          </button>
         </div>
 
         <p className="modalOr">Powered by [LOGO] Liquality</p>
