@@ -110,3 +110,54 @@
 .nextBtn {
   width: 100%;
 }
+
+.passwordInputBox {
+  background-color: transparent;
+  color: #000000;
+
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+
+  outline: none;
+  outline-style: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid #000000 1px;
+  padding: 3px;
+  margin: 15;
+  width: 80%;
+  padding-bottom: 10px;
+}
+
+.verifyPasswordContainer {
+  margin-top: 5%;
+  margin-left: 10%;
+  text-align: left;
+}
+
+.greyText {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+
+  color: #a8aeb7;
+}
+
+.greenText {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+  color: #00b43c;
+}
