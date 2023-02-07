@@ -1,9 +1,18 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
 
-interface ModalProps {}
+interface ModalProps {
+  setShowPasswordCreation: (params: boolean) => void;
+  setShowInitialScreen: (params: boolean) => void;
+}
 
 export const VerificationSuccess: React.FC<ModalProps> = (props) => {
-  const {} = props;
+  const { setShowPasswordCreation, setShowInitialScreen } = props;
+
+  const setNewScreenStates = () => {
+    setShowPasswordCreation(true);
+    setShowInitialScreen(false);
+  };
 
   const renderCheckmarkScreen = () => {
     return (
@@ -76,12 +85,19 @@ export const VerificationSuccess: React.FC<ModalProps> = (props) => {
             </svg>{" "}
             Authentication factor set
           </div>
-        </div>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
+          <br></br>
 
+          <Button
+            onClick={setNewScreenStates}
+            className="modalButtonSignIn nextBtn"
+          >
+            Next{" "}
+          </Button>
+        </div>
+
+        <br></br>
+        <br></br>
+        <br></br>
         <p className="modalOr">Powered by [LOGO] Liquality</p>
       </div>
     );

@@ -106,3 +106,7 @@
   display: inline-block;
   text-align: left;
 }
+
+.nextBtn {
+  width: 100%;
+}

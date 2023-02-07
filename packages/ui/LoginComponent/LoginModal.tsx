@@ -6,6 +6,7 @@ import { AuthService } from "@liquality/wallet";
 import Web3 from "web3";
 import { VerificationSuccess } from "./VerificationSuccess";
 import { SpinningLoader } from "./SpinningLoader";
+import { CreatePassword } from "./CreatePassword";
 
 interface ModalProps {
   showModal: boolean;
@@ -28,6 +29,9 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
 
   const [tKey, setTKey] = useState<any>({});
   const [loading, setLoading] = useState<any>(false);
+  const [showPasswordCreation, setShowPasswordCreation] =
+    useState<boolean>(false);
+  const [showInitialScreen, setShowInitialScreen] = useState<boolean>(true);
 
   const authService = new AuthService();
 
@@ -103,11 +107,30 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
     );
   };
 
+  console.log(
+    loginResponse,
+    "LOGINresponse",
+    showPasswordCreation,
+    "render password creation",
+    loginResponse && !showPasswordCreation
+  );
+
+  var whatToRender;
+  if (loginResponse && !showPasswordCreation) {
+    whatToRender = (
+      <VerificationSuccess
+        setShowPasswordCreation={setShowPasswordCreation}
+        setShowInitialScreen={setShowInitialScreen}
+      />
+    );
+  } else if (showPasswordCreation && !showInitialScreen) {
+    whatToRender = <CreatePassword />;
+  } else {
+    whatToRender = renderInitialScreen();
+  }
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)}>
-      <div className="modalContainer">
-        {loginResponse ? <VerificationSuccess /> : renderInitialScreen()}
-      </div>
+      <div className="modalContainer">{whatToRender}</div>
     </Modal>
   );
 };
