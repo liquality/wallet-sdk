@@ -25,6 +25,7 @@ const directParams = {
 export default function Web() {
   const [address, setAddress] = useState<string>();
   const [showLiqualityModal, setShowLiqualityModal] = useState(false);
+  const [loginResponse, setLoginResponse] = useState<any>({});
 
   const [nfts, setNfts] = useState<Nft[] | null>([]);
 
@@ -69,9 +70,12 @@ export default function Web() {
       </Button>
 
       <LoginModal
-        children={""}
-        show={showLiqualityModal}
-        onAction={setShowLiqualityModal}
+        showModal={showLiqualityModal}
+        setShowModal={setShowLiqualityModal}
+        directParams={directParams}
+        verifierMap={verifierMap}
+        loginResponse={loginResponse}
+        setLoginResponse={setLoginResponse}
       ></LoginModal>
     </div>
   );

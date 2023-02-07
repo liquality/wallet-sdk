@@ -89,3 +89,20 @@
   flex-direction: row;
   margin-bottom: 15px;
 }
+
+.verifiedLogin {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -1px;
+  margin-top: 15px;
+
+  color: #60657c;
+}
+
+.verifierContainer {
+  display: inline-block;
+  text-align: left;
+}
