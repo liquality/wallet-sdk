@@ -3,6 +3,8 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import "../custom.css";
 import { AuthService } from "@liquality/wallet";
+import Web3 from "web3";
+
 interface ModalProps {
   showModal: boolean;
   setShowModal: (params: boolean) => void;
@@ -40,15 +42,14 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
 
   const metamaskLogin = async () => {
     try {
-      const provider = "PROVIDER STRING HERE";
-      //TODO: install ethers in this package
-      const web3Provider = new ethers.providers.Web3Provider(provider!);
-      const signer = web3Provider.getSigner();
-      const gotAccount = await signer.getAddress();
-      const network = await web3Provider.getNetwork();
-      console.info(`EOA Address ${gotAccount}\nNetwork: ${network}`);
-      //this.provider = provider;
-      return provider;
+      const web3 = new Web3(Web3.givenProvider);
+      await window.ethereum.enable();
+      const accountFromMetaMask = await web3.eth.getAccounts();
+      //Some data manipulation as loginresponse expects a certain format
+      const defineLoginResponse = {
+        loginResponse: { publicAddress: accountFromMetaMask[0] },
+      };
+      setLoginResponse(defineLoginResponse);
     } catch (error) {
       console.error(error);
       throw error;
@@ -163,7 +164,6 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
       </div>
     );
   };
-  console.log(loginResponse, "LOGIN RESPONNNSEEE");
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)}>
       <div className="modalContainer">
