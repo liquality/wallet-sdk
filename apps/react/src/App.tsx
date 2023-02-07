@@ -25,7 +25,7 @@ const directParams = {
 export default function Web() {
   const [address, setAddress] = useState<string>();
   const [showLiqualityModal, setShowLiqualityModal] = useState(false);
-  const [loginResponse, setLoginResponse] = useState<any>({});
+  const [loginResponse, setLoginResponse] = useState<any>(null);
 
   const [nfts, setNfts] = useState<Nft[] | null>([]);
 
@@ -77,6 +77,13 @@ export default function Web() {
         loginResponse={loginResponse}
         setLoginResponse={setLoginResponse}
       ></LoginModal>
+
+      {loginResponse ? (
+        <p>
+          You signed in using login component!{" "}
+          <p>Public address: {loginResponse.loginResponse.publicAddress}</p>
+        </p>
+      ) : null}
     </div>
   );
 }

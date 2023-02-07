@@ -21,9 +21,8 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
     directParams,
     verifierMap,
   } = props;
-  //TODO: the setTkey and setLoginResponse should come from user props
-  const [tKey, setTKey] = useState<any>({});
 
+  const [tKey, setTKey] = useState<any>({});
   const authService = new AuthService();
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
       setTKey(tKeyResponse);
     };
     init();
-  }, []);
+  }, [loginResponse]);
 
   const createNewWallet = async () => {
     const response = await authService.createWallet(tKey, verifierMap);
@@ -164,7 +163,7 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
       </div>
     );
   };
-
+  console.log(loginResponse, "LOGIN RESPONNNSEEE");
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)}>
       <div className="modalContainer">
