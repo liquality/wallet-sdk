@@ -4,10 +4,12 @@ import "../custom.css";
 import { AuthService } from "@liquality/wallet";
 import { SpinningLoader } from "./SpinningLoader";
 
-interface ModalProps {}
+interface ModalProps {
+  setShowModal: (params: boolean) => void;
+}
 
 export const CreatePassword: React.FC<ModalProps> = (props) => {
-  const {} = props;
+  const { setShowModal } = props;
 
   const [tKey, setTKey] = useState<any>({});
   const [loading, setLoading] = useState<any>(false);
@@ -154,11 +156,6 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
           <div
             style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
           >
-            {/*   <input type="checkbox" onChange={handleAcceptTermsChange} />
-            <label style={{ fontSize: "12px", marginLeft: "5px" }}>
-              Accept terms & conditions
-            </label> */}
-
             <label className="container-checkbox modalOr">
               I Agree to the{" "}
               <a
@@ -173,15 +170,25 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
               <span className="checkmark"></span>
             </label>
           </div>
-          <button
-            disabled={!acceptTerms}
-            className={
-              acceptTerms ? "modalButtonAcceptTerms" : "modalButtonSignIn"
-            }
-            style={{ marginTop: "15px", marginBottom: 10 }}
-          >
-            Set-up & Continue
-          </button>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <button
+              disabled={!acceptTerms}
+              className={
+                acceptTerms ? "modalButtonAcceptTerms" : "modalButtonSignIn"
+              }
+              style={{ marginTop: "15px", marginBottom: 10, marginRight: 10 }}
+            >
+              Set-up & Continue
+            </button>
+            <div
+              onClick={() => {
+                setShowModal(false);
+              }}
+              className="cancelPointer"
+            >
+              Cancel
+            </div>
+          </div>
         </div>
 
         <p className="modalOr">Powered by [LOGO] Liquality</p>

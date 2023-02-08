@@ -32,21 +32,12 @@
   line-height: 26px;
 }
 
-.modalButtonSignIn {
-  border: 2px solid #d9d9d9;
-  border-radius: 30px;
-  background-color: white;
-  color: grey;
-  width: 60%;
-  height: 51px;
-}
-
 .modalButtonAcceptTerms {
   border: 2px solid #d9d9d9;
   border-radius: 30px;
   background-color: #d9d9d9;
   color: black;
-  width: 60%;
+  width: 70%;
   height: 51px;
 }
 
@@ -57,31 +48,40 @@
   color: black;
 }
 
-.modalButtonSignIn:hover {
-  border: 2px solid #d9d9d9;
-  border-radius: 30px;
-  background-color: white;
-  color: grey;
-}
-
-.modalButtonSignIn:active {
-  border: 2px solid #d9d9d9;
-  background-color: white;
-  color: grey;
-}
-
 .modalButtonAcceptTerms:active {
   border: 2px solid #d9d9d9;
   background-color: white;
   color: grey;
 }
-
-.modalButtonSignIn:focus {
+.modalButtonAcceptTerms:focus {
   outline: 0;
 }
 
-.modalButtonAcceptTerms:focus {
-  outline: 0;
+.modalButtonSignIn {
+  border: 2px solid #d9d9d9;
+  border-radius: 30px;
+  background-color: white;
+  color: grey;
+  width: 60%;
+  height: 51px;
+}
+
+.modalButtonSignIn:hover {
+  border: 2px solid #d9d9d9 !important;
+  background-color: white !important;
+  color: grey !important;
+}
+
+.modalButtonSignIn:active {
+  border: 2px solid #d9d9d9 !important;
+  background-color: white !important;
+  color: grey !important;
+}
+
+.modalButtonSignIn:focus {
+  border: 2px solid #d9d9d9 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
 }
 
 .modalConnectWallet {
@@ -104,7 +104,6 @@
   font-size: 15px;
   line-height: 18px;
   text-align: center;
-
   color: #000000;
 }
 
@@ -116,7 +115,6 @@
   line-height: 18px;
   text-align: center;
   text-decoration: underline;
-
   color: #878787;
 }
 
@@ -290,4 +288,10 @@
 
 .termsLink:hover {
   color: black;
+}
+
+.cancelPointer {
+  cursor: "pointer";
+  margin-top: 10%;
+  text-decoration: underline;
 }

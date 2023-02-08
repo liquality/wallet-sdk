@@ -114,30 +114,24 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
     );
   };
 
-  console.log(
-    loginResponse,
-    "LOGINresponse",
-    showPasswordCreation,
-    "render password creation",
-    loginResponse && !showPasswordCreation
-  );
+  const whatToRender = () => {
+    if (loginResponse && !showPasswordCreation) {
+      return (
+        <VerificationSuccess
+          setShowPasswordCreation={setShowPasswordCreation}
+          setShowInitialScreen={setShowInitialScreen}
+        />
+      );
+    } else if (showPasswordCreation && !showInitialScreen) {
+      return <CreatePassword setShowModal={setShowModal} />;
+    } else {
+      return renderInitialScreen();
+    }
+  };
 
-  var whatToRender;
-  if (loginResponse && !showPasswordCreation) {
-    whatToRender = (
-      <VerificationSuccess
-        setShowPasswordCreation={setShowPasswordCreation}
-        setShowInitialScreen={setShowInitialScreen}
-      />
-    );
-  } else if (showPasswordCreation && !showInitialScreen) {
-    whatToRender = <CreatePassword />;
-  } else {
-    whatToRender = renderInitialScreen();
-  }
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)}>
-      <div className="modalContainer">{whatToRender}</div>
+      <div className="modalContainer">{whatToRender()}</div>
     </Modal>
   );
 };
