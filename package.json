@@ -9,7 +9,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --no-cache --filter=docs^... && changeset publish --yes"
+    "release": "turbo run build --no-cache --filter=docs^... && changeset publish --yes",
+    "release-beta": "yarn workspaces foreach --from '@liquality/*' npm publish --tag beta --access public",
+    "build-prerelease": "yarn build --force && yarn release-beta",
+    "changeset-prerelease-enter": "changeset pre exit && changeset pre enter next"
     
   },
   "devDependencies": {

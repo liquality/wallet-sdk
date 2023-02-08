@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "api": "0.0.0",
+    "tkey-test": "0.1.0",
+    "eslint-config-custom": "0.0.0",
+    "@liquality/wallet-sdk": "0.0.0",
+    "tsconfig": "0.0.0",
+    "ui": "0.0.0"
+  },
+  "changesets": [
+    "big-olives-shake"
+  ]
+}

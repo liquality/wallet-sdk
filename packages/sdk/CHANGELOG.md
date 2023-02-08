@@ -1,7 +1,7 @@
-# @liquality/wallet
+# @liquality/wallet-sdk
 
-## 1.0.0
+## 1.0.0-next.0
 
 ### Major Changes
 
-- b56bf7d: First release
+- First Release
