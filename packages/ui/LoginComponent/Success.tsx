@@ -1,23 +1,15 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 
-interface ModalProps {
-  setShowPasswordCreation: (params: boolean) => void;
-  setShowInitialScreen: (params: boolean) => void;
-}
+interface ModalProps {}
 
-export const VerificationSuccess: React.FC<ModalProps> = (props) => {
-  const { setShowPasswordCreation, setShowInitialScreen } = props;
-
-  const setNewScreenStates = () => {
-    setShowPasswordCreation(true);
-    setShowInitialScreen(false);
-  };
+export const Success: React.FC<ModalProps> = (props) => {
+  const {} = props;
 
   const renderCheckmarkScreen = () => {
     return (
       <div>
-        <p className="modalTitle">Google Login</p>
+        <p className="modalTitle">WALLET SIGNED-IN</p>
         <br></br>
 
         <svg
@@ -69,7 +61,7 @@ export const VerificationSuccess: React.FC<ModalProps> = (props) => {
             >
               <path d="M2 9.5L10 18L20 1" stroke="black" stroke-width="3" />
             </svg>{" "}
-            Verified Login
+            Ready to play
           </div>
 
           <div className="modalRow verifiedLogin">
@@ -83,16 +75,22 @@ export const VerificationSuccess: React.FC<ModalProps> = (props) => {
             >
               <path d="M2 9.5L10 18L20 1" stroke="black" stroke-width="3" />
             </svg>{" "}
-            Authentication factor set
+            Buy crypto as you go
+          </div>
+          <div className="modalRow verifiedLogin">
+            {" "}
+            <svg
+              width="22"
+              height="21"
+              viewBox="0 0 22 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M2 9.5L10 18L20 1" stroke="black" stroke-width="3" />
+            </svg>{" "}
+            Get assets & NFTs
           </div>
           <br></br>
-
-          <Button
-            onClick={setNewScreenStates}
-            className="modalButtonSignIn nextBtn"
-          >
-            Next{" "}
-          </Button>
         </div>
 
         <br></br>
