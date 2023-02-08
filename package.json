@@ -9,8 +9,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --no-cache --filter=docs^... && changeset publish --yes"
-    
+    "release": "turbo run build --no-cache --filter=docs^... && changeset publish --yes",
+    "build-prerelease": "yarn release --tag beta --access public",
+    "changeset-prerelease-enter": "changeset pre exit && changeset pre enter next"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
