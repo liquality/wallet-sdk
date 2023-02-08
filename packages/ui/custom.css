@@ -41,11 +41,47 @@
   height: 51px;
 }
 
+.modalButtonAcceptTerms {
+  border: 2px solid #d9d9d9;
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  color: black;
+  width: 60%;
+  height: 51px;
+}
+
+.modalButtonAcceptTerms:hover {
+  border: 2px solid #d9d9d9;
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  color: black;
+}
+
 .modalButtonSignIn:hover {
   border: 2px solid #d9d9d9;
   border-radius: 30px;
   background-color: white;
   color: grey;
+}
+
+.modalButtonSignIn:active {
+  border: 2px solid #d9d9d9;
+  background-color: white;
+  color: grey;
+}
+
+.modalButtonAcceptTerms:active {
+  border: 2px solid #d9d9d9;
+  background-color: white;
+  color: grey;
+}
+
+.modalButtonSignIn:focus {
+  outline: 0;
+}
+
+.modalButtonAcceptTerms:focus {
+  outline: 0;
 }
 
 .modalConnectWallet {
@@ -81,6 +117,10 @@
   text-align: center;
   text-decoration: underline;
 
+  color: #878787;
+}
+
+.modalTerms:hover {
   color: #878787;
 }
 
@@ -175,6 +215,7 @@
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
+  margin-bottom: 40px;
   line-height: 15px;
 
   color: #000000;
@@ -241,3 +282,12 @@
 }
 
 /*End of checkbox style*/
+
+.termsLink {
+  color: black;
+  text-decoration: underline;
+}
+
+.termsLink:hover {
+  color: black;
+}

@@ -66,7 +66,6 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
     return (
       <div>
         <p className="modalTitle">Create Password</p>
-        <br></br>
 
         <input
           type="password"
@@ -151,7 +150,7 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
             [application name] uses tKey to securely set-up and access your
             in-game wallet with authentication factors. Keep your password safe.
           </p>
-
+          <div></div>
           <div
             style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
           >
@@ -161,22 +160,31 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
             </label> */}
 
             <label className="container-checkbox modalOr">
-              I Agree to the <u>Terms & Conditions</u>
+              I Agree to the{" "}
+              <a
+                className="termsLink"
+                rel="noreferrer"
+                target="_blank"
+                href="https://docs.liquality.io/"
+              >
+                Terms & Conditions
+              </a>
               <input type="checkbox" onChange={handleAcceptTermsChange} />
               <span className="checkmark"></span>
             </label>
           </div>
           <button
             disabled={!acceptTerms}
-            className="modalButtonSignIn"
-            style={{ marginTop: "10px" }}
+            className={
+              acceptTerms ? "modalButtonAcceptTerms" : "modalButtonSignIn"
+            }
+            style={{ marginTop: "15px", marginBottom: 10 }}
           >
-            Next
+            Set-up & Continue
           </button>
         </div>
 
         <p className="modalOr">Powered by [LOGO] Liquality</p>
-        <p className="modalTerms">Terms & Conditions</p>
       </div>
     );
   };

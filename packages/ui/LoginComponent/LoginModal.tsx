@@ -102,7 +102,14 @@ export const LoginModal: React.FC<ModalProps> = (props) => {
         )}
 
         <p className="modalOr">Powered by [LOGO] Liquality</p>
-        <p className="modalTerms">Terms & Conditions</p>
+        <a
+          rel="noreferrer"
+          target="_blank"
+          href="https://docs.liquality.io/"
+          className="modalTerms"
+        >
+          Terms & Conditions
+        </a>
       </div>
     );
   };
