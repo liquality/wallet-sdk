@@ -10,6 +10,7 @@
     "ui": "0.0.0"
   },
   "changesets": [
-    "brave-pillows-deny"
+    "brave-pillows-deny",
+    "spotty-geckos-pull"
   ]
 }
