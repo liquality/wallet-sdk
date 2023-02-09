@@ -1,0 +1,297 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+
+.modal-content {
+  transition: border-color 0.2s linear;
+  background: #ffffff;
+  padding: 2rem;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  padding: 0.45rem 0;
+  width: 100%;
+  text-align: center;
+  color: #000d35;
+  width: 406px;
+  height: 509px;
+}
+
+.modalTitle {
+  margin-top: 30px;
+  color: #000d35;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  font-size: 20px;
+  padding: 0.45 rem 0;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 26px;
+}
+
+.modalButtonAcceptTerms {
+  border: 2px solid #d9d9d9;
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  color: black;
+  width: 70%;
+  height: 51px;
+}
+
+.modalButtonAcceptTerms:hover {
+  border: 2px solid #d9d9d9;
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  color: black;
+}
+
+.modalButtonAcceptTerms:active {
+  border: 2px solid #d9d9d9;
+  background-color: white;
+  color: grey;
+}
+.modalButtonAcceptTerms:focus {
+  outline: 0;
+}
+
+.modalButtonSignIn {
+  border: 2px solid #d9d9d9;
+  border-radius: 30px;
+  background-color: white;
+  color: grey;
+  width: 60%;
+  height: 51px;
+}
+
+.modalButtonSignIn:hover {
+  border: 2px solid #d9d9d9 !important;
+  background-color: white !important;
+  color: grey !important;
+}
+
+.modalButtonSignIn:active {
+  border: 2px solid #d9d9d9 !important;
+  background-color: white !important;
+  color: grey !important;
+}
+
+.modalButtonSignIn:focus {
+  border: 2px solid #d9d9d9 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+.modalConnectWallet {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  /* or 173% */
+
+  text-align: center;
+
+  color: #000000;
+}
+
+.modalOr {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+  color: #000000;
+}
+
+.modalTerms {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  text-decoration: underline;
+  color: #878787;
+}
+
+.modalTerms:hover {
+  color: #878787;
+}
+
+.modalRow {
+  flex: 1;
+  flex-direction: row;
+  margin-bottom: 15px;
+}
+
+.verifiedLogin {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -1px;
+  margin-top: 15px;
+
+  color: #60657c;
+}
+
+.verifierContainer {
+  display: inline-block;
+  text-align: left;
+}
+
+.nextBtn {
+  width: 100%;
+}
+
+.passwordInputBox {
+  background-color: transparent;
+  color: #000000;
+
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+
+  outline: none;
+  outline-style: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid #000000 1px;
+  padding: 3px;
+  margin: 15;
+  width: 80%;
+  padding-bottom: 10px;
+}
+
+.verifyPasswordContainer {
+  margin-top: 5%;
+  margin-left: 10%;
+  text-align: left;
+}
+
+.userInfoContainer {
+  margin-top: 5%;
+  width: 80%;
+  margin-left: 10%;
+
+  text-align: left;
+}
+
+.greyText {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+
+  color: #a8aeb7;
+}
+
+.greenText {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+  color: #00b43c;
+}
+
+.userInfoText {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  margin-bottom: 15px;
+  line-height: 15px;
+
+  color: #000000;
+}
+
+/* The container */
+.container-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 4px;
+  cursor: pointer;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.container-checkbox .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+.container-checkbox:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.container-checkbox input:checked ~ .checkmark {
+  background-color: #067c1a;
+}
+
+.container-checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container-checkbox .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/*End of checkbox style*/
+
+.termsLink {
+  color: black;
+  text-decoration: underline;
+}
+
+.termsLink:hover {
+  color: black;
+}
+
+.cancelPointer {
+  cursor: "pointer";
+  margin-top: 10%;
+  text-decoration: underline;
+}

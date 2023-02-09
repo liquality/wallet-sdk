@@ -1,16 +1,18 @@
 import { Config } from "./common/config"
 import { NftService } from "./nft/nft.service";
 import { AuthService } from "./auth/auth.service";
-
 import { ConfigParams } from "./types";
-
 import { ERC20 } from "./erc20/erc.service";
 import { TransactionService } from "./transaction/transaction.service";
+
+//Export services
 export { AuthService } from './auth/auth.service';
 export { NftService } from "./nft/nft.service";
-export type { Nft } from "./nft/types";
-
 export { TransactionService } from "./transaction/transaction.service";
+
+
+//Export types
+export type { Nft } from "./nft/types";
 
 function setup(config: ConfigParams) {
     Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
