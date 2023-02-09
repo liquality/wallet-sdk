@@ -20,6 +20,12 @@ export type { IERC1155 } from "./@openzeppelin/contracts/token/ERC1155/IERC1155"
 export { IERC1155__factory } from "./factories/@openzeppelin/contracts/token/ERC1155/IERC1155__factory";
 export type { IERC1155Receiver } from "./@openzeppelin/contracts/token/ERC1155/IERC1155Receiver";
 export { IERC1155Receiver__factory } from "./factories/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver__factory";
+export type { ERC20 } from "./@openzeppelin/contracts/token/ERC20/ERC20";
+export { ERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/ERC20__factory";
+export type { IERC20Metadata } from "./@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata";
+export { IERC20Metadata__factory } from "./factories/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata__factory";
+export type { IERC20 } from "./@openzeppelin/contracts/token/ERC20/IERC20";
+export { IERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/IERC20__factory";
 export type { ERC721 } from "./@openzeppelin/contracts/token/ERC721/ERC721";
 export { ERC721__factory } from "./factories/@openzeppelin/contracts/token/ERC721/ERC721__factory";
 export type { ERC721Burnable } from "./@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable";
@@ -36,6 +42,8 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
+export type { LIQERC20 } from "./contracts/LIQ_ERC20.sol/LIQERC20";
+export { LIQERC20__factory } from "./factories/contracts/LIQ_ERC20.sol/LIQERC20__factory";
 export type { LiqERC1155 } from "./contracts/nft/LIQ_ERC1155.sol/LiqERC1155";
 export { LiqERC1155__factory } from "./factories/contracts/nft/LIQ_ERC1155.sol/LiqERC1155__factory";
 export type { LiqERC721 } from "./contracts/nft/LIQ_ERC721.sol/LiqERC721";

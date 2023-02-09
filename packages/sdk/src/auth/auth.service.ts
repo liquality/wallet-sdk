@@ -125,18 +125,12 @@ export class AuthService {
       const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
       await webStorageModule.inputShareFromWebStorage();
       const indexes = tKey.getCurrentShareIndexes();
-      const details = await this.getTKeyDetails(tKey);
-
       console.log(
         "Total number of available shares: " + indexes.length,
         "Shareinfo:",
         indexes
       );
-      return {
-        tKey,
-        loginResponse,
-        tKeyDetails: details,
-      };
+      return loginResponse;
     } catch (error) {
       console.error(error, "caught");
     }

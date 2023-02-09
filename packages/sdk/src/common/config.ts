@@ -1,7 +1,7 @@
 export class Config {
-  public static ALCHEMY_API_KEY: string; 
+  public static ALCHEMY_API_KEY: string;
   public static ETHERSCAN_API_KEY: string;
-  public static INFURA_PROJECT_ID: string;  
+  public static INFURA_PROJECT_ID: string;
   public static POCKET_NETWORK_APPLICATION_ID: string;
   public static QUORUM: number;
   public static SLOW_GAS_PRICE_MULTIPLIER: number;
