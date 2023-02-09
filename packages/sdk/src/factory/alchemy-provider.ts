@@ -1,7 +1,6 @@
-import { Alchemy, Network } from 'alchemy-sdk';
-import { CHAIN_IDS } from '../common/chain-ids';
-import { Config } from '../common/config';
-
+import { Alchemy, Network } from "alchemy-sdk";
+import { CHAIN_IDS } from "../common/chain-ids";
+import { Config } from "../common/config";
 
 const chainIdToNetwork = {
   [CHAIN_IDS.ETH_MAINNET]: Network.ETH_MAINNET,
@@ -16,19 +15,18 @@ const chainIdToNetwork = {
 };
 
 const alchemyProviderCache: Record<number, Alchemy> = {};
-export function getAlchemyProvider (chainId: number) {
-  if(alchemyProviderCache[chainId]) return alchemyProviderCache[chainId];
+export function getAlchemyProvider(chainId: number) {
+  if (alchemyProviderCache[chainId]) return alchemyProviderCache[chainId];
   return createAlchemyProvider(chainId);
-};
+}
 
-
-export function  createAlchemyProvider(chainId: number){
+export function createAlchemyProvider(chainId: number) {
   const settings = {
     apiKey: Config.ALCHEMY_API_KEY,
     network: chainIdToNetwork[chainId],
   };
-  const alchemyProvider =  new Alchemy(settings);
-  alchemyProviderCache[chainId] =  alchemyProvider;
+  const alchemyProvider = new Alchemy(settings);
+  alchemyProviderCache[chainId] = alchemyProvider;
 
   return alchemyProvider;
 }

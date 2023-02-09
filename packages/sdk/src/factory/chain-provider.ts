@@ -1,5 +1,5 @@
-import { ethers } from 'ethers';
-import { Config } from '../common/config';
+import { ethers } from "ethers";
+import { Config } from "../common/config";
 
 const chainProviderOptions = {
   ...(Config.ALCHEMY_API_KEY && { alchemy: Config.ALCHEMY_API_KEY }),
@@ -14,16 +14,17 @@ const chainProviderOptions = {
 };
 
 const chainProviderCache: Record<number, ethers.providers.BaseProvider> = {};
-export function getChainProvider (chainId: number) {
-  if(chainProviderCache[chainId]) return chainProviderCache[chainId];
+export function getChainProvider(chainId: number) {
+  if (chainProviderCache[chainId]) return chainProviderCache[chainId];
   return createChainProvider(chainId);
-};
+}
 
-
-export function  createChainProvider(chainId: number){
-  
-  const chainProvider = ethers.getDefaultProvider(chainId, chainProviderOptions);
-  chainProviderCache[chainId] =  chainProvider;
+export function createChainProvider(chainId: number) {
+  const chainProvider = ethers.getDefaultProvider(
+    chainId,
+    chainProviderOptions
+  );
+  chainProviderCache[chainId] = chainProvider;
 
   return chainProvider;
 }
