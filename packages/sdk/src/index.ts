@@ -11,6 +11,8 @@ export { NftService } from "./nft/nft.service";
 export type { Nft } from "./nft/types";
 
 export { TransactionService } from "./transaction/transaction.service";
+export { ERC20 } from "./erc20/erc.service";
+
 
 function setup(config: ConfigParams) {
     Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
