@@ -67,10 +67,12 @@ export class AuthService {
   //This function generates a new share with password that user chooses
   public async generateNewShareWithPassword(tKey: ThresholdKey, password: string) {
     if (password.length > 10) {
+      console.log('DO I GET HERE???')
       const result = await (
         tKey.modules.securityQuestions as SecurityQuestionsModule
       ).generateNewShareWithSecurityQuestions(password, "whats your password?");
       console.log("Successfully generated new share with password.");
+      console.log(result, 'RESULT FROM GENERATED PASS', await this.getTKeyDetails(tKey))
       return { result, msg: "Successfully set password share" }
     } else {
       return { result: {}, msg: "Error, could not set password share, password needs to be mininum 10 chars" }
@@ -86,6 +88,12 @@ export class AuthService {
         await (
           tKey.modules.securityQuestions as SecurityQuestionsModule
         ).inputShareFromSecurityQuestions(password);
+
+
+        /*      await (
+               tKey.modules.securityQuestions as SecurityQuestionsModule
+             ).decrypt(password); */
+
         console.log("Imported Share using the security question");
       } catch (error) {
         console.log('ERROOÖÖÖÖÖ ', error, 'TKEEY:', tKey)
@@ -110,23 +118,50 @@ export class AuthService {
     }
   }
 
-  public async loginUsingPassword(tKey: ThresholdKey, password: string) {
+
+
+  public async loginUsingPassword(tKey: ThresholdKey, verifierMap: Record<string, any>, password: string) {
     try {
-
+      let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
       await tKey.initialize();
+      //const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
+      //await webStorageModule.inputShareFromWebStorage();
 
-      //TODO: You need the password share to recover without social, this would be stored
-      // on game devs 'backend' or however they want to store it. For the purpose of this demo
-      // user needs to store it themselves
       const securityQuestionsModule = tKey.modules["securityQuestions"] as SecurityQuestionsModule;
       await securityQuestionsModule.inputShareFromSecurityQuestions(password);
       const indexes = tKey.getCurrentShareIndexes();
       console.log("Total number of available shares: " + indexes.length, 'Shareinfo:', indexes);
-
+      return loginResponse
     } catch (error) {
-      console.error(error, "Error logging in using password");
+      console.error(error, "caught");
     }
   }
+  /*   public async loginUsingPassword(tKey: ThresholdKey, password: string) {
+      console.log(tKey, 'BEFORE TRY')
+      try {
+  
+        console.log(tKey, '00000')
+  
+        await tKey.initialize();
+        console.log(tKey, '111111')
+  
+        const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
+        await webStorageModule.inputShareFromWebStorage();
+  
+        console.log(tKey, '22222')
+        //TODO: You need the password share to recover without social, this would be stored
+        // on game devs 'backend' or however they want to store it. For the purpose of this demo
+        // user needs to store it themselves
+              const securityQuestionsModule = tKey.modules["securityQuestions"] as SecurityQuestionsModule;
+             await securityQuestionsModule.inputShareFromSecurityQuestions(password);
+        const indexes = tKey.getCurrentShareIndexes();
+  
+        console.log("Total number of available shares: " + indexes.length, 'Shareinfo:', indexes);
+  
+      } catch (error) {
+        console.error(error, "Error logging in using password");
+      }
+    } */
 
 
 

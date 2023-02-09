@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { AuthService } from "@liquality/wallet";
+import { AuthService } from "@liquality/wallet-sdk";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
 
 type Props = {
@@ -32,11 +32,14 @@ export const CreateWallet: React.FC<Props> = (props) => {
     setLoginResponse(response);
   };
 
+  console.log("IN RENDER REACT");
   const generatePassword = async (password: string) => {
     let response = await authService.generateNewShareWithPassword(
       loginResponse.tKey,
       password
     );
+
+    console.log("response from REACT:", response);
     setNewPasswordShare(response.result);
     response.msg.startsWith("Error")
       ? setErrorMsg(response.msg)

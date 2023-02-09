@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { AuthService } from "@liquality/wallet";
+import { AuthService } from "@liquality/wallet-sdk";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
 
 type Props = {
@@ -19,8 +19,10 @@ export const Login: React.FC<Props> = (props) => {
     setLoginResponse(response);
   };
 
+  console.log(tKey, "FULL TKEEEY IN CLIENT");
+
   const logInUsingPassword = async () => {
-    await authService.loginUsingPassword(tKey, password);
+    await authService.loginUsingPassword(tKey, props.verifierMap, password);
   };
 
   //Init tkey instance
