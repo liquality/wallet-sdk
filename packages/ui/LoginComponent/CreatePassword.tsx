@@ -173,7 +173,7 @@ export const CreatePassword: React.FC<ModalProps> = (props) => {
 
         <div className="userInfoContainer">
           <p className="userInfoText">
-            [application name] uses tKey to securely set-up and access your
+            This application uses tKey to securely set-up and access your
             in-game wallet with authentication factors. Keep your password safe.
           </p>
           <p className="userInfoText" style={{ marginBottom: 0, color: "red" }}>
