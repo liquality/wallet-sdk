@@ -7,7 +7,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "yarn build -- force && changeset publish --yes",
+    "release": "yarn build --force && changeset publish --yes",
     "changeset-prerelease-enter": "changeset pre exit && changeset pre enter next"
   },
   "devDependencies": {
