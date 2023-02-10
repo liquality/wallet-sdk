@@ -1,8 +1,11 @@
 {
   "name": "@liquality/wallet-sdk",
   "version": "1.0.0-next.1",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
   "license": "MIT",
   "scripts": {
     "compile": "hardhat compile && hardhat typechain",
@@ -18,19 +21,19 @@
     "@typechain/hardhat": "^6.1.5",
     "@types/hdkey": "^2.0.1",
     "@types/lodash": "^4.14.191",
-    "eslint": "^7.32.0",
-    "eslint-config-custom": "*",
-    "hardhat": "^2.12.6",
-    "tsconfig": "*",
-    "typechain": "^8.1.1",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "hardhat": "^2.12.6",
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
+    "tsconfig": "*",
+    "typechain": "^8.1.1",
     "url": "^0.11.0"
   },
   "dependencies": {
