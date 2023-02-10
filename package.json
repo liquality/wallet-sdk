@@ -1,9 +1,7 @@
 {
-  "name": "wallet-api",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "turbo run build --no-cache",
+    "build": "turbo run build --no-cache --force",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
