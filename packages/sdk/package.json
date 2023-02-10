@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "compile": "hardhat compile && hardhat typechain",
-    "build": "tsc",
+    "build": "yarn compile && tsc",
     "watch": "tsc -w",
     "eject": "react-scripts eject",
     "lint": "TIMING=1 eslint \"**/*.ts*\""
