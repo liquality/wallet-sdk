@@ -1,13 +1,13 @@
 {
   "private": true,
   "scripts": {
-    "build": "turbo run build --no-cache --force",
+    "build": "turbo run build --no-cache",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "yarn build && changeset publish --yes",
+    "release": "yarn build --force && changeset publish --yes",
     "changeset-prerelease-enter": "changeset pre exit && changeset pre enter next"
   },
   "devDependencies": {
