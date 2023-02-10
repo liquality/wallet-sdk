@@ -5,7 +5,7 @@
     "api": "0.0.0",
     "tkey-test": "0.1.0",
     "eslint-config-custom": "0.0.0",
-    "@liquality/wallet-sdk": "0.0.0",
+    "@liquality/wallet-sdk": "1.0.0-next.1",
     "tsconfig": "0.0.0",
     "ui": "0.0.0"
   },
@@ -14,6 +14,7 @@
     "spotty-geckos-pull",
     "tasty-pens-shave",
     "funny-apricots-jam",
-    "forty-cows-pull"
+    "forty-cows-pull",
+    "young-feet-pump"
   ]
 }
