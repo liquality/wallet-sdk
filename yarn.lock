@@ -2373,6 +2373,57 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@liquality/wallet-sdk@*":
+  version "1.0.0-next.1"
+  dependencies:
+    "@testing-library/jest-dom" "^5.16.5"
+    "@testing-library/react" "^13.4.0"
+    "@testing-library/user-event" "^14.4.3"
+    "@tkey/chrome-storage" "^7.0.0"
+    "@tkey/common-types" "^7.0.0"
+    "@tkey/core" "^7.0.0"
+    "@tkey/default" "^7.0.0"
+    "@tkey/private-keys" "^7.0.0"
+    "@tkey/security-questions" "^7.0.0"
+    "@tkey/seed-phrase" "^7.0.0"
+    "@tkey/service-provider-base" "^7.0.0"
+    "@tkey/service-provider-torus" "^7.0.0"
+    "@tkey/share-serialization" "^7.0.0"
+    "@tkey/share-transfer" "^7.0.0"
+    "@tkey/storage-layer-torus" "^7.0.0"
+    "@tkey/web-storage" "^7.0.0"
+    "@types/jest" "^29.1.2"
+    "@types/node" "^18.8.5"
+    "@types/react" "^18.0.21"
+    "@types/react-dom" "^18.0.6"
+    alchemy-sdk "^2.2.4"
+    axios "^1.3.0"
+    bip32 "^3.1.0"
+    bip39 "^3.0.4"
+    bootstrap "^5.2.2"
+    ethers "^5.7.2"
+    hdkey "^2.0.1"
+    lodash "^4.17.21"
+    react "^18.2.0"
+    react-bootstrap "^2.5.0"
+    react-dom "^18.2.0"
+    react-scripts "5.0.1"
+    sweetalert "^2.1.2"
+    typescript "^4.8.4"
+    web-vitals "^3.0.3"
+    workbox-background-sync "^6.5.4"
+    workbox-broadcast-update "^6.5.4"
+    workbox-cacheable-response "^6.5.4"
+    workbox-core "^6.5.4"
+    workbox-expiration "^6.5.4"
+    workbox-google-analytics "^6.5.4"
+    workbox-navigation-preload "^6.5.4"
+    workbox-precaching "^6.5.4"
+    workbox-range-requests "^6.5.4"
+    workbox-routing "^6.5.4"
+    workbox-strategies "^6.5.4"
+    workbox-streams "^6.5.4"
+
 "@lukeed/csprng@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@lukeed/csprng/-/csprng-1.0.1.tgz#625e93a0edb2c830e3c52ce2d67b9d53377c6a66"
@@ -2448,9 +2499,9 @@
     webpack-node-externals "3.0.0"
 
 "@nestjs/common@^9.0.0":
-  version "9.3.7"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-9.3.7.tgz#83096f292ff16aadf1982077b44ad20cb2e7372d"
-  integrity sha512-7hwY2lIkmB+K8wPSP9T8auzKPSlO15Gzujl3/ZxLX9SBt6B7N5Niv5E+5AzOcfL+h2X8JGysMG620hiGbUsT9A==
+  version "9.3.8"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-9.3.8.tgz#7cc58ede3922b7b52c8f1615ac1ee051907cb03b"
+  integrity sha512-CM2+pSDvOrEXETCYciXQPYP9iCral3zu6GHbQkP1PKyyZDtvVsRNoVJ/zVFdmEUwsqvsV75X1VvyXt5w4OA1mg==
   dependencies:
     uid "2.0.1"
     iterare "1.2.1"
@@ -2467,9 +2518,9 @@
     uuid "9.0.0"
 
 "@nestjs/core@^9.0.0":
-  version "9.3.7"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-9.3.7.tgz#381856108cfbf69ec37dc8a77ec38ebf690815f3"
-  integrity sha512-FXGVivZiujZl1aJF6jdPpg1XnLKp7kDhVGhWhJtnpv2IW/cz/YQHD2uMz/o+GZ9TCZxsGlxg79jbcuJITG11iQ==
+  version "9.3.8"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-9.3.8.tgz#7a0bccfdfc93cc8c7134409c9523a7ce6b0b21ec"
+  integrity sha512-LtKMF7qzlSN+B4lItxHc/r9IJTSgURZAT5LqMtZynmYDpIkkiG7UrKKx/jAolUF41SGkKXzC6Lh+yralZ97i5A==
   dependencies:
     uid "2.0.1"
     "@nuxtjs/opencollective" "0.3.2"
@@ -2484,9 +2535,9 @@
   integrity sha512-3dHxLXs3M0GPiriAcCFFJQHoDFUuzTD5w6JDhE7TyfT89YKpe6tcCCIqOZWdXmt9AZjjK30RkHRSFF+QEnWFQg==
 
 "@nestjs/platform-express@^9.0.0":
-  version "9.3.7"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.3.7.tgz#c1677d2e4ff2d6c8d57c46b3a8c745351bc9fd14"
-  integrity sha512-/Qa3lXsDg66T4/eBLUWOriPuk+oYBRcEMbQ0FqNXpuxHNO0CepOTMjw5zq1ewfusAhAmasadjBGQFbXNX1u+Fw==
+  version "9.3.8"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.3.8.tgz#6f8166b8b3efe99c8a786bb0723ceaf4ce87d584"
+  integrity sha512-VY0tZbMPXyLypIm1FwpFC+xv0DR0RWx+M4baD9JiLmh+jdojm/blfzoFqVMRoZ33F9Q3iUjrQfSJOfgbbTiv5g==
   dependencies:
     body-parser "1.20.1"
     cors "2.8.5"
@@ -2517,9 +2568,9 @@
     swagger-ui-dist "4.15.5"
 
 "@nestjs/testing@^9.0.0":
-  version "9.3.7"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.3.7.tgz#2b1c4cec9633fdc6bc044a8d9a5512e0911e24b9"
-  integrity sha512-tNJuNYfDXMJzTgQXRwnQtLdd7PIIqrSsZ//TP/wnqPnbUpTkWMCSK5exWfPWvdyS8P3Fy2wy5hNj8Rvp9+KvYw==
+  version "9.3.8"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.3.8.tgz#4f2d96dd5b6fadcd64075d68c870294d324b58eb"
+  integrity sha512-QyGOfrEOWbT8mi7ruYnh/taKuHDv4caAyf4WZ1YKkGn4tCeTKKNXSvV/y+NoO5o9Li/sLiq9B8EmleB1fxGajw==
   dependencies:
     tslib "2.5.0"
 
