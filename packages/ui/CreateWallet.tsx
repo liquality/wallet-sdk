@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { AuthService } from "@liquality/wallet";
+import { AuthService } from "@liquality/wallet-sdk";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
 
 type Props = {

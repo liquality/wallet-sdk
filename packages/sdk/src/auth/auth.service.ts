@@ -191,4 +191,8 @@ export class AuthService {
       console.log(error, "GOT IN CATCH SSO");
     }
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5a4379e704e150ff4f71aaa54f3751180aebf528
