@@ -115,8 +115,6 @@ export class AuthService {
     }
   }
 
-
-
   public async loginUsingSSO(
     tKey: ThresholdKey,
     verifierMap: Record<string, any>
@@ -128,6 +126,7 @@ export class AuthService {
       await webStorageModule.inputShareFromWebStorage();
       const indexes = tKey.getCurrentShareIndexes();
       const details = await this.getTKeyDetails(tKey);
+
       console.log(
         "Total number of available shares: " + indexes.length,
         "Shareinfo:",
