@@ -107,8 +107,8 @@ export type LoginResult = {
 }
 
 export type AccountToken = {
-  tokenName: string
-  tokenSymbol: string
-  rawBalance: string
+  tokenName: string | null
+  tokenSymbol: string | null
+  rawBalance: string | null
   formattedBalance: string | undefined
 }

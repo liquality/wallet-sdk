@@ -8,7 +8,7 @@ import {
 import { parseEther } from "ethers/lib/utils";
 import { Config } from "../common/config";
 import { getChainProvider } from "../factory/chain-provider";
-import GasPriceMultipliers from "./constants/gas-price-multipliers";
+import { gasMultiplier } from "./constants/gas-price-multipliers";
 import TransactionSpeed from "./types/transaction-speed";
 
 export abstract class TransactionService {
@@ -38,16 +38,16 @@ export abstract class TransactionService {
     if (fees.maxFeePerGas) {
       extractedFees.maxFeePerGas = this.calculateFee(
         fees.maxFeePerGas,
-        GasPriceMultipliers[speed]
+        gasMultiplier(speed)
       );
       extractedFees.maxPriorityFeePerGas = this.calculateFee(
         fees.maxPriorityFeePerGas!,
-        GasPriceMultipliers[speed]
+        gasMultiplier(speed)
       );
     } else {
       extractedFees.gasPrice = this.calculateFee(
         fees.gasPrice!,
-        GasPriceMultipliers[speed]
+        gasMultiplier(speed)
       );
     }
 
