@@ -34,13 +34,11 @@ export interface TransferRequest {
 
 export interface CreateERC1155CollectionRequest {
   uri: string;
-  creator: string;
 }
 
 export interface CreateERC721CollectionRequest {
   tokenName: string;
   tokenSymbol: string;
-  creator: string;
 }
 
 export interface MintERC1155Request {
