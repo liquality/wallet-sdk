@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 1.0.0-next.3
+
+### Patch Changes
+
+- 91e9b9f: Add return types to auth service functions and erc20 service functions
+
 ## 1.0.0-next.2
 
 ### Major Changes
