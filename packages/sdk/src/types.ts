@@ -105,3 +105,10 @@ export type LoginResult = {
   loginResponse: TorusLoginResponse,
   tKeyDetails: KeyDetails
 }
+
+export type AccountToken = {
+  tokenName: string
+  tokenSymbol: string
+  rawBalance: string
+  formattedBalance: string | undefined
+}
