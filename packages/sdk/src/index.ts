@@ -4,14 +4,14 @@ import { AuthService } from "./auth/auth.service";
 
 import { ConfigParams } from "./types";
 
-import { ERC20 } from "./erc20/erc.service";
+import { ERC20Service } from "./erc20/erc.service";
 import { TransactionService } from "./transaction/transaction.service";
 export { AuthService } from "./auth/auth.service";
 export { NftService } from "./nft/nft.service";
 export type { Nft } from "./nft/types";
 
 export { TransactionService } from "./transaction/transaction.service";
-export { ERC20 } from "./erc20/erc.service";
+export { ERC20Service } from "./erc20/erc.service";
 
 
 function setup(config: ConfigParams) {
@@ -28,7 +28,7 @@ function setup(config: ConfigParams) {
 
 export const sdk = {
   nft: NftService,
-  erc20: ERC20,
+  erc20: ERC20Service,
   auth: AuthService,
   transferEther: TransactionService.transfer,
   setup,
