@@ -2,6 +2,8 @@ import { PopulatedTransaction } from "@ethersproject/contracts";
 import {
   CreateERC1155CollectionRequest,
   CreateERC721CollectionRequest,
+  MintERC1155Request,
+  MintERC721Request,
   Nft,
   NftInfo,
   NftType,
@@ -18,7 +20,6 @@ import {
 } from "../../typechain-types";
 import { TransactionService } from "../transaction/transaction.service";
 import { getChainProvider } from "../factory/chain-provider";
-import { MintERC1155Request, MintERC721Request } from "../types";
 
 export abstract class NftService {
   private static cache: Record<string, NftInfo> = {};
