@@ -1,3 +1,7 @@
+import ThresholdKey from "@tkey/default";
+import type { TorusLoginResponse } from "@toruslabs/customauth";
+
+
 export interface Nft {
   id: string;
   contract: {
@@ -94,3 +98,10 @@ export declare const NETWORK_MAP: {
 };
 export type TORUS_NETWORK_TYPE =
   (typeof TORUS_NETWORK)[keyof typeof TORUS_NETWORK];
+
+
+export type LoginResult = {
+  tKey: ThresholdKey,
+  loginResponse: TorusLoginResponse,
+  tKeyDetails: KeyDetails
+}

@@ -5,14 +5,16 @@ import SecurityQuestionsModule from "@tkey/security-questions";
 import ShareTransferModule from "@tkey/share-transfer";
 import WebStorageModule from "@tkey/web-storage";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
+import { LoginResult } from "src/types";
+import { KeyDetails } from "@tkey/common-types";
 
 export class AuthService {
-  public async getTKeyDetails(tKey: ThresholdKey) {
+  public async getTKeyDetails(tKey: ThresholdKey): Promise<KeyDetails> {
     let details = tKey.getKeyDetails();
     return details;
   }
 
-  public async init(directParams: CustomAuthArgs) {
+  public async init(directParams: CustomAuthArgs): Promise<ThresholdKey> {
     const serviceProvider = new TorusServiceProvider({
       customAuthArgs: directParams,
     });
@@ -23,7 +25,6 @@ export class AuthService {
     const storageLayer = new TorusStorageLayer({
       hostUrl: "https://metadata.tor.us",
     });
-
     // Creating the ThresholdKey instance
     const tKey = new ThresholdKey({
       serviceProvider: serviceProvider,
@@ -34,7 +35,6 @@ export class AuthService {
         shareTransfer: shareTransferModule,
       },
     });
-
     await (tKey.serviceProvider as TorusServiceProvider).init({
       skipSw: false,
     });
@@ -45,29 +45,22 @@ export class AuthService {
   public async createWallet(
     tKey: ThresholdKey,
     verifierMap: Record<string, any>
-  ) {
+  ): Promise<LoginResult | null> {
     try {
       let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
       const res = await tKey._initializeNewKey({ initializeModules: true });
-      console.log("response from _initializeNewKey", res);
       const details = await this.getTKeyDetails(tKey);
-      if (details.requiredShares <= 0) {
-        console.log(
-          "All shares are present, you can reconstruct your private key and do operations on the tKey",
-          tKey.getKeyDetails()
-        );
-      } else {
-        console.log(
-          "You need to generate more shares to reconstruct your private key"
-        );
-      }
-      return {
+      const result = {
         tKey,
         loginResponse,
         tKeyDetails: details,
-      };
+      } as LoginResult
+
+      return result
+
     } catch (error) {
       console.error(error, "Error calling triggerSSOLogin");
+      return null
     }
   }
 
@@ -79,8 +72,7 @@ export class AuthService {
     if (password.length > 10) {
       const result = await (
         tKey.modules.securityQuestions as SecurityQuestionsModule
-      ).generateNewShareWithSecurityQuestions(password, "whats your password?");
-      console.log("Successfully generated new share with password.");
+      ).generateNewShareWithSecurityQuestions(password, "What is your password?");
       return { result, msg: "Successfully set password share" };
     } else {
       return {
@@ -94,21 +86,14 @@ export class AuthService {
     tKey: ThresholdKey,
     password: string
   ) {
-    console.log(
-      "Importing Share from Security Question",
-      tKey,
-      "TKEY MODULES",
-      tKey
-    );
     if (password.length > 10 && tKey) {
       try {
         await tKey.initialize();
         await (
           tKey.modules.securityQuestions as SecurityQuestionsModule
         ).inputShareFromSecurityQuestions(password);
-        console.log("Imported Share using the security question");
       } catch (error) {
-        console.log("ERROOÖÖÖÖÖ ", error, "TKEEY:", tKey);
+        console.log(error, 'Error in inputShareFromSecurityQuestions');
       }
     } else {
       console.log("Error", "Password must be > 10 characters", "error");
@@ -118,7 +103,7 @@ export class AuthService {
   public async loginUsingSSO(
     tKey: ThresholdKey,
     verifierMap: Record<string, any>
-  ) {
+  ): Promise<LoginResult | null> {
     try {
       let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
       await tKey.initialize();
@@ -126,22 +111,19 @@ export class AuthService {
       await webStorageModule.inputShareFromWebStorage();
       const indexes = tKey.getCurrentShareIndexes();
       const details = await this.getTKeyDetails(tKey);
-
-      console.log(
-        "Total number of available shares: " + indexes.length,
-        "Shareinfo:",
-        indexes
-      );
-      return {
+      const result = {
         tKey,
         loginResponse,
         tKeyDetails: details,
-      };
+      } as LoginResult
+      return result
     } catch (error) {
-      console.error(error, "caught");
+      console.error(error, "Error in loginUsingSSO");
+      return null
     }
   }
 
+  //TODO: This function is not finished, still looking into if this is even possible
   public async loginUsingPassword(tKey: ThresholdKey, password: string) {
     try {
       await tKey.initialize();
@@ -153,12 +135,6 @@ export class AuthService {
         "securityQuestions"
       ] as SecurityQuestionsModule;
       await securityQuestionsModule.inputShareFromSecurityQuestions(password);
-      const indexes = tKey.getCurrentShareIndexes();
-      console.log(
-        "Total number of available shares: " + indexes.length,
-        "Shareinfo:",
-        indexes
-      );
     } catch (error) {
       console.error(error, "Error logging in using password");
     }
@@ -173,7 +149,6 @@ export class AuthService {
       //Not needed for google
       const jwtParams = {};
       const { typeOfLogin, clientId, verifier } = verifierMap.google;
-
       // 3. Trigger Login ==> opens the popup
       const loginResponse = await (
         tKey.serviceProvider as TorusServiceProvider
@@ -183,16 +158,9 @@ export class AuthService {
         clientId,
         jwtParams,
       });
-      console.log("Login response:", loginResponse);
       return loginResponse;
-
-      // setConsoleText(loginResponse);
     } catch (error) {
       console.log(error, "GOT IN CATCH SSO");
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5a4379e704e150ff4f71aaa54f3751180aebf528
