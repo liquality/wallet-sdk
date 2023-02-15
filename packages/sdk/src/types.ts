@@ -1,13 +1,5 @@
 import ThresholdKey from "@tkey/default";
 import type { TorusLoginResponse } from "@toruslabs/customauth";
-
-export interface TransferRequest {
-  contractAddress: string;
-  owner: string;
-  receiver: string;
-  tokenIDs: string[];
-  amounts?: number[];
-}
 export interface ConfigParams {
   alchemyApiKey?: string;
   etherscanApiKey?: string;
