@@ -6,8 +6,11 @@ import { AddressZero } from "@ethersproject/constants";
 import { getChainProvider } from "../factory/chain-provider";
 import { TransactionService } from "../transaction/transaction.service";
 import { Wallet } from "ethers";
+import { AccountToken } from "src/types";
+
+
 export abstract class ERC20Service {
-  public static async listAccountTokens(address: string, chainID: number) {
+  public static async listAccountTokens(address: string, chainID: number): Promise<AccountToken[]> {
     const alchemyProvider = getAlchemyProvider(chainID);
 
     const balances = await alchemyProvider.core.getTokenBalances(address);
