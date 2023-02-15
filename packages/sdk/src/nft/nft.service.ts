@@ -127,31 +127,19 @@ export abstract class NftService {
   }
 
   public static async createERC1155Collection(
-    { uri, creator }: CreateERC1155CollectionRequest,
+    { uri }: CreateERC1155CollectionRequest,
     chainId: number,
     pk: string
   ): Promise<string> {
     const contractFactory = new ethers.ContractFactory(
       LiqERC1155__factory.abi,
-      LiqERC1155__factory.bytecode
+      LiqERC1155__factory.bytecode,
+      new Wallet(pk, getChainProvider(chainId))
     );
-    const deployTx = contractFactory.getDeployTransaction(uri);
-
-    const preparedTx = await TransactionService.prepareTransaction(
-      {
-        data: deployTx.data!.toString(),
-        from: creator,
-        chainId,
-        to: AddressZero,
-      },
-      chainId
-    );
-
-    return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
-        preparedTx
-      )
-    ).hash;
+    
+    return (await contractFactory.deploy(
+      uri,
+    )).deployTransaction.hash;
   }
 
   public static async mintERC1155Token(
@@ -188,34 +176,20 @@ export abstract class NftService {
   }
 
   public static async createERC721Collection(
-    { tokenName, tokenSymbol, creator }: CreateERC721CollectionRequest,
+    { tokenName, tokenSymbol }: CreateERC721CollectionRequest,
     chainId: number,
     pk: string
   ): Promise<string> {
     const contractFactory = new ethers.ContractFactory(
       LiqERC721__factory.abi,
-      LiqERC721__factory.bytecode
+      LiqERC721__factory.bytecode,
+      new Wallet(pk, getChainProvider(chainId))
     );
-    const deployTx = contractFactory.getDeployTransaction(
+    
+    return (await contractFactory.deploy(
       tokenName,
       tokenSymbol
-    );
-
-    const preparedTx = await TransactionService.prepareTransaction(
-      {
-        data: deployTx.data!.toString(),
-        from: creator,
-        chainId,
-        to: AddressZero,
-      },
-      chainId
-    );
-
-    return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
-        preparedTx
-      )
-    ).hash;
+    )).deployTransaction.hash;
   }
 
   public static async mintERC721Token(
