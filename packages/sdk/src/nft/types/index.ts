@@ -25,7 +25,6 @@ export enum NftType {
 
 export interface TransferRequest {
   contractAddress: string;
-  owner: string;
   receiver: string;
   tokenIDs: string[];
   amounts?: number[];
@@ -42,7 +41,6 @@ export interface CreateERC721CollectionRequest {
 
 export interface MintERC1155Request {
   contractAddress: string;
-  owner: string;
   recipient: string;
   id: string;
   amount: number;
@@ -50,7 +48,6 @@ export interface MintERC1155Request {
 
 export interface MintERC721Request {
   contractAddress: string;
-  owner: string;
   recipient: string;
   uri: string;
 }
