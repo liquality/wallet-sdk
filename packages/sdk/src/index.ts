@@ -8,7 +8,7 @@ export { NftService } from "./nft/nft.service";
 export type { Nft } from "./nft/types";
 
 export { TransactionService } from "./transaction/transaction.service";
-
+export { DebridgeSwapProvider as SwapService } from "./swap/debridge/debridgeSwapProvider";  
 
 export function setup(config: ConfigParams) {
   Config.ALCHEMY_API_KEY = config.alchemyApiKey!;

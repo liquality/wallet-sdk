@@ -21,3 +21,16 @@ export async function withInterval<T>(
     }, random(15000, 30000));
   });
 }
+
+
+export async function fetchGet(url: string, params:any)  {
+  const response: any = await fetch(`${url}?${(new URLSearchParams(params)).toString()}`, {
+    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  return response.json(); 
+}

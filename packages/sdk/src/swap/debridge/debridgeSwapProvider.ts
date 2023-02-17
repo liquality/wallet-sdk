@@ -1,10 +1,9 @@
-import axios from "axios";
 import { BigNumber as EthersBigNumber, Contract, ethers, Wallet } from "ethers";
 import { getChainProvider } from "../../factory/chain-provider";
 import { TransactionService } from "../../transaction/transaction.service";
 import { DebridgeConfig } from "./config";
 import { FullSubmissionInfo, SwapRequest } from "./types";
-import { withInterval } from "../../common/utils";
+import { fetchGet, withInterval } from "../../common/utils";
 import SignatureVerifier from "./abi/SignatureVerifier.json";
 import { AddressZero } from "@ethersproject/constants";
 import { ERC20, ERC20__factory } from "../../../typechain-types";
@@ -66,23 +65,27 @@ export abstract class DebridgeSwapProvider {
       dstChainTokenOut: tokenOut,
       dstChainTokenOutRecipient: tokenOutRecipient,
     } = swapRequest;
-    const tx = await axios({
-      url: this.config.url + "chain/transaction",
-      method: "get",
-      params: {
+
+    const sdgf =  JSON.stringify( {
+      chainId,
+      tokenIn,
+      tokenInAmount: fromAmountInUnits,
+      tokenOut,
+      tokenOutRecipient,
+    }) ;
+
+    const response = await fetchGet(this.config.url + "chain/transaction", {
         chainId,
         tokenIn,
         tokenInAmount: fromAmountInUnits,
         tokenOut,
         tokenOutRecipient,
-      },
     });
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
-        to: tx.data.to,
-        value: tx.data.value,
-        data: tx.data.value,
+        from: wallet.address,
+        ...response.tx,
       },
       chainId
     );
@@ -112,24 +115,19 @@ export abstract class DebridgeSwapProvider {
       dstChainTokenOut,
       dstChainTokenOutRecipient,
     } = swapRequest;
-    const tx = await axios({
-      url: this.config.url + "transaction",
-      method: "get",
-      params: {
+    const response = await fetchGet(this.config.url + "transaction", {
         srcChainId,
         srcChainTokenIn,
         srcChainTokenInAmount: fromAmountInUnits,
         dstChainId,
         dstChainTokenOut,
         dstChainTokenOutRecipient,
-      },
     });
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
-        to: tx.data.to,
-        value: tx.data.value,
-        data: tx.data.value,
+        from: wallet.address,
+        ...response.tx,
       },
       srcChainId
     );
@@ -301,15 +299,11 @@ export abstract class DebridgeSwapProvider {
     try {
       const submissionId = await this.getSubmissionId(swapTxHash);
       if (submissionId) {
-        const result = await axios({
-          url: this.config.api + "SubmissionConfirmations/getForSubmission",
-          method: "get",
-          params: {
+        const result = await fetchGet(this.config.api + "SubmissionConfirmations/getForSubmission", {
             submissionId: submissionId,
-          },
         });
-        if (Array.isArray(result?.data)) {
-          return result.data.length;
+        if (Array.isArray(result)) {
+          return result.length;
         }
       }
     } catch (e) {}
@@ -320,15 +314,11 @@ export abstract class DebridgeSwapProvider {
     swapTxHash: string
   ): Promise<string | null> {
     try {
-      const result = await axios({
-        url: this.config.api + "Transactions/GetFullSubmissionInfo",
-        method: "get",
-        params: {
+      const result = await fetchGet(this.config.api + "Transactions/GetFullSubmissionInfo",{
           filter: swapTxHash,
           filterType: 1,
-        },
       });
-      return result?.data?.send?.submissionId || null;
+      return result?.send?.submissionId || null;
     } catch (e) {
       return null;
     }
@@ -338,15 +328,11 @@ export abstract class DebridgeSwapProvider {
     swapTxHash: string
   ): Promise<FullSubmissionInfo | null> {
     try {
-      const result = await axios({
-        url: this.config.api + "Transactions/GetFullSubmissionInfo",
-        method: "get",
-        params: {
+      const result = await fetchGet(this.config.api + "Transactions/GetFullSubmissionInfo",{
           filter: swapTxHash,
           filterType: 1,
-        },
       });
-      return result?.data || null;
+      return result || null;
     } catch (e) {
       return null;
     }
