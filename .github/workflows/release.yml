@@ -54,6 +54,14 @@ jobs:
           files: |
             .changeset/**
 
+      - name: Exit Prerelease
+        run: yarn changeset-prerelease-exit
+
+      - name: Commit Exit Prerelease
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'exit prerelease'
+
       - name: Create Release Pull Request & npm publish (latest)
         if: github.ref == 'refs/heads/master' && steps.changed-files-specific.outputs.any_changed == 'true' || steps.changed-files-specific.outputs.any_deleted == 'true'
         uses: changesets/action@v1
