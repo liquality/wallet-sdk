@@ -1,5 +1,32 @@
 # @liquality/wallet-sdk
 
+## 1.0.0
+
+### Major Changes
+
+- 377d516: First Release
+
+### Minor Changes
+
+- d1e6e75: fix sdk import errors
+
+### Patch Changes
+
+- 73d4519: bug fixes
+- 5d3c78e: chore: update entry file path in package.json
+- b116a7c: chore: compile contract artifacts during build
+- 44d217e: fix: use address from ethers wallet rather than expect address as argument
+- 7cb876b: fix duplicate types
+- 3eb2355: fix: add getQuote function and getTransactionStatus function
+- 82e1101: Add return types to auth service functions and erc20 service functions
+- 0b5ba4f: fix: resolve run time type error
+- ffc30b9: refactor: remove unnecessary file
+- 740abef: fix: update swap
+- b623f42: Update readme
+- 1940927: fix: remove duplicate types for TransferRequest
+- a60f9f6: update types
+- b1429c4: bump version
+
 ## 1.0.0-next.11
 
 ### Major Changes
