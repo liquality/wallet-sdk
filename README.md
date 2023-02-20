@@ -10,7 +10,7 @@ This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It inclu
 
 - `api`: a nestjs server
 - `react`: a create-react-app, can be used for demo
-- `sdk`: a typescript library
+- `@liquality/wallet-sdk`: a typescript library
 - `ui`: a React component library with Login component
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo

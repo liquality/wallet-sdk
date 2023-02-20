@@ -1,16 +1,15 @@
 {
-  "name": "wallet-api",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --no-cache",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --no-cache --filter=docs^... && changeset publish --yes"
-    
+    "release": "yarn build --force && changeset publish --yes",
+    "changeset-prerelease-enter": "changeset pre enter next",
+    "changeset-prerelease-exit": "changeset pre exit"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",

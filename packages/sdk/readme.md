@@ -5,7 +5,7 @@
 You can use npm or yarn to install the Liquality SDK
 
 ```
-npm install @liquality/wallet
+npm install @liquality/wallet-sdk
 ```
 
 Liquality Wallet API and SDK relies on Torus wallet tech for authentication. This significantly simplifies the onboarding experience and removes risk of key loss as users do not need to keep track of a seed phrase. Instead, authentication is handled by key shares that allow for easy recoverability without compromising security.

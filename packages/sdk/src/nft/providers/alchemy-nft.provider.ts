@@ -1,14 +1,17 @@
-import { NftTokenType, Nft as AlchemyNft } from 'alchemy-sdk';
-import { getAlchemyProvider } from '../../factory/alchemy-provider';
-import { Nft, NftType } from '../types';
-import { BaseNftProvider } from './base-nft.provider';
+import { NftTokenType, Nft as AlchemyNft } from "alchemy-sdk";
+import { getAlchemyProvider } from "../../factory/alchemy-provider";
+import { Nft, NftType } from "../types";
+import { BaseNftProvider } from "./base-nft.provider";
 
 export abstract class AlchemyNftProvider extends BaseNftProvider {
   constructor() {
     super();
   }
 
-  public static async getNfts(owner: string, chainID: number): Promise<Nft[]|null> {
+  public static async getNfts(
+    owner: string,
+    chainID: number
+  ): Promise<Nft[] | null> {
     try {
       const alchemy = getAlchemyProvider(chainID);
       const nfts = (await alchemy.nft.getNftsForOwner(owner)).ownedNfts;
@@ -18,14 +21,14 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
           id: nft.tokenId,
           contract: {
             address: nft.contract.address,
-            name: nft.contract.name || '',
-            symbol: nft.contract.symbol || '',
+            name: nft.contract.name || "",
+            symbol: nft.contract.symbol || "",
             type: this.extractNftType(nft.tokenType) || undefined,
           },
           metadata: {
-            name: nft!.rawMetadata!.name || '',
-            description: nft!.rawMetadata!.description || '',
-            image: nft!.rawMetadata!.image || '',
+            name: nft!.rawMetadata!.name || "",
+            description: nft!.rawMetadata!.description || "",
+            image: nft!.rawMetadata!.image || "",
           },
           balance: this.isERC1155(nft) ? nft.balance : undefined,
         };
@@ -35,7 +38,10 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
     }
   }
 
-  public static async getNftType(contractAddress: string, chainID: number): Promise<NftType> {
+  public static async getNftType(
+    contractAddress: string,
+    chainID: number
+  ): Promise<NftType> {
     const alchemy = getAlchemyProvider(chainID);
     const nft = await alchemy.nft.getContractMetadata(contractAddress);
     return this.extractNftType(nft.tokenType);
