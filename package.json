@@ -8,7 +8,8 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "yarn build --force && changeset publish --yes",
-    "changeset-prerelease-enter": "changeset pre exit && changeset pre enter next"
+    "changeset-prerelease-enter": "changeset pre enter next",
+    "changeset-prerelease-exit": "changeset pre exit"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
