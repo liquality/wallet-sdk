@@ -9,21 +9,5 @@
     "tsconfig": "0.0.0",
     "ui": "0.0.0"
   },
-  "changesets": [
-    "brave-pillows-deny",
-    "few-buckets-behave",
-    "forty-cows-pull",
-    "funny-apricots-jam",
-    "heavy-timers-care",
-    "light-meals-battle",
-    "lucky-onions-cry",
-    "moody-pots-arrive",
-    "purple-dragons-mix",
-    "rotten-humans-approve",
-    "spotty-geckos-pull",
-    "strong-lies-travel",
-    "tasty-pens-shave",
-    "wicked-masks-hear",
-    "young-feet-pump"
-  ]
+  "changesets": []
 }
