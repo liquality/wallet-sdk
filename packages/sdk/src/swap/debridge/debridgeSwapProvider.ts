@@ -122,6 +122,7 @@ export abstract class DebridgeSwapProvider {
         tokenOut,
     });
 
+    if(!response.estimation) throw Error('Could not get quote');
     return {
       amount: formatUnits(response.estimation.tokenOut.amount, decimals),
       minAmount: formatUnits(response.estimation.tokenOut.minAmount, decimals),
@@ -184,6 +185,8 @@ export abstract class DebridgeSwapProvider {
         dstChainId,
         dstChainTokenOut,
     });
+
+    if(!response.estimation) throw Error('Could not get quote');
 
     return {
       amount: formatUnits(response.estimation.dstChainTokenOut.amount, decimals),
