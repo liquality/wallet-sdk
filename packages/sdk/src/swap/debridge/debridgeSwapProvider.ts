@@ -2,13 +2,14 @@ import { BigNumber as EthersBigNumber, Contract, ethers, Wallet } from "ethers";
 import { getChainProvider } from "../../factory/chain-provider";
 import { TransactionService } from "../../transaction/transaction.service";
 import { DebridgeConfig } from "./config";
-import { FullSubmissionInfo, SwapRequest } from "./types";
+import { FullSubmissionInfo, QuoteRequest, SwapRequest, SwapStatusRequest } from "./types";
 import { fetchGet, withInterval } from "../../common/utils";
 import SignatureVerifier from "./abi/SignatureVerifier.json";
 import { AddressZero } from "@ethersproject/constants";
 import { ERC20, ERC20__factory } from "../../../typechain-types";
-import { parseEther, parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import BigNumber from "bignumber.js";
+import { TX_STATUS } from "../../transaction/constants/transaction-status";
 
 export abstract class DebridgeSwapProvider {
   private static readonly config = DebridgeConfig;
@@ -36,7 +37,7 @@ export abstract class DebridgeSwapProvider {
       ).attach(swapRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
-      const fromAmountInUnits = parseUnits(
+      fromAmountInUnits = parseUnits(
         swapRequest.srcChainTokenInAmount,
         decimals
       ).toString();
@@ -53,6 +54,80 @@ export abstract class DebridgeSwapProvider {
     return this.crossChainSwap(swapRequest, fromAmountInUnits!, wallet);
   }
 
+  public static async getQuote(quoteRequest: QuoteRequest) {
+    // Validation
+    const isSrcChainSupported = !!this.config.chains[quoteRequest.srcChainId];
+    const isDstChainSupported = !!this.config.chains[quoteRequest.srcChainId];
+    if (
+      new BigNumber(quoteRequest.srcChainTokenInAmount).lte(0) ||
+      !isSrcChainSupported ||
+      !isDstChainSupported
+    )
+      throw Error("Swap not supported");
+
+    const chainProvider = getChainProvider(quoteRequest.srcChainId);
+    let fromAmountInUnits: string;
+    let dstTokenDecimals: number;
+
+    if (quoteRequest.srcChainTokenIn !== AddressZero) {
+      const contract: ERC20 = ERC20__factory.connect(
+        AddressZero,
+        chainProvider
+      ).attach(quoteRequest.srcChainTokenIn);
+      const decimals = await contract.decimals();
+
+      fromAmountInUnits = parseUnits(
+        quoteRequest.srcChainTokenInAmount,
+        decimals
+      ).toString();
+    } else {
+      fromAmountInUnits = parseEther(
+        quoteRequest.srcChainTokenInAmount
+      ).toString();
+    }
+
+    if (quoteRequest.dstChainTokenOut !== AddressZero) {
+      const contract: ERC20 = ERC20__factory.connect(
+        AddressZero,
+        chainProvider
+      ).attach(quoteRequest.dstChainTokenOut);
+      dstTokenDecimals = await contract.decimals();
+    } else {
+      dstTokenDecimals = 18;
+    }
+
+
+
+    if (quoteRequest.srcChainId === quoteRequest.dstChainId)
+      return this.singleChainSwapQuote(quoteRequest, fromAmountInUnits!, dstTokenDecimals!);
+    return this.crossChainSwapQuote(quoteRequest, fromAmountInUnits!, dstTokenDecimals!);
+  }
+
+
+  private static async singleChainSwapQuote(
+    quoteRequest: QuoteRequest,
+    fromAmountInUnits: string,
+    decimals: number
+  ) {
+    const {
+      srcChainId: chainId,
+      srcChainTokenIn: tokenIn,
+      dstChainTokenOut: tokenOut,
+    } = quoteRequest;
+
+    const response = await fetchGet(this.config.url + "chain/estimation", {
+        chainId,
+        tokenIn,
+        tokenInAmount: fromAmountInUnits,
+        tokenOut,
+    });
+
+    return {
+      amount: formatUnits(response.estimation.tokenOut.amount, decimals),
+      minAmount: formatUnits(response.estimation.tokenOut.minAmount, decimals),
+    }
+  }
+
   private static async singleChainSwap(
     swapRequest: SwapRequest,
     fromAmountInUnits: string,
@@ -66,14 +141,6 @@ export abstract class DebridgeSwapProvider {
       dstChainTokenOutRecipient: tokenOutRecipient,
     } = swapRequest;
 
-    const sdgf =  JSON.stringify( {
-      chainId,
-      tokenIn,
-      tokenInAmount: fromAmountInUnits,
-      tokenOut,
-      tokenOutRecipient,
-    }) ;
-
     const response = await fetchGet(this.config.url + "chain/transaction", {
         chainId,
         tokenIn,
@@ -82,23 +149,45 @@ export abstract class DebridgeSwapProvider {
         tokenOutRecipient,
     });
 
+    if(!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+
     const preparedTx = await TransactionService.prepareTransaction(
       {
         from: wallet.address,
         ...response.tx,
+        value: EthersBigNumber.from(response.tx.value)
       },
       chainId
     );
 
     const swapTx = await wallet.sendTransaction(preparedTx);
-    const swapConfirmation = await this.waitForSingleChainSwapConfirmations(
-      swapTx.hash,
-      chainId
-    );
-    if (swapConfirmation.status === "FAILED") return false;
+
+    return swapTx.hash;
+  }
+
+
+  private static async crossChainSwapQuote(
+    quoteRequest: QuoteRequest,
+    fromAmountInUnits: string,
+    decimals: number,
+  ) {
+    const {
+      srcChainId,
+      srcChainTokenIn,
+      dstChainId,
+      dstChainTokenOut,
+    } = quoteRequest;
+    const response = await fetchGet(this.config.url + "estimation", {
+        srcChainId,
+        srcChainTokenIn,
+        srcChainTokenInAmount: fromAmountInUnits,
+        dstChainId,
+        dstChainTokenOut,
+    });
 
     return {
-      swapTxHash: swapTx.hash,
+      amount: formatUnits(response.estimation.dstChainTokenOut.amount, decimals),
+      minAmount: formatUnits(response.estimation.dstChainTokenOut.minAmount, decimals)
     };
   }
 
@@ -110,7 +199,6 @@ export abstract class DebridgeSwapProvider {
     const {
       srcChainId,
       srcChainTokenIn,
-      srcChainTokenInAmount,
       dstChainId,
       dstChainTokenOut,
       dstChainTokenOutRecipient,
@@ -124,27 +212,21 @@ export abstract class DebridgeSwapProvider {
         dstChainTokenOutRecipient,
     });
 
+    if(!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+
     const preparedTx = await TransactionService.prepareTransaction(
       {
         from: wallet.address,
         ...response.tx,
+        value: EthersBigNumber.from(response.tx.value)
       },
       srcChainId
     );
 
     const sendTx = await wallet.sendTransaction(preparedTx);
-    const sendConfirmation = await this.waitForCrossChainSendConfirmations(
-      sendTx.hash,
-      srcChainId
-    );
-    if (sendConfirmation.status === "FAILED") return false;
-    const receiveConfirmation =
-      await this.waitForCrossChainReceiveConfirmations(sendTx.hash);
 
-    return {
-      sendTxHash: sendTx.hash,
-      receiveTxHash: receiveConfirmation.receiveTxHash,
-    };
+    return sendTx.hash;
+
   }
 
   private static async approveToken(
@@ -201,96 +283,53 @@ export abstract class DebridgeSwapProvider {
     });
   }
 
-  private static async waitForSingleChainSwapConfirmations(
+  public static async getSwapStatus(statusRequest: SwapStatusRequest) {
+    if (statusRequest.srcChainId === statusRequest.dstChainId)
+      return this.getSingleChainSwapStatus(statusRequest.txHash, statusRequest.srcChainId);
+    return this.getCrossChainSwapStatus(statusRequest.txHash, statusRequest.srcChainId, statusRequest.dstChainId);
+  }
+
+  private static async getSingleChainSwapStatus(
     swapTxHash: string,
     chainId: number
-  ) {
-    const chainProvider = getChainProvider(chainId);
+  ): Promise<string> {
 
-    return withInterval(async () => {
-      try {
-        const tx = await chainProvider.getTransaction(swapTxHash);
-        if (
-          tx.confirmations &&
-          tx.confirmations > this.config.chains[chainId].minBlockConfirmation
-        ) {
-          const { status } = await chainProvider.getTransactionReceipt(
-            swapTxHash
-          );
-          if (Number(status) === 1) {
-            return {
-              status: "SUCCESS",
-            };
-          } else {
-            return {
-              status: "FAILED",
-            };
-          }
-        }
-      } catch (e) {
-        throw Error(`Problem Confirming Swap Tx, ${e}`);
-      }
-    });
+    return TransactionService.getTransactionStatus(swapTxHash, chainId, this.config.chains[chainId].minBlockConfirmation);
   }
 
-  private static async waitForCrossChainSendConfirmations(
+  private static async getCrossChainSwapStatus(
     sendTxHash: string,
-    chainId: number
+    srcChainId: number,
+    dstChainId: number,
   ) {
-    const chainProvider = getChainProvider(chainId);
-
-    return withInterval(async () => {
-      try {
-        const tx = await chainProvider.getTransaction(sendTxHash);
-        if (
-          tx.confirmations &&
-          tx.confirmations > this.config.chains[chainId].minBlockConfirmation
-        ) {
-          const { status } = await chainProvider.getTransactionReceipt(
-            sendTxHash
-          );
-          if (Number(status) === 1) {
-            const signatureVerifier = new ethers.Contract(
-              this.config.chains[chainId].signatureVerifier,
-              SignatureVerifier.abi,
-              chainProvider
-            );
-            const minConfirmations = await signatureVerifier.minConfirmations();
-            const count = await this.getConfirmationsCount(sendTxHash);
-            if (count >= minConfirmations) {
-              return {
-                status: "WAITING_FOR_RECEIVE_CONFIRMATIONS",
-              };
-            }
-          } else {
-            return {
-              status: "FAILED",
-            };
-          }
-        }
-      } catch (e) {
-        throw Error(`Problem Confirming Send leg, ${e}`);
+    const sendStatus = await TransactionService.getTransactionStatus(sendTxHash, srcChainId);
+    let receiveStatus;
+    if (sendStatus === TX_STATUS.SUCCESS) {
+      const signatureVerifier = new ethers.Contract(
+        this.config.chains[srcChainId].signatureVerifier,
+        SignatureVerifier.abi,
+        getChainProvider(srcChainId)
+      );
+      const minConfirmations = await signatureVerifier.minConfirmations();
+      const count = await this.getConfirmationsCount(sendTxHash);
+      if (count >= minConfirmations) {
+        receiveStatus = await this.getCrossChainSwapReceiveStatus(sendTxHash, dstChainId);
       }
-    });
-  }
 
-  private static async waitForCrossChainReceiveConfirmations(
-    sendTxHash: string
-  ) {
-    return withInterval(async () => {
-      try {
-        const submissionInfo = await this.getFullSubmissionInfo(sendTxHash);
+      return {sendStatus, receiveStatus};
+    }
+    
+    return {sendStatus, receiveStatus: null};
+ }
 
-        if (submissionInfo?.send?.isExecuted && submissionInfo?.claim) {
-          return {
-            receiveTxHash: submissionInfo?.claim.transactionHash,
-            status: "SUCCESS",
-          };
-        }
-      } catch (e) {
-        throw Error(`Problem Confirming receive leg, ${e}`);
-      }
-    });
+  private static async getCrossChainSwapReceiveStatus(sendTxHash: string, dstChainId: number){
+    const submissionInfo = await this.getFullSubmissionInfo(sendTxHash);
+
+    if (submissionInfo?.send?.isExecuted && submissionInfo?.claim) {
+      return TransactionService.getTransactionStatus(submissionInfo?.claim.transactionHash, dstChainId);
+    }
+
+    return TX_STATUS.NOT_FOUND;
   }
 
   private static async getConfirmationsCount(
