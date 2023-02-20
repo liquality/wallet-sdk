@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { CHAIN_IDS } from "../common/chain-ids";
 import { Config } from "../common/config";
 
 
@@ -21,10 +22,17 @@ export function createChainProvider(chainId: number) {
     }),
   };
   
-  const chainProvider = ethers.getDefaultProvider(
+  let chainProvider;
+  if(chainId === CHAIN_IDS.BNB_MAINNET){
+    chainProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/', 56);
+  }else{
+    chainProvider = ethers.getDefaultProvider(
     chainId,
     chainProviderOptions
   );
+  }
+  
+
   chainProviderCache[chainId] = chainProvider;
 
   return chainProvider;
