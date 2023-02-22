@@ -3,8 +3,8 @@ import { ConfigParams } from "./types";
 export { ERC20Service } from "./erc20/erc.service";
 import { TransactionService } from "./transaction/transaction.service";
 import { Config } from "./common/config";
-export { AuthService } from "./auth/auth.service";
 export { NftService } from "./nft/nft.service";
+export * from "./auth"
 export type { Nft } from "./nft/types";
 
 export { TransactionService } from "./transaction/transaction.service";

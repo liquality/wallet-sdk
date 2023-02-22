@@ -9,12 +9,12 @@ import { LoginResult } from "src/types";
 import { KeyDetails } from "@tkey/common-types";
 
 export class AuthService {
-  public async getTKeyDetails(tKey: ThresholdKey): Promise<KeyDetails> {
+  public static async getTKeyDetails(tKey: ThresholdKey): Promise<KeyDetails> {
     let details = tKey.getKeyDetails();
     return details;
   }
 
-  public async init(directParams: CustomAuthArgs): Promise<ThresholdKey> {
+  public static async init(directParams: CustomAuthArgs): Promise<ThresholdKey> {
     const serviceProvider = new TorusServiceProvider({
       customAuthArgs: directParams,
     });
@@ -42,14 +42,14 @@ export class AuthService {
     return tKey;
   }
 
-  public async createWallet(
+  public static async createWallet(
     tKey: ThresholdKey,
     verifierMap: Record<string, any>
   ): Promise<LoginResult | null> {
     try {
-      let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
+      let loginResponse = await AuthService.triggerSSOLogin(tKey, verifierMap);
       const res = await tKey._initializeNewKey({ initializeModules: true });
-      const details = await this.getTKeyDetails(tKey);
+      const details = await AuthService.getTKeyDetails(tKey);
       const result = {
         tKey,
         loginResponse,
@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   //This function generates a new share with password that user chooses
-  public async generateNewShareWithPassword(
+  public static async generateNewShareWithPassword(
     tKey: ThresholdKey,
     password: string
   ) {
@@ -82,7 +82,7 @@ export class AuthService {
     }
   }
 
-  public async inputShareFromSecurityQuestions(
+  public static async inputShareFromSecurityQuestions(
     tKey: ThresholdKey,
     password: string
   ) {
@@ -100,17 +100,17 @@ export class AuthService {
     }
   }
 
-  public async loginUsingSSO(
+  public static async loginUsingSSO(
     tKey: ThresholdKey,
     verifierMap: Record<string, any>
   ): Promise<LoginResult | null> {
     try {
-      let loginResponse = await this.triggerSSOLogin(tKey, verifierMap);
+      let loginResponse = await AuthService.triggerSSOLogin(tKey, verifierMap);
       await tKey.initialize();
       const webStorageModule = tKey.modules["webStorage"] as WebStorageModule;
       await webStorageModule.inputShareFromWebStorage();
       const indexes = tKey.getCurrentShareIndexes();
-      const details = await this.getTKeyDetails(tKey);
+      const details = await AuthService.getTKeyDetails(tKey);
       const result = {
         tKey,
         loginResponse,
@@ -140,7 +140,7 @@ export class AuthService {
     }
   }
 
-  private async triggerSSOLogin(
+  private static async triggerSSOLogin(
     tKey: ThresholdKey,
     verifierMap: Record<string, any>
   ) {
