@@ -9,6 +9,7 @@ import { parseEther } from "ethers/lib/utils";
 import { Config } from "../common/config";
 import { getChainProvider } from "../factory/chain-provider";
 import { gasMultiplier } from "./constants/gas-price-multipliers";
+import { TX_STATUS } from "./constants/transaction-status";
 import TransactionSpeed from "./types/transaction-speed";
 
 export abstract class TransactionService {
@@ -26,6 +27,30 @@ export abstract class TransactionService {
       nonce: await chainProvider.getTransactionCount(txRequest.from!),
       ...(!!fees.maxFeePerGas && { type: 2 }),
     } as PopulatedTransaction;
+  }
+
+  public static async getTransactionStatus(
+    hash: string,
+    chainID: number,
+    minBlockConfirmation = 0,
+  ): Promise<string> {
+    const chainProvider = getChainProvider(chainID);
+    const tx = await chainProvider.getTransaction(hash);
+    if (!tx) throw Error(TX_STATUS.NOT_FOUND);
+    if (
+      tx.confirmations &&
+      tx.confirmations > minBlockConfirmation
+    ) {
+      const { status } = await chainProvider.getTransactionReceipt(
+        hash
+      );
+      if (Number(status) === 1) {
+        return TX_STATUS.SUCCESS;
+      } else {
+        return TX_STATUS.FAILED;
+      }
+    }
+    return TX_STATUS.NOT_CONFIRMED;
   }
 
   private static async getFees(

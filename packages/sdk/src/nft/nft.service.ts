@@ -37,10 +37,12 @@ export abstract class NftService {
     chainId: number,
     pk: string
   ): Promise<string> {
-    const { contractAddress, owner, receiver, tokenIDs, amounts } =
+    const { contractAddress, receiver, tokenIDs, amounts } =
       transferRequest;
     const { schema, contract } = await this.cacheGet(contractAddress, chainId);
 
+    const wallet = new Wallet(pk, getChainProvider(chainId));
+    const owner = wallet.address;
     let tx: PopulatedTransaction;
     const data = "0x";
 
@@ -95,7 +97,7 @@ export abstract class NftService {
     );
 
     return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
+      await wallet.sendTransaction(
         preparedTx
       )
     ).hash;
@@ -137,14 +139,14 @@ export abstract class NftService {
       LiqERC1155__factory.bytecode,
       new Wallet(pk, getChainProvider(chainId))
     );
-    
+
     return (await contractFactory.deploy(
       uri,
     )).deployTransaction.hash;
   }
 
   public static async mintERC1155Token(
-    { contractAddress, owner, recipient, id, amount }: MintERC1155Request,
+    { contractAddress, recipient, id, amount }: MintERC1155Request,
     chainId: number,
     pk: string
   ): Promise<string> {
@@ -152,6 +154,9 @@ export abstract class NftService {
       AddressZero,
       getChainProvider(chainId)
     ).attach(contractAddress);
+    const wallet = new Wallet(pk, getChainProvider(chainId));
+    const owner = wallet.address;
+
     const data = "0x";
     const tx = await contract.populateTransaction.mint(
       recipient,
@@ -170,7 +175,7 @@ export abstract class NftService {
     );
 
     return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
+      await wallet.sendTransaction(
         preparedTx
       )
     ).hash;
@@ -186,7 +191,7 @@ export abstract class NftService {
       LiqERC721__factory.bytecode,
       new Wallet(pk, getChainProvider(chainId))
     );
-    
+
     return (await contractFactory.deploy(
       tokenName,
       tokenSymbol
@@ -194,7 +199,7 @@ export abstract class NftService {
   }
 
   public static async mintERC721Token(
-    { contractAddress, owner, recipient, uri }: MintERC721Request,
+    { contractAddress, recipient, uri }: MintERC721Request,
     chainId: number,
     pk: string
   ): Promise<string> {
@@ -202,6 +207,9 @@ export abstract class NftService {
       AddressZero,
       getChainProvider(chainId)
     ).attach(contractAddress);
+    const wallet = new Wallet(pk, getChainProvider(chainId));
+    const owner = wallet.address;
+
     const tx = await contract.populateTransaction.safeMint(recipient, uri);
 
     const preparedTx = await TransactionService.prepareTransaction(
@@ -214,7 +222,7 @@ export abstract class NftService {
     );
 
     return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
+      await wallet.sendTransaction(
         preparedTx
       )
     ).hash;

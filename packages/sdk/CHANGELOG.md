@@ -1,5 +1,157 @@
 # @liquality/wallet-sdk
 
+## 1.0.0
+
+### Major Changes
+
+- 377d516: First Release
+
+### Minor Changes
+
+- d1e6e75: fix sdk import errors
+
+### Patch Changes
+
+- 73d4519: bug fixes
+- 5d3c78e: chore: update entry file path in package.json
+- b116a7c: chore: compile contract artifacts during build
+- 44d217e: fix: use address from ethers wallet rather than expect address as argument
+- 7cb876b: fix duplicate types
+- 3eb2355: fix: add getQuote function and getTransactionStatus function
+- 82e1101: Add return types to auth service functions and erc20 service functions
+- 0b5ba4f: fix: resolve run time type error
+- ffc30b9: refactor: remove unnecessary file
+- 740abef: fix: update swap
+- b623f42: Update readme
+- 1940927: fix: remove duplicate types for TransferRequest
+- a60f9f6: update types
+- b1429c4: bump version
+
+## 1.0.0-next.11
+
+### Major Changes
+
+- 6c87f80: First Release
+
+### Minor Changes
+
+- f70e688: fix sdk import errors
+
+### Patch Changes
+
+- 6001dd9: bug fixes
+- 9060a2e: chore: update entry file path in package.json
+- 5499773: chore: compile contract artifacts during build
+- 79111ca: fix: use address from ethers wallet rather than expect address as argument
+- dfbc026: fix duplicate types
+- f09ea07: fix: add getQuote function and getTransactionStatus function
+- 91e9b9f: Add return types to auth service functions and erc20 service functions
+- 37ef972: fix: resolve run time type error
+- a015e85: refactor: remove unnecessary file
+- 1a0a954: fix: update swap
+- a96568a: Update readme
+- 2db71f7: fix: remove duplicate types for TransferRequest
+- 5b8ac77: update types
+- 4cdf485: bump version
+
+## 1.0.0-next.10
+
+### Major Changes
+
+- 6c87f80: First Release
+
+### Minor Changes
+
+- f70e688: fix sdk import errors
+
+### Patch Changes
+
+- 6001dd9: bug fixes
+- 9060a2e: chore: update entry file path in package.json
+- 5499773: chore: compile contract artifacts during build
+- 79111ca: fix: use address from ethers wallet rather than expect address as argument
+- dfbc026: fix duplicate types
+- f09ea07: fix: add getQuote function and getTransactionStatus function
+- 91e9b9f: Add return types to auth service functions and erc20 service functions
+- a015e85: refactor: remove unnecessary file
+- 1a0a954: fix: update swap
+- a96568a: Update readme
+- 2db71f7: fix: remove duplicate types for TransferRequest
+- 5b8ac77: update types
+- 4cdf485: bump version
+
+## 1.0.0-next.9
+
+### Major Changes
+
+- 6c87f80: First Release
+
+### Minor Changes
+
+- f70e688: fix sdk import errors
+
+### Patch Changes
+
+- 6001dd9: bug fixes
+- 9060a2e: chore: update entry file path in package.json
+- 5499773: chore: compile contract artifacts during build
+- 79111ca: fix: use address from ethers wallet rather than expect address as argument
+- dfbc026: fix duplicate types
+- 91e9b9f: Add return types to auth service functions and erc20 service functions
+- a015e85: refactor: remove unnecessary file
+- 1a0a954: fix: update swap
+- a96568a: Update readme
+- 2db71f7: fix: remove duplicate types for TransferRequest
+- 5b8ac77: update types
+- 4cdf485: bump version
+
+## 1.0.0-next.8
+
+### Major Changes
+
+- 6c87f80: First Release
+
+### Minor Changes
+
+- f70e688: fix sdk import errors
+
+### Patch Changes
+
+- 6001dd9: bug fixes
+- 9060a2e: chore: update entry file path in package.json
+- 5499773: chore: compile contract artifacts during build
+- 79111ca: fix: use address from ethers wallet rather than expect address as argument
+- dfbc026: fix duplicate types
+- 91e9b9f: Add return types to auth service functions and erc20 service functions
+- a015e85: refactor: remove unnecessary file
+- a96568a: Update readme
+- 2db71f7: fix: remove duplicate types for TransferRequest
+- 5b8ac77: update types
+- 4cdf485: bump version
+
+## 1.0.0-next.7
+
+### Major Changes
+
+- 6c87f80: First Release
+
+### Minor Changes
+
+- f70e688: fix sdk import errors
+
+### Patch Changes
+
+- 6001dd9: bug fixes
+- 9060a2e: chore: update entry file path in package.json
+- 5499773: chore: compile contract artifacts during build
+- 79111ca: fix: use address from ethers wallet rather than expect address as argument
+- dfbc026: fix duplicate types
+- 91e9b9f: Add return types to auth service functions and erc20 service functions
+- a015e85: refactor: remove unnecessary file
+- a96568a: Update readme
+- 5b8ac77: update types
+- 4cdf485: bump version
+
 ## 1.0.0-next.6
 
 ### Major Changes

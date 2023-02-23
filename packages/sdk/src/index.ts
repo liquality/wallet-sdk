@@ -3,12 +3,12 @@ import { ConfigParams } from "./types";
 export { ERC20Service } from "./erc20/erc.service";
 import { TransactionService } from "./transaction/transaction.service";
 import { Config } from "./common/config";
-export { AuthService } from "./auth/auth.service";
 export { NftService } from "./nft/nft.service";
+export * from "./auth"
 export type { Nft } from "./nft/types";
 
 export { TransactionService } from "./transaction/transaction.service";
-
+export { DebridgeSwapProvider as SwapService } from "./swap/debridge/debridgeSwapProvider";
 
 export function setup(config: ConfigParams) {
   Config.ALCHEMY_API_KEY = config.alchemyApiKey!;
@@ -22,5 +22,5 @@ export function setup(config: ConfigParams) {
   Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
 }
 
-export const transferEther =  TransactionService.transfer;
+export const transferEther = TransactionService.transfer;
 
