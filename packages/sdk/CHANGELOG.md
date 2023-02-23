@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.0.0-next.0
+
+### Major Changes
+
+- new serviceworker setup
+
 ## 1.0.0
 
 ### Major Changes
