@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.0.0-next.1
+
+### Minor Changes
+
+- b464847: export authservice and registerSW seperetly
+
 ## 2.0.0-next.0
 
 ### Major Changes
