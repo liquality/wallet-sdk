@@ -1,5 +1,5 @@
 ---
-"@liquality/wallet-sdk": major
+"@liquality/wallet-sdk": minor
 ---
 
 new serviceworker setup
