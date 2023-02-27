@@ -11,6 +11,7 @@ import { Wallet } from "ethers";
 
 
 type AccountToken = {
+  tokenContractAddress: string | null
   tokenName: string | null
   tokenSymbol: string | null
   rawBalance: string | null
@@ -48,6 +49,7 @@ export abstract class ERC20Service {
       }
 
       accountTokens.push({
+        tokenContractAddress: token.contractAddress,
         tokenName: metadata.name,
         tokenSymbol: metadata.symbol,
         rawBalance: balance,

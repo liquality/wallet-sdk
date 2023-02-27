@@ -1,6 +1,5 @@
 import { Login, CreateWallet } from "ui";
 import { useState } from "react";
-import { NftService, Nft } from "@liquality/wallet-sdk";
 
 const verifierMap: Record<string, any> = {
   google: {
@@ -22,21 +21,21 @@ const directParams = {
 
 export default function Web() {
   const [address, setAddress] = useState<string>();
-  const [nfts, setNfts] = useState<Nft[] | null>([]);
+  /*  const [nfts, setNfts] = useState<Nft[] | null>([]);
 
   async function updateNfts() {
     if (!address) throw new Error("set address first");
-    const nfts = await NftService.getNfts(address, 1);
+    //const nfts = await NftService.getNfts(address, 1);
     console.log(nfts, "NFTS in my addr");
     setNfts(nfts);
-  }
+  } */
 
   return (
     <div>
       <Login directParams={directParams} verifierMap={verifierMap} />
       <CreateWallet directParams={directParams} verifierMap={verifierMap} />
       <hr />
-      <div>
+      {/*  <div>
         NFT address:
         <input
           type="text"
@@ -55,7 +54,7 @@ export default function Web() {
             <div>{nft.contract.name}</div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

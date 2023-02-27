@@ -3,6 +3,7 @@ import { ConfigParams } from "./types";
 export { ERC20Service } from "./erc20/erc.service"
 import { TransactionService } from "./transaction/transaction.service";
 import { Config } from "./common/config";
+import { ERC20Service } from "./erc20/erc.service";
 export { NftService } from "./nft/nft.service";
 export { AuthService } from "./auth/auth.service";
 export { tryRegisterSW } from "./auth/tryRegisterSW";
@@ -25,6 +26,7 @@ export function setup(config: ConfigParams) {
   Config.FAST_GAS_PRICE_MULTIPLIER = config.fastGasPriceMultiplier!;
   Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
 }
+
 
 export const transferEther = TransactionService.transfer;
 

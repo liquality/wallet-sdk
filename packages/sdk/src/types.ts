@@ -49,6 +49,7 @@ export type LoginResult = {
 }
 
 export type AccountToken = {
+  tokenContractAddress: string | null
   tokenName: string | null
   tokenSymbol: string | null
   rawBalance: string | null

@@ -2,11 +2,28 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { AuthService } from "@liquality/wallet-sdk";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
+import { ERC20Service } from "@liquality/wallet-sdk";
 
 type Props = {
   directParams: CustomAuthArgs;
   verifierMap: Record<string, any>;
 };
+
+import { setup } from "@liquality/wallet-sdk";
+
+function setupSDK() {
+  setup({
+    alchemyApiKey: "JmoTKlpUIjzd1y5-8h-La50OewZULyL0",
+    etherscanApiKey: "-",
+    infuraProjectId: "-",
+    pocketNetworkApplicationID: "-",
+    quorum: 1,
+    slowGasPriceMultiplier: 1,
+    averageGasPriceMultiplier: 1.5,
+    fastGasPriceMultiplier: 2,
+    gasLimitMargin: 2000,
+  });
+}
 
 export const CreateWallet: React.FC<Props> = (props) => {
   const { directParams, verifierMap } = props;
@@ -16,24 +33,29 @@ export const CreateWallet: React.FC<Props> = (props) => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [passwordResponse, setPasswordResponse] = useState<string>("");
   const [newPasswordShare, setNewPasswordShare] = useState<any>({});
-  const authService = new AuthService();
 
+  setupSDK();
   useEffect(() => {
     const init = async () => {
-      const tKeyResponse = await authService.init(directParams);
+      const tKeyResponse = await AuthService.init(directParams);
       setTKey(tKeyResponse);
+      const balances = await ERC20Service.listAccountTokens(
+        "0x595ec62736Bf19445d7F00D66072B3a3c7aeA0F5",
+        5
+      );
+      console.log(balances, "balancos");
     };
 
     init();
   }, [loginResponse, passwordResponse]);
 
   const createNewWallet = async () => {
-    const response = await authService.createWallet(tKey, verifierMap);
+    const response = await AuthService.createWallet(tKey, verifierMap);
     setLoginResponse(response);
   };
 
   const generatePassword = async (password: string) => {
-    let response = await authService.generateNewShareWithPassword(
+    let response = await AuthService.generateNewShareWithPassword(
       loginResponse.tKey,
       password
     );
