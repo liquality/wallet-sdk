@@ -6,7 +6,17 @@ import { AddressZero } from "@ethersproject/constants";
 import { getChainProvider } from "../factory/chain-provider";
 import { TransactionService } from "../transaction/transaction.service";
 import { Wallet } from "ethers";
-import { AccountToken } from "src/types";
+//import { AccountToken } from "src/types";
+
+
+
+type AccountToken = {
+  tokenName: string | null
+  tokenSymbol: string | null
+  rawBalance: string | null
+  formattedBalance: string | undefined
+}
+
 
 
 export abstract class ERC20Service {

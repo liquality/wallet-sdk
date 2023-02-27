@@ -5,8 +5,16 @@ import SecurityQuestionsModule from "@tkey/security-questions";
 import ShareTransferModule from "@tkey/share-transfer";
 import WebStorageModule from "@tkey/web-storage";
 import type { CustomAuthArgs } from "@toruslabs/customauth";
-import { LoginResult } from "src/types";
+//import { LoginResult } from "src/types";
+import type { TorusLoginResponse } from "@toruslabs/customauth";
+
 import { KeyDetails } from "@tkey/common-types";
+
+type LoginResult = {
+  tKey: ThresholdKey,
+  loginResponse: TorusLoginResponse,
+  tKeyDetails: KeyDetails
+}
 
 export class AuthService {
   public static async getTKeyDetails(tKey: ThresholdKey): Promise<KeyDetails> {
