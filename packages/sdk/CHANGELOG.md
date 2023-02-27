@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.1.0
+
+### Minor Changes
+
+- 00f9735: add token contract address on alchemy return
+
 ## 2.0.0
 
 ### Minor Changes
