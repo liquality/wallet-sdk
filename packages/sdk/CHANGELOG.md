@@ -1,5 +1,13 @@
 # @liquality/wallet-sdk
 
+## 2.0.0
+
+### Minor Changes
+
+- b464847: export authservice and registerSW seperetly
+- f00c36f: do direct type definition instead of import
+- new serviceworker setup
+
 ## 2.0.0-next.1
 
 ### Minor Changes
