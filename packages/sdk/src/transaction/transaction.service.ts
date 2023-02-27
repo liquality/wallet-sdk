@@ -35,22 +35,22 @@ export abstract class TransactionService {
     minBlockConfirmation = 0,
   ): Promise<string> {
     const chainProvider = getChainProvider(chainID);
-        const tx = await chainProvider.getTransaction(hash);
-        if(!tx) throw Error(TX_STATUS.NOT_FOUND);
-        if (
-          tx.confirmations &&
-          tx.confirmations > minBlockConfirmation
-        ) {
-          const { status } = await chainProvider.getTransactionReceipt(
-            hash
-          );
-          if (Number(status) === 1) {
-            return TX_STATUS.SUCCESS;
-          } else {
-            return TX_STATUS.FAILED;
-            }
-        }
-        return TX_STATUS.NOT_CONFIRMED;
+    const tx = await chainProvider.getTransaction(hash);
+    if (!tx) throw Error(TX_STATUS.NOT_FOUND);
+    if (
+      tx.confirmations &&
+      tx.confirmations > minBlockConfirmation
+    ) {
+      const { status } = await chainProvider.getTransactionReceipt(
+        hash
+      );
+      if (Number(status) === 1) {
+        return TX_STATUS.SUCCESS;
+      } else {
+        return TX_STATUS.FAILED;
+      }
+    }
+    return TX_STATUS.NOT_CONFIRMED;
   }
 
   private static async getFees(

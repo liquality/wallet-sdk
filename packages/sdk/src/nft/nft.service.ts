@@ -41,7 +41,7 @@ export abstract class NftService {
       transferRequest;
     const { schema, contract } = await this.cacheGet(contractAddress, chainId);
 
-    const  wallet = new Wallet(pk, getChainProvider(chainId));
+    const wallet = new Wallet(pk, getChainProvider(chainId));
     const owner = wallet.address;
     let tx: PopulatedTransaction;
     const data = "0x";
@@ -139,7 +139,7 @@ export abstract class NftService {
       LiqERC1155__factory.bytecode,
       new Wallet(pk, getChainProvider(chainId))
     );
-    
+
     return (await contractFactory.deploy(
       uri,
     )).deployTransaction.hash;
@@ -154,7 +154,7 @@ export abstract class NftService {
       AddressZero,
       getChainProvider(chainId)
     ).attach(contractAddress);
-    const  wallet = new Wallet(pk, getChainProvider(chainId));
+    const wallet = new Wallet(pk, getChainProvider(chainId));
     const owner = wallet.address;
 
     const data = "0x";
@@ -191,7 +191,7 @@ export abstract class NftService {
       LiqERC721__factory.bytecode,
       new Wallet(pk, getChainProvider(chainId))
     );
-    
+
     return (await contractFactory.deploy(
       tokenName,
       tokenSymbol
@@ -207,7 +207,7 @@ export abstract class NftService {
       AddressZero,
       getChainProvider(chainId)
     ).attach(contractAddress);
-    const  wallet = new Wallet(pk, getChainProvider(chainId));
+    const wallet = new Wallet(pk, getChainProvider(chainId));
     const owner = wallet.address;
 
     const tx = await contract.populateTransaction.safeMint(recipient, uri);

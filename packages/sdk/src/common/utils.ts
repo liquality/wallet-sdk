@@ -23,7 +23,7 @@ export async function withInterval<T>(
 }
 
 
-export async function fetchGet(url: string, params:any)  {
+export async function fetchGet(url: string, params: any) {
   const response: any = await fetch(`${url}?${(new URLSearchParams(params)).toString()}`, {
     method: 'GET', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
@@ -32,5 +32,5 @@ export async function fetchGet(url: string, params:any)  {
     },
   });
 
-  return response.json(); 
+  return response.json();
 }

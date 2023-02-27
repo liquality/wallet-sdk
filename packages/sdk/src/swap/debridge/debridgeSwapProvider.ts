@@ -116,13 +116,13 @@ export abstract class DebridgeSwapProvider {
     } = quoteRequest;
 
     const response = await fetchGet(this.config.url + "chain/estimation", {
-        chainId,
-        tokenIn,
-        tokenInAmount: fromAmountInUnits,
-        tokenOut,
+      chainId,
+      tokenIn,
+      tokenInAmount: fromAmountInUnits,
+      tokenOut,
     });
 
-    if(!response.estimation) throw Error('Could not get quote');
+    if (!response.estimation) throw Error('Could not get quote');
     return {
       amount: formatUnits(response.estimation.tokenOut.amount, decimals),
       minAmount: formatUnits(response.estimation.tokenOut.minAmount, decimals),
@@ -143,14 +143,14 @@ export abstract class DebridgeSwapProvider {
     } = swapRequest;
 
     const response = await fetchGet(this.config.url + "chain/transaction", {
-        chainId,
-        tokenIn,
-        tokenInAmount: fromAmountInUnits,
-        tokenOut,
-        tokenOutRecipient,
+      chainId,
+      tokenIn,
+      tokenInAmount: fromAmountInUnits,
+      tokenOut,
+      tokenOutRecipient,
     });
 
-    if(!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+    if (!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
@@ -179,14 +179,14 @@ export abstract class DebridgeSwapProvider {
       dstChainTokenOut,
     } = quoteRequest;
     const response = await fetchGet(this.config.url + "estimation", {
-        srcChainId,
-        srcChainTokenIn,
-        srcChainTokenInAmount: fromAmountInUnits,
-        dstChainId,
-        dstChainTokenOut,
+      srcChainId,
+      srcChainTokenIn,
+      srcChainTokenInAmount: fromAmountInUnits,
+      dstChainId,
+      dstChainTokenOut,
     });
 
-    if(!response.estimation) throw Error('Could not get quote');
+    if (!response.estimation) throw Error('Could not get quote');
 
     return {
       amount: formatUnits(response.estimation.dstChainTokenOut.amount, decimals),
@@ -207,15 +207,15 @@ export abstract class DebridgeSwapProvider {
       dstChainTokenOutRecipient,
     } = swapRequest;
     const response = await fetchGet(this.config.url + "transaction", {
-        srcChainId,
-        srcChainTokenIn,
-        srcChainTokenInAmount: fromAmountInUnits,
-        dstChainId,
-        dstChainTokenOut,
-        dstChainTokenOutRecipient,
+      srcChainId,
+      srcChainTokenIn,
+      srcChainTokenInAmount: fromAmountInUnits,
+      dstChainId,
+      dstChainTokenOut,
+      dstChainTokenOutRecipient,
     });
 
-    if(!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+    if (!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
@@ -319,13 +319,13 @@ export abstract class DebridgeSwapProvider {
         receiveStatus = await this.getCrossChainSwapReceiveStatus(sendTxHash, dstChainId);
       }
 
-      return {sendStatus, receiveStatus};
+      return { sendStatus, receiveStatus };
     }
-    
-    return {sendStatus, receiveStatus: null};
- }
 
-  private static async getCrossChainSwapReceiveStatus(sendTxHash: string, dstChainId: number){
+    return { sendStatus, receiveStatus: null };
+  }
+
+  private static async getCrossChainSwapReceiveStatus(sendTxHash: string, dstChainId: number) {
     const submissionInfo = await this.getFullSubmissionInfo(sendTxHash);
 
     if (submissionInfo?.send?.isExecuted && submissionInfo?.claim) {
@@ -342,13 +342,13 @@ export abstract class DebridgeSwapProvider {
       const submissionId = await this.getSubmissionId(swapTxHash);
       if (submissionId) {
         const result = await fetchGet(this.config.api + "SubmissionConfirmations/getForSubmission", {
-            submissionId: submissionId,
+          submissionId: submissionId,
         });
         if (Array.isArray(result)) {
           return result.length;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
     return 0;
   }
 
@@ -356,9 +356,9 @@ export abstract class DebridgeSwapProvider {
     swapTxHash: string
   ): Promise<string | null> {
     try {
-      const result = await fetchGet(this.config.api + "Transactions/GetFullSubmissionInfo",{
-          filter: swapTxHash,
-          filterType: 1,
+      const result = await fetchGet(this.config.api + "Transactions/GetFullSubmissionInfo", {
+        filter: swapTxHash,
+        filterType: 1,
       });
       return result?.send?.submissionId || null;
     } catch (e) {
@@ -370,9 +370,9 @@ export abstract class DebridgeSwapProvider {
     swapTxHash: string
   ): Promise<FullSubmissionInfo | null> {
     try {
-      const result = await fetchGet(this.config.api + "Transactions/GetFullSubmissionInfo",{
-          filter: swapTxHash,
-          filterType: 1,
+      const result = await fetchGet(this.config.api + "Transactions/GetFullSubmissionInfo", {
+        filter: swapTxHash,
+        filterType: 1,
       });
       return result || null;
     } catch (e) {

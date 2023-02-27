@@ -21,17 +21,17 @@ export function createChainProvider(chainId: number) {
       quorum: Config.QUORUM,
     }),
   };
-  
+
   let chainProvider;
-  if(chainId === CHAIN_IDS.BNB_MAINNET){
+  if (chainId === CHAIN_IDS.BNB_MAINNET) {
     chainProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/', 56);
-  }else{
+  } else {
     chainProvider = ethers.getDefaultProvider(
-    chainId,
-    chainProviderOptions
-  );
+      chainId,
+      chainProviderOptions
+    );
   }
-  
+
 
   chainProviderCache[chainId] = chainProvider;
 
