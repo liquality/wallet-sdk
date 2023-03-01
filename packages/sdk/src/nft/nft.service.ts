@@ -32,6 +32,13 @@ export abstract class NftService {
     return NftProvider.getNfts(owner, chainID);
   }
 
+  // Gets all Nfts minted from a contract. 
+  // use the pageKey( returned with each response ) to request the next page of nfts
+  // pageSize is 100 by default
+  public static async getNftsForContract(contractAddress: string, chainID: number, options?: {pageKey?: string, pageSize?: number}){
+      return NftProvider.getNftsForContract(contractAddress, chainID, options);
+  }
+
   public static async transferNft(
     transferRequest: TransferRequest,
     chainId: number,
