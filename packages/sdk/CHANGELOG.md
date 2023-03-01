@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.0
+
+### Minor Changes
+
+- f566694: feat: add getNftsForContract to the Nft Service
+
 ## 2.1.0
 
 ### Minor Changes
