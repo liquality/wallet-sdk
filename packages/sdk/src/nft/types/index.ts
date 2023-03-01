@@ -16,6 +16,10 @@ export interface Nft {
   };
   balance?: number;
 }
+export interface NftsForContract {
+  tokenIDs: string[], 
+  pageKey: string | undefined, 
+}
 
 export enum NftType {
   ERC721 = "ERC721",

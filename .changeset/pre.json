@@ -1,0 +1,13 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "api": "0.0.0",
+    "tkey-test": "0.1.1",
+    "eslint-config-custom": "0.0.0",
+    "@liquality/wallet-sdk": "2.1.0",
+    "tsconfig": "0.0.0",
+    "ui": "0.0.0"
+  },
+  "changesets": []
+}
