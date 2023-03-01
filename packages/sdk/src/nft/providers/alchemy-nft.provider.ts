@@ -1,6 +1,6 @@
 import { NftTokenType, Nft as AlchemyNft } from "alchemy-sdk";
 import { getAlchemyProvider } from "../../factory/alchemy-provider";
-import { Nft, NftType } from "../types";
+import { Nft, NftsForContract, NftType } from "../types";
 import { BaseNftProvider } from "./base-nft.provider";
 
 export abstract class AlchemyNftProvider extends BaseNftProvider {
@@ -15,7 +15,7 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
     try {
       const alchemy = getAlchemyProvider(chainID);
       const nfts = (await alchemy.nft.getNftsForOwner(owner)).ownedNfts;
-
+      
       return nfts.map((nft) => {
         return {
           id: nft.tokenId,
@@ -33,6 +33,22 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
           balance: this.isERC1155(nft) ? nft.balance : undefined,
         };
       });
+    } catch (error) {
+      return null;
+    }
+  }
+
+  public static async getNftsForContract(
+    contractAddress: string,
+    chainID: number,
+    options?: {pageKey?: string, pageSize?: number},
+  ): Promise<NftsForContract | null> {
+    try {
+      const alchemy = getAlchemyProvider(chainID);
+      const nftsResponse = await alchemy.nft.getNftsForContract(contractAddress, {...(options?.pageKey && {pageKey: options?.pageKey}), ...(options?.pageSize && {pageSize: options?.pageSize})});
+      
+      const tokenIDs =  nftsResponse.nfts.map(nft => nft.tokenId);
+      return {tokenIDs, pageKey: nftsResponse.pageKey }
     } catch (error) {
       return null;
     }
