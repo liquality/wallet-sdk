@@ -5,10 +5,8 @@ import { ERC20 as ERC20Contract, ERC20__factory } from "../../typechain-types";
 import { AddressZero } from "@ethersproject/constants";
 import { getChainProvider } from "../factory/chain-provider";
 import { TransactionService } from "../transaction/transaction.service";
-import { Wallet } from "ethers";
-//import { AccountToken } from "src/types";
-
-
+import { getWallet } from "../common/utils";
+import { JsonRpcSigner } from "@ethersproject/providers";
 
 type AccountToken = {
   tokenContractAddress: string | null
@@ -98,7 +96,7 @@ export abstract class ERC20Service {
   public static async transfer(
     transferRequest: TransferERC20Request,
     chainId: number,
-    pk: string
+    pkOrSigner: string | JsonRpcSigner
   ): Promise<string> {
     const { contractAddress, owner, receiver, amount } = transferRequest;
     const contract: ERC20Contract = ERC20__factory.connect(
@@ -118,7 +116,7 @@ export abstract class ERC20Service {
     );
 
     return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
+      await getWallet(pkOrSigner, chainId).sendTransaction(
         preparedTx
       )
     ).hash;
