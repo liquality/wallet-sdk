@@ -3,7 +3,6 @@ import BigNumber from "bignumber.js";
 import {
   BigNumber as EthersBigNumber,
   PopulatedTransaction,
-  Wallet,
 } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { Config } from "../common/config";
@@ -11,6 +10,8 @@ import { getChainProvider } from "../factory/chain-provider";
 import { gasMultiplier } from "./constants/gas-price-multipliers";
 import { TX_STATUS } from "./constants/transaction-status";
 import TransactionSpeed from "./types/transaction-speed";
+import { JsonRpcSigner } from "@ethersproject/providers";
+import { getWallet } from "src/common/utils";
 
 export abstract class TransactionService {
   public static async prepareTransaction(
@@ -123,7 +124,7 @@ export abstract class TransactionService {
     recipient: string,
     amount: string,
     chainId: number,
-    pk: string
+    pkOrSigner: string | JsonRpcSigner
   ): Promise<string> {
     const preparedTx = await TransactionService.prepareTransaction(
       {
@@ -136,7 +137,7 @@ export abstract class TransactionService {
     );
 
     return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
+      await getWallet(pkOrSigner, chainId).sendTransaction(
         preparedTx
       )
     ).hash;

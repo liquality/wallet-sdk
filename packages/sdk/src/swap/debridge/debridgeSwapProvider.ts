@@ -3,18 +3,19 @@ import { getChainProvider } from "../../factory/chain-provider";
 import { TransactionService } from "../../transaction/transaction.service";
 import { DebridgeConfig } from "./config";
 import { FullSubmissionInfo, QuoteRequest, SwapRequest, SwapStatusRequest } from "./types";
-import { fetchGet, withInterval } from "../../common/utils";
+import { fetchGet, getWallet, withInterval } from "../../common/utils";
 import SignatureVerifier from "./abi/SignatureVerifier.json";
 import { AddressZero } from "@ethersproject/constants";
 import { ERC20, ERC20__factory } from "../../../typechain-types";
-import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import BigNumber from "bignumber.js";
 import { TX_STATUS } from "../../transaction/constants/transaction-status";
+import { JsonRpcSigner } from "@ethersproject/providers";
 
 export abstract class DebridgeSwapProvider {
   private static readonly config = DebridgeConfig;
 
-  public static async swap(swapRequest: SwapRequest, pk: string) {
+  public static async swap(swapRequest: SwapRequest, pkOrSigner: string | JsonRpcSigner) {
     // Validation
     const isSrcChainSupported = !!this.config.chains[swapRequest.srcChainId];
     const isDstChainSupported = !!this.config.chains[swapRequest.srcChainId];
@@ -25,15 +26,14 @@ export abstract class DebridgeSwapProvider {
     )
       throw Error("Swap not supported");
 
-    const chainProvider = getChainProvider(swapRequest.srcChainId);
-    const wallet = new Wallet(pk, chainProvider);
+    const wallet = getWallet(pkOrSigner, swapRequest.srcChainId);
     let fromAmountInUnits: string;
 
     if (swapRequest.srcChainTokenIn !== AddressZero) {
       // Approve token
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        chainProvider
+        getChainProvider(swapRequest.srcChainId)
       ).attach(swapRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
@@ -132,7 +132,7 @@ export abstract class DebridgeSwapProvider {
   private static async singleChainSwap(
     swapRequest: SwapRequest,
     fromAmountInUnits: string,
-    wallet: Wallet
+    wallet: Wallet | JsonRpcSigner
   ) {
     const {
       srcChainId: chainId,
@@ -154,7 +154,7 @@ export abstract class DebridgeSwapProvider {
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
-        from: wallet.address,
+        from: await wallet.getAddress(),
         ...response.tx,
         value: EthersBigNumber.from(response.tx.value)
       },
@@ -197,7 +197,7 @@ export abstract class DebridgeSwapProvider {
   private static async crossChainSwap(
     swapRequest: SwapRequest,
     fromAmountInUnits: string,
-    wallet: Wallet
+    wallet: Wallet | JsonRpcSigner
   ) {
     const {
       srcChainId,
@@ -219,7 +219,7 @@ export abstract class DebridgeSwapProvider {
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
-        from: wallet.address,
+        from: await wallet.getAddress(),
         ...response.tx,
         value: EthersBigNumber.from(response.tx.value)
       },
@@ -235,9 +235,9 @@ export abstract class DebridgeSwapProvider {
   private static async approveToken(
     contract: ERC20,
     amount: string,
-    wallet: Wallet
+    wallet: Wallet  | JsonRpcSigner
   ) {
-    if (await this.hasAllowance(contract, amount, wallet.address)) return true;
+    if (await this.hasAllowance(contract, amount, await wallet.getAddress())) return true;
 
     const tx = await contract.populateTransaction.approve(
       this.config.routerAddress,
