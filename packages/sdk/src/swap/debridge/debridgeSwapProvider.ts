@@ -65,14 +65,13 @@ export abstract class DebridgeSwapProvider {
     )
       throw Error("Swap not supported");
 
-    const chainProvider = getChainProvider(quoteRequest.srcChainId);
     let fromAmountInUnits: string;
     let dstTokenDecimals: number;
 
     if (quoteRequest.srcChainTokenIn !== AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        chainProvider
+        getChainProvider(quoteRequest.srcChainId)
       ).attach(quoteRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
@@ -89,7 +88,7 @@ export abstract class DebridgeSwapProvider {
     if (quoteRequest.dstChainTokenOut !== AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        chainProvider
+        getChainProvider(quoteRequest.dstChainId)
       ).attach(quoteRequest.dstChainTokenOut);
       dstTokenDecimals = await contract.decimals();
     } else {
