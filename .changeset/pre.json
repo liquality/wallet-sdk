@@ -10,6 +10,7 @@
     "ui": "0.0.0"
   },
   "changesets": [
-    "proud-cups-act"
+    "proud-cups-act",
+    "soft-turkeys-tap"
   ]
 }
