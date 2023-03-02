@@ -1,5 +1,12 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.3
+
+### Patch Changes
+
+- 334a764: fix: resolve import path error
+  fix: resolve error using same chain provider for cross chain swap
+
 ## 2.2.0-next.2
 
 ### Patch Changes
