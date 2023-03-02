@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.1
+
+### Minor Changes
+
+- 79c63d9: feat: support injected signer
+
 ## 2.2.0-next.0
 
 ### Minor Changes
