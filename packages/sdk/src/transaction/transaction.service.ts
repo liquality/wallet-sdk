@@ -11,7 +11,7 @@ import { gasMultiplier } from "./constants/gas-price-multipliers";
 import { TX_STATUS } from "./constants/transaction-status";
 import TransactionSpeed from "./types/transaction-speed";
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { getWallet } from "src/common/utils";
+import { getWallet } from "../common/utils";
 
 export abstract class TransactionService {
   public static async prepareTransaction(
