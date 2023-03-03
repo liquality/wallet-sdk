@@ -27,6 +27,7 @@ export function setup(config: ConfigParams) {
   Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
 }
 
+export {AccountService} from "./account/account.service"
 
 export const transferEther = TransactionService.transfer;
 
