@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.5
+
+### Patch Changes
+
+- f394759: fix import path error
+
 ## 2.2.0-next.4
 
 ### Minor Changes
