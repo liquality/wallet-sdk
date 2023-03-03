@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.4
+
+### Minor Changes
+
+- 886bf93: Add account service and method to get native balance
+
 ## 2.2.0-next.3
 
 ### Patch Changes
