@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { getChainProvider } from "src/factory/chain-provider";
+import { getChainProvider } from "../factory/chain-provider";
 
 
 export abstract class AccountService {
