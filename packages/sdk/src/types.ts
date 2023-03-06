@@ -1,5 +1,6 @@
 import ThresholdKey from "@tkey/default";
 import type { TorusLoginResponse } from "@toruslabs/customauth";
+import { ExternalProvider } from "@ethersproject/providers";
 export interface ConfigParams {
   alchemyApiKey?: string;
   etherscanApiKey?: string;
@@ -55,3 +56,5 @@ export type AccountToken = {
   rawBalance: string | null
   formattedBalance: string | undefined
 }
+
+export type PKeyOrProvider = ExternalProvider | string 

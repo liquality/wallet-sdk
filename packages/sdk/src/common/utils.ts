@@ -3,8 +3,8 @@ import BigNumber from "bignumber.js";
 import { ERC20, ERC20__factory } from "../../typechain-types";
 import { AddressZero } from "@ethersproject/constants";
 import { getChainProvider } from "../factory/chain-provider";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Wallet } from "ethers";
+import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
+import { ethers, Wallet } from "ethers";
 
 export async function withInterval<T>(
   func: () => Promise<T | undefined>
@@ -37,9 +37,11 @@ export async function fetchGet(url: string, params: any) {
   return response.json();
 }
 
-export function getWallet(pkOrSigner: string | JsonRpcSigner, chainID: number) {
-  if(typeof pkOrSigner === 'string') 
-    return new Wallet(pkOrSigner, getChainProvider(chainID));
-  
-  return pkOrSigner;
+export function getWallet(pkOrProvider: string | ExternalProvider, chainID: number, isGasless: boolean) {
+  if(typeof pkOrProvider === 'string') 
+    return new Wallet(pkOrProvider, getChainProvider(chainID, pkOrProvider, isGasless));
+ 
+  return new Web3Provider(pkOrProvider).getSigner()
 }
+
+
