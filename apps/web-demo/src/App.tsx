@@ -1,5 +1,6 @@
 import { Login, CreateWallet } from "ui";
 import { useState } from "react";
+import { AccountService, setup } from "@liquality/wallet-sdk";
 
 const verifierMap: Record<string, any> = {
   google: {
@@ -20,6 +21,21 @@ const directParams = {
 };
 
 export default function Web() {
+
+  setup({
+    alchemyApiKey:'',
+    etherscanApiKey:"-",
+    infuraProjectId:"-",
+    pocketNetworkApplicationID:"-",
+    quorum:1,
+    slowGasPriceMultiplier:1,
+    averageGasPriceMultiplier:1.5,
+    fastGasPriceMultiplier:2,
+    gasLimitMargin:2000,
+    biconomyApiKey:"",
+    biconomyContractAddresses:[]
+  });
+
   const [address, setAddress] = useState<string>();
   /*  const [nfts, setNfts] = useState<Nft[] | null>([]);
 
@@ -30,10 +46,19 @@ export default function Web() {
     setNfts(nfts);
   } */
 
+  async function updateNfts() {
+    // if (!address) throw new Error("set address first");
+    // alert(window.ethereum.address)
+    const balance = await AccountService.getBalance("0x9aC56DEF75A46bc1A85d8a44916a6C4C7f404fB4", 5);
+    alert(balance);
+    // console.log(nfts, "NFTS in my addr");
+    // setNfts(nfts);
+  }
+
   return (
     <div>
-      <Login directParams={directParams} verifierMap={verifierMap} />
-      <CreateWallet directParams={directParams} verifierMap={verifierMap} />
+      {/* <Login directParams={directParams} verifierMap={verifierMap} />
+      <CreateWallet directParams={directParams} verifierMap={verifierMap} /> */}
       <hr />
       {/*  <div>
         NFT address:
@@ -55,6 +80,7 @@ export default function Web() {
           ))}
         </div>
       )} */}
+      <button onClick={() => updateNfts()}>Get NFTS</button>
     </div>
   );
 }
