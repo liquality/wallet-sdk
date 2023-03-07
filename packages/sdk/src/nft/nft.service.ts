@@ -11,7 +11,7 @@ import {
 } from "./types";
 import { AddressZero } from "@ethersproject/constants";
 import { NftProvider } from "./nft.provider";
-import { ethers, Wallet } from "ethers";
+import { ethers } from "ethers";
 import { ExternalProvider } from "@ethersproject/providers";
 import { 
   LiqERC1155,
@@ -22,7 +22,6 @@ import {
 import { TransactionService } from "../transaction/transaction.service";
 import { getChainProvider } from "../factory/chain-provider";
 import { getWallet } from "../common/utils";
-import { JsonRpcSigner } from "@ethersproject/providers";
 
 export abstract class NftService {
   private static cache: Record<string, NftInfo> = {};
@@ -168,7 +167,7 @@ export abstract class NftService {
   ): Promise<string> {
     const contract = LiqERC1155__factory.connect(
       AddressZero,
-      getChainProvider(chainId,pkOrProvider, isGasless)
+      getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
     ).attach(contractAddress);
     const wallet = getWallet(pkOrProvider, chainId, isGasless);
     const owner = await wallet.getAddress();
@@ -223,7 +222,7 @@ export abstract class NftService {
   ): Promise<string> {
     const contract = LiqERC721__factory.connect(
       AddressZero,
-      getChainProvider(chainId,pkOrProvider, isGasless)
+      getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
     ).attach(contractAddress);
     const wallet = getWallet(pkOrProvider, chainId, isGasless);
     const owner = await wallet.getAddress();

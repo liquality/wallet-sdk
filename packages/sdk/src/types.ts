@@ -11,6 +11,8 @@ export interface ConfigParams {
   averageGasPriceMultiplier?: number;
   fastGasPriceMultiplier?: number;
   gasLimitMargin?: number;
+  biconomyApiKey?: string
+  biconomyContractAddresses?: string[]
 }
 
 export type KeyDetails = {

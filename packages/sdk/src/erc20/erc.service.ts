@@ -102,7 +102,7 @@ export abstract class ERC20Service {
     const { contractAddress, owner, receiver, amount } = transferRequest;
     const contract: ERC20Contract = ERC20__factory.connect(
       AddressZero,
-      getChainProvider(chainId,pkOrProvider, isGasless)
+      getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
     ).attach(contractAddress);
 
     const tx = await contract.populateTransaction.transfer(receiver, amount);
