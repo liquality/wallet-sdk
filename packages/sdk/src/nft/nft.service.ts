@@ -15,13 +15,16 @@ import { ethers } from "ethers";
 import { ExternalProvider } from "@ethersproject/providers";
 import { 
   LiqERC1155,
+  LiqERC1155Meta__factory,
   LiqERC1155__factory,
   LiqERC721,
+  LiqERC721Meta__factory,
   LiqERC721__factory,
 } from "../../typechain-types";
 import { TransactionService } from "../transaction/transaction.service";
 import { getChainProvider } from "../factory/chain-provider";
 import { getWallet } from "../common/utils";
+import { BICONOMY_TRUSTED_FORWARDERS } from "../common/constants";
 
 export abstract class NftService {
   private static cache: Record<string, NftInfo> = {};
@@ -143,20 +146,31 @@ export abstract class NftService {
     { uri }: CreateERC1155CollectionRequest,
     chainId: number,
     pkOrProvider: string | ExternalProvider,
-    isGasless: boolean
+    isGaslessCompliant: boolean
   ): Promise<string> {
-    const contractFactory = new ethers.ContractFactory(
-      LiqERC1155__factory.abi,
-      LiqERC1155__factory.bytecode,
-      
-      getWallet(pkOrProvider, chainId, isGasless)
-    );
+    let contractFactory;
+    let args = [uri];
 
-    const wallet = getWallet(pkOrProvider, chainId, isGasless);
-    const owner = await wallet.getAddress();
+    if(isGaslessCompliant) {
+      if(!BICONOMY_TRUSTED_FORWARDERS[chainId]) throw("Cannot deploy gasless compliant contract on the chain. not supported by us now");
+      contractFactory = new ethers.ContractFactory(
+        LiqERC1155Meta__factory.abi,
+        LiqERC1155Meta__factory.bytecode,
+        getWallet(pkOrProvider, chainId)
+      );
+      args.push(BICONOMY_TRUSTED_FORWARDERS[chainId]);
+
+    }else{
+      contractFactory = new ethers.ContractFactory(
+        LiqERC1155__factory.abi,
+        LiqERC1155__factory.bytecode,
+        getWallet(pkOrProvider, chainId)
+      );
+    }
+
     return (await contractFactory.deploy(
-      uri,
-    )).deployTransaction.hash;
+      ...args
+     )).deployTransaction.hash;
   }
 
   public static async mintERC1155Token(
@@ -200,17 +214,30 @@ export abstract class NftService {
     { tokenName, tokenSymbol }: CreateERC721CollectionRequest,
     chainId: number,
     pkOrProvider: string | ExternalProvider,
-    isGasless: boolean
+    isGaslessCompliant: boolean
   ): Promise<string> {
-    const contractFactory = new ethers.ContractFactory(
-      LiqERC721__factory.abi,
-      LiqERC721__factory.bytecode,
-      getWallet(pkOrProvider, chainId, isGasless)
-    );
+    let contractFactory;
+    let args = [tokenName, tokenSymbol];
+    if(isGaslessCompliant) {
+      if(!BICONOMY_TRUSTED_FORWARDERS[chainId]) throw("Cannot deploy gasless compliant contract on the chain. not supported by us now");
+      contractFactory = new ethers.ContractFactory(
+        LiqERC721Meta__factory.abi,
+        LiqERC721Meta__factory.bytecode,
+        getWallet(pkOrProvider, chainId)
+      );
+      args.push(BICONOMY_TRUSTED_FORWARDERS[chainId]);
+
+    }else{
+      contractFactory = new ethers.ContractFactory(
+        LiqERC721__factory.abi,
+        LiqERC721__factory.bytecode,
+        getWallet(pkOrProvider, chainId)
+      );
+    }
+
 
     return (await contractFactory.deploy(
-      tokenName,
-      tokenSymbol
+     ...args
     )).deployTransaction.hash;
   }
 
