@@ -4,14 +4,14 @@ import { Config } from "../common/config";
 import {Biconomy} from "@biconomy/mexa";
 ///@ts-ignore
 import {Biconomy as BiconomyForServer} from "biconomy/mexaforbackend";
-import { ExternalProvider, JsonRpcProvider, BaseProvider } from "@ethersproject/providers";
+import { ExternalProvider, JsonRpcProvider, BaseProvider, Web3Provider } from "@ethersproject/providers";
 
 
 const chainProviderCache: Record<number, BaseProvider> = {};
 
-export function getChainProvider(chainId: number, options?: {provider?: ExternalProvider, isGasless?: boolean}): BaseProvider {
+export function getChainProvider(chainId: number, options?: {provider?: ExternalProvider, isGasless?: boolean}): BaseProvider | Web3Provider {
   if(options?.isGasless) return gaslessProvider(chainId, options?.provider);
-  
+  else if(options?.provider) return new Web3Provider(options.provider);
   return chainProviderCache[chainId] ? chainProviderCache[chainId] : createChainProvider(chainId);
 }
 

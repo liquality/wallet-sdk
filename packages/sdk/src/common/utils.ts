@@ -34,11 +34,11 @@ export async function fetchGet(url: string, params: any) {
   return response.json();
 }
 
-export function getWallet(pkOrProvider: string | ExternalProvider, chainID: number, isGasless: boolean) {
+export function getWallet(pkOrProvider: string | ExternalProvider, chainID: number, isGasless?: boolean) {
   if(typeof pkOrProvider === 'string') 
-    return new Wallet(pkOrProvider, getChainProvider(chainID));
+    return new Wallet(pkOrProvider, getChainProvider(chainID, {isGasless}));
  
-  return new Web3Provider(pkOrProvider).getSigner()
+  return (getChainProvider(chainID, {provider: pkOrProvider, isGasless}) as Web3Provider).getSigner()
 }
 
 
