@@ -60,7 +60,7 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "alchemy-sdk": "^2.2.4",
-    "biconomy/mexaforbackend": "npm:@biconomy/mexa@2.38",
+    "biconomy/mexaforbackend": "npm:@biconomy/mexa@2.0.38",
     "bip32": "^3.1.0",
     "bip39": "^3.0.4",
     "bootstrap": "^5.2.2",

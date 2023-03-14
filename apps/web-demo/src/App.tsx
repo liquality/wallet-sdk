@@ -1,6 +1,6 @@
 import { Login, CreateWallet } from "ui";
 import { useState } from "react";
-import { AccountService, setup } from "@liquality/wallet-sdk";
+import { NftService, setup } from "@liquality/wallet-sdk";
 
 const verifierMap: Record<string, any> = {
   google: {
@@ -49,8 +49,10 @@ export default function Web() {
   async function updateNfts() {
     // if (!address) throw new Error("set address first");
     // alert(window.ethereum.address)
-    const balance = await AccountService.getBalance("0x9aC56DEF75A46bc1A85d8a44916a6C4C7f404fB4", 5);
-    alert(balance);
+    // const hash = await NftService.createERC721Collection({tokenName: "gaslessNft", tokenSymbol:"gnft"}, 80001,"", true);
+        const hash = await NftService.mintERC721Token({contractAddress: "0x276d843c8c7f3aa6518b6ba119d92c6262dd3577", recipient:"0x97542289b1453eb8e9c0f4af562ef7eb354db75c", uri:"spark"}, 80001,"<private key>", true);
+
+    console.log("hash => ",hash);
     // console.log(nfts, "NFTS in my addr");
     // setNfts(nfts);
   }

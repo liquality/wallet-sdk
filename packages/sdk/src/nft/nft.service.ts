@@ -148,6 +148,9 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
+    const wallet = getWallet(pkOrProvider, chainId);
+    const owner = await wallet.getAddress();
+
     let contractFactory;
     let args = [uri];
 
@@ -156,7 +159,7 @@ export abstract class NftService {
       contractFactory = new ethers.ContractFactory(
         LiqERC1155Meta__factory.abi,
         LiqERC1155Meta__factory.bytecode,
-        getWallet(pkOrProvider, chainId)
+        wallet
       );
       args.push(BICONOMY_TRUSTED_FORWARDERS[chainId]);
 
@@ -164,13 +167,27 @@ export abstract class NftService {
       contractFactory = new ethers.ContractFactory(
         LiqERC1155__factory.abi,
         LiqERC1155__factory.bytecode,
-        getWallet(pkOrProvider, chainId)
+        wallet
       );
     }
 
-    return (await contractFactory.deploy(
-      ...args
-     )).deployTransaction.hash;
+    const tx = contractFactory.getDeployTransaction(...args);
+
+    const preparedTx = await TransactionService.prepareTransaction(
+      {
+        from: owner,
+        to: undefined,
+        data: tx.data?.toString(),
+        chainId,
+      },
+      chainId
+    );
+    return (
+      await getWallet(pkOrProvider, chainId).sendTransaction(
+        preparedTx
+      )
+    ).hash;
+
   }
 
   public static async mintERC1155Token(
@@ -216,6 +233,9 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
+    const wallet = getWallet(pkOrProvider, chainId);
+    const owner = await wallet.getAddress();
+
     let contractFactory;
     let args = [tokenName, tokenSymbol];
     if(isGaslessCompliant) {
@@ -223,22 +243,36 @@ export abstract class NftService {
       contractFactory = new ethers.ContractFactory(
         LiqERC721Meta__factory.abi,
         LiqERC721Meta__factory.bytecode,
-        getWallet(pkOrProvider, chainId)
+        wallet
       );
       args.push(BICONOMY_TRUSTED_FORWARDERS[chainId]);
+
 
     }else{
       contractFactory = new ethers.ContractFactory(
         LiqERC721__factory.abi,
         LiqERC721__factory.bytecode,
-        getWallet(pkOrProvider, chainId)
+        wallet
       );
     }
 
+    const tx = contractFactory.getDeployTransaction(...args);
 
-    return (await contractFactory.deploy(
-     ...args
-    )).deployTransaction.hash;
+    const preparedTx = await TransactionService.prepareTransaction(
+      {
+        from: owner,
+        to: undefined,
+        data: tx.data?.toString(),
+        chainId,
+      },
+      chainId
+    );
+    return (
+      await getWallet(pkOrProvider, chainId).sendTransaction(
+        preparedTx
+      )
+    ).hash;
+
   }
 
   public static async mintERC721Token(
@@ -264,6 +298,7 @@ export abstract class NftService {
       },
       chainId
     );
+
 
     return (
       await wallet.sendTransaction(
