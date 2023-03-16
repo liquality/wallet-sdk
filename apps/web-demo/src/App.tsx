@@ -32,8 +32,7 @@ export default function Web() {
     averageGasPriceMultiplier:1.5,
     fastGasPriceMultiplier:2,
     gasLimitMargin:2000,
-    biconomyApiKey:"",
-    biconomyContractAddresses:[]
+    gelatoApiKey:"",
   });
 
   const [address, setAddress] = useState<string>();
