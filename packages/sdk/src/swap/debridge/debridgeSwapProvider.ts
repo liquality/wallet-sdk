@@ -26,14 +26,14 @@ export abstract class DebridgeSwapProvider {
     )
       throw Error("Swap not supported");
 
-    const wallet = getWallet(pkOrProvider, swapRequest.srcChainId, isGasless);
+    const wallet = await getWallet(pkOrProvider, swapRequest.srcChainId, isGasless);
     let fromAmountInUnits: string;
 
     if (swapRequest.srcChainTokenIn !== AddressZero) {
       // Approve token
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        getChainProvider(swapRequest.srcChainId)
+        await getChainProvider(swapRequest.srcChainId)
       ).attach(swapRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
@@ -71,7 +71,7 @@ export abstract class DebridgeSwapProvider {
     if (quoteRequest.srcChainTokenIn !== AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        getChainProvider(quoteRequest.srcChainId)
+        await getChainProvider(quoteRequest.srcChainId)
       ).attach(quoteRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
@@ -88,7 +88,7 @@ export abstract class DebridgeSwapProvider {
     if (quoteRequest.dstChainTokenOut !== AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        getChainProvider(quoteRequest.dstChainId)
+        await getChainProvider(quoteRequest.dstChainId)
       ).attach(quoteRequest.dstChainTokenOut);
       dstTokenDecimals = await contract.decimals();
     } else {
@@ -310,7 +310,7 @@ export abstract class DebridgeSwapProvider {
       const signatureVerifier = new ethers.Contract(
         this.config.chains[srcChainId].signatureVerifier,
         SignatureVerifier.abi,
-        getChainProvider(srcChainId)
+        await getChainProvider(srcChainId)
       );
       const minConfirmations = await signatureVerifier.minConfirmations();
       const count = await this.getConfirmationsCount(sendTxHash);

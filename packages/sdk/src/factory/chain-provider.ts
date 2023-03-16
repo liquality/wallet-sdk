@@ -9,8 +9,8 @@ import { ExternalProvider, JsonRpcProvider, BaseProvider, Web3Provider } from "@
 
 const chainProviderCache: Record<number, BaseProvider> = {};
 
-export function getChainProvider(chainId: number, options?: {provider?: ExternalProvider, isGasless?: boolean}): BaseProvider | Web3Provider {
-  if(options?.isGasless) return gaslessProvider(chainId, options?.provider);
+export async function getChainProvider(chainId: number, options?: {provider?: ExternalProvider, isGasless?: boolean}): Promise<BaseProvider | Web3Provider> {
+  if(options?.isGasless) return await gaslessProvider(chainId, options?.provider);
   else if(options?.provider) return new Web3Provider(options.provider);
   return chainProviderCache[chainId] ? chainProviderCache[chainId] : createChainProvider(chainId);
 }
@@ -46,7 +46,9 @@ export function createChainProvider(chainId: number) {
   return chainProvider
 }
 
-function gaslessProvider(chainId: number, provider?: ExternalProvider) {
+async function gaslessProvider(chainId: number, provider?: ExternalProvider) {
+
+  console.log("Came here >>>>>>>>>> ")
 
   let rpc = CHAINS[chainId].providerRPCs.ALCHEMY+Config.ALCHEMY_API_KEY || 
   CHAINS[chainId].providerRPCs.INFURA+Config.INFURA_PROJECT_ID;
@@ -55,16 +57,32 @@ function gaslessProvider(chainId: number, provider?: ExternalProvider) {
     const biconomyForServer = new BiconomyForServer(new JsonRpcProvider(rpc), {
       apiKey: Config.BICONOMY_API_KEY,
     });
+
     return biconomyForServer.getEthersProvider();
+    // return new ethers.providers.Web3Provider(biconomyForServer.getEthersProvider);
   } 
 
-  
+  // When external provider
   let biconomyOption = {
     apiKey: Config.BICONOMY_API_KEY,
-    contractAddresses: []
+    contractAddresses: Config.BICONOMY_CONTRACT_ADDRESSES
   } 
-
+  console.log("contractAddresses >> ", biconomyOption.contractAddresses)
   const biconomy = new Biconomy(provider, biconomyOption);
-  return new ethers.providers.Web3Provider(biconomy.provider);
+//   biconomy.on("READY", async () => {
+//     // Initialize your dapp here like getting user accounts etc
+//     console.log("It works >>>>>>> ")
+// })
+  await biconomy.init()
+  
+  // await biconomy.on("", handleEvent)
+  // console.log("get data >> ", await biconomy.getDappData())
+  return biconomy.ethersProvider
+  // return new ethers.providers.Web3Provider(biconomy.provider);
 
+
+}
+
+function handleEvent() {
+  console.log()
 }

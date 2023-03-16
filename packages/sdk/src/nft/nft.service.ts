@@ -25,6 +25,8 @@ import { TransactionService } from "../transaction/transaction.service";
 import { getChainProvider } from "../factory/chain-provider";
 import { getWallet } from "../common/utils";
 import { BICONOMY_TRUSTED_FORWARDERS } from "../common/constants";
+import { Biconomy } from "@biconomy/mexa";
+import { Config } from "../common/config";
 
 export abstract class NftService {
   private static cache: Record<string, NftInfo> = {};
@@ -54,7 +56,7 @@ export abstract class NftService {
       transferRequest;
     const { schema, contract } = await this.cacheGet(contractAddress, chainId);
 
-    const wallet = getWallet(pkOrProvider, chainId, isGasless);
+    const wallet = await getWallet(pkOrProvider, chainId, isGasless);
     const owner = await wallet.getAddress();
     let tx: PopulatedTransaction;
     const data = "0x";
@@ -131,7 +133,7 @@ export abstract class NftService {
         nftType == NftType.ERC1155 ? LiqERC1155__factory : LiqERC721__factory;
       NftService.cache[contractAddress] = {
         contract: contractFactory
-          .connect(AddressZero, getChainProvider(chainID))
+          .connect(AddressZero, await getChainProvider(chainID))
           .attach(contractAddress),
         schema: nftType,
       };
@@ -148,7 +150,7 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
-    const wallet = getWallet(pkOrProvider, chainId);
+    const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
 
     let contractFactory;
@@ -183,7 +185,7 @@ export abstract class NftService {
       chainId
     );
     return (
-      await getWallet(pkOrProvider, chainId).sendTransaction(
+      await (await getWallet(pkOrProvider, chainId)).sendTransaction(
         preparedTx
       )
     ).hash;
@@ -198,9 +200,9 @@ export abstract class NftService {
   ): Promise<string> {
     const contract = LiqERC1155__factory.connect(
       AddressZero,
-      getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
+      await getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
     ).attach(contractAddress);
-    const wallet = getWallet(pkOrProvider, chainId, isGasless);
+    const wallet = await getWallet(pkOrProvider, chainId, isGasless);
     const owner = await wallet.getAddress();
 
     const data = "0x";
@@ -233,7 +235,7 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
-    const wallet = getWallet(pkOrProvider, chainId);
+    const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
 
     let contractFactory;
@@ -268,7 +270,7 @@ export abstract class NftService {
       chainId
     );
     return (
-      await getWallet(pkOrProvider, chainId).sendTransaction(
+      await (await getWallet(pkOrProvider, chainId)).sendTransaction(
         preparedTx
       )
     ).hash;
@@ -281,29 +283,113 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
-    const contract = LiqERC721__factory.connect(
-      AddressZero,
-      getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
-    ).attach(contractAddress);
-    const wallet = getWallet(pkOrProvider, chainId, isGasless);
-    const owner = await wallet.getAddress();
+    // const chainProvider = await getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
+    // const contract = LiqERC721__factory.connect(
+    //   AddressZero,
+    //   chainProvider
+    // ).attach(contractAddress);
+    console.log("contractAddress >>>> ", contractAddress)
+    const wallet = await getWallet(pkOrProvider, chainId, isGasless);
+    // const owner = await wallet.getAddress();
 
-    const tx = await contract.populateTransaction.safeMint(recipient, uri);
+    // const tx = await contract.populateTransaction.safeMint(recipient, uri);
 
-    const preparedTx = await TransactionService.prepareTransaction(
-      {
-        ...tx,
-        from: owner,
-        chainId,
-      },
-      chainId
-    );
+    //  const preparedTx = await TransactionService.prepareTransaction(
+    //   {
+    //     ...tx,
+    //     from: owner,
+    //     chainId,
+    //   },
+    //   chainId
+    // );
+    // let txParams = {
+    //   data: tx.data,
+    //   to: contractAddress,
+    //   from: owner,
+    //   signatureType: "PERSONAL_SIGN",
+    //  };
+    //  (chainProvider as ExternalProvider).send!({method: "eth_sendRawTransaction", params: [txParams]}, (err, response) => {
+    //   console.log("response >> ", response, "err > ", err)
+    //  });
 
 
-    return (
-      await wallet.sendTransaction(
-        preparedTx
-      )
-    ).hash;
+    //  return ""
+
+
+    // try 1
+    // const biconomy = new Biconomy(pkOrProvider as ExternalProvider, {
+    //   apiKey: Config.BICONOMY_API_KEY,
+    //   debug: true,
+    //   contractAddresses: Config.BICONOMY_CONTRACT_ADDRESSES, // list of contract address you want to enable gasless on
+    // });
+    // // To create contract instances you can do:
+    // const contractInstance = new ethers.Contract(
+    //   contractAddress,
+    //   LiqERC721__factory.abi,
+    //   biconomy.ethersProvider
+    // );
+    // await biconomy.init();
+    // const resp = await contractInstance.safeMint(recipient, uri);
+    // console.log("resp >> ", resp)
+    // return resp
+    const biconomy = new Biconomy(pkOrProvider as ExternalProvider, {
+        apiKey: Config.BICONOMY_API_KEY,
+        debug: true,
+        contractAddresses: Config.BICONOMY_CONTRACT_ADDRESSES, // list of contract address you want to enable gasless on
+      });
+      await biconomy.init()
+      // console.log("DAPP data >> ", await biconomy.getDappData())
+    const provider = await biconomy.provider;
+const contractInstance = new ethers.Contract(
+    contractAddress,
+    LiqERC721Meta__factory.abi,
+    biconomy.ethersProvider
+);
+let tx = await contractInstance.populateTransaction.safeMint(recipient, uri);
+const preparedTx = await TransactionService.prepareTransaction(
+  {
+    ...tx,
+    from: await wallet.getAddress(),
+    chainId,
+  },
+  chainId
+);
+let txParams = {
+  data: preparedTx.data,
+  to: contractAddress,
+  from: wallet,
+  signature: "EIP712_SIGN",
+  txGas: preparedTx.gasLimit
+};
+const resp = await provider.request!({method: "eth_sendTransaction", params: [txParams]});
+console.log("resp >> ",resp);
+
+//  , (err, response) => {
+//   console.log("response >> ", response, "err > ", err)
+//  }
+
+ biconomy.on("txHashGenerated", (data: { transactionId: string; transactionHash: string; }) => {
+  console.log("txHashGenerated >> ",data);
+});
+
+biconomy.on("txMined", (data: {msg: string; id: string; hash: string; receipt: string}) => {
+  console.log("txMined >> ",data);
+});
+
+biconomy.on("onError", (data: {error: any; transactionId: string}) => {
+  console.log("onError >> ",data);
+});
+
+biconomy.on("txHashChanged", (data: {transactionId: string, transactionHash: string}) => {
+  console.log("txHashChanged >> ",data);
+});
+
+
+    // return (
+    //   await wallet.sendTransaction(
+    //     preparedTx
+    //   )
+    // ).hash;
+  return resp
   }
 }

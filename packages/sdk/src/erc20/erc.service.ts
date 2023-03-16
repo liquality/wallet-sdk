@@ -102,7 +102,7 @@ export abstract class ERC20Service {
     const { contractAddress, owner, receiver, amount } = transferRequest;
     const contract: ERC20Contract = ERC20__factory.connect(
       AddressZero,
-      getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
+      await getChainProvider(chainId,{...(typeof pkOrProvider !== 'string' && {pkOrProvider}), isGasless})
     ).attach(contractAddress);
 
     const tx = await contract.populateTransaction.transfer(receiver, amount);
@@ -117,7 +117,7 @@ export abstract class ERC20Service {
     );
 
     return (
-      await getWallet(pkOrProvider, chainId, isGasless).sendTransaction(
+      await ( await getWallet(pkOrProvider, chainId, isGasless)).sendTransaction(
         preparedTx
       )
     ).hash;

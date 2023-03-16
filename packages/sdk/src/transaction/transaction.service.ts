@@ -19,7 +19,7 @@ export abstract class TransactionService {
     chainID: number,
     speed = TransactionSpeed.Average,
   ): Promise<PopulatedTransaction> {
-    const chainProvider = getChainProvider(chainID);
+    const chainProvider = await getChainProvider(chainID);
     const fees = await this.getFees(speed, chainProvider);
     return {
       ...txRequest,
@@ -35,7 +35,7 @@ export abstract class TransactionService {
     chainID: number,
     minBlockConfirmation = 0,
   ): Promise<string> {
-    const chainProvider = getChainProvider(chainID);
+    const chainProvider = await getChainProvider(chainID);
     const tx = await chainProvider.getTransaction(hash);
     if (!tx) throw Error(TX_STATUS.NOT_FOUND);
     if (
@@ -138,7 +138,7 @@ export abstract class TransactionService {
     );
 
     return (
-      await getWallet(pkOrProvider, chainId, isGasless).sendTransaction(
+      await (await getWallet(pkOrProvider, chainId, isGasless)).sendTransaction(
         preparedTx
       )
     ).hash;
