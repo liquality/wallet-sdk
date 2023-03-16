@@ -25,6 +25,8 @@ export function setup(config: ConfigParams) {
   Config.AVERAGE_GAS_PRICE_MULTIPLIER = config.averageGasPriceMultiplier!;
   Config.FAST_GAS_PRICE_MULTIPLIER = config.fastGasPriceMultiplier!;
   Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
+  Config.GAS_LIMIT_MARGIN = config.gasLimitMargin!;
+  Config.GELATO_API_KEY = config.gelatoApiKey!;
 }
 
 export {AccountService} from "./account/account.service"

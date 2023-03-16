@@ -10,16 +10,16 @@ import { getChainProvider } from "../factory/chain-provider";
 import { gasMultiplier } from "./constants/gas-price-multipliers";
 import { TX_STATUS } from "./constants/transaction-status";
 import TransactionSpeed from "./types/transaction-speed";
-import { JsonRpcSigner } from "@ethersproject/providers";
+import { ExternalProvider } from "@ethersproject/providers";
 import { getWallet } from "../common/utils";
 
 export abstract class TransactionService {
   public static async prepareTransaction(
     txRequest: PopulatedTransaction,
     chainID: number,
-    speed = TransactionSpeed.Average
+    speed = TransactionSpeed.Average,
   ): Promise<PopulatedTransaction> {
-    const chainProvider = getChainProvider(chainID);
+    const chainProvider = await getChainProvider(chainID);
     const fees = await this.getFees(speed, chainProvider);
     return {
       ...txRequest,
@@ -35,7 +35,7 @@ export abstract class TransactionService {
     chainID: number,
     minBlockConfirmation = 0,
   ): Promise<string> {
-    const chainProvider = getChainProvider(chainID);
+    const chainProvider = await getChainProvider(chainID);
     const tx = await chainProvider.getTransaction(hash);
     if (!tx) throw Error(TX_STATUS.NOT_FOUND);
     if (
@@ -124,7 +124,8 @@ export abstract class TransactionService {
     recipient: string,
     amount: string,
     chainId: number,
-    pkOrSigner: string | JsonRpcSigner
+    pkOrProvider: string | ExternalProvider,
+    isGasless: boolean
   ): Promise<string> {
     const preparedTx = await TransactionService.prepareTransaction(
       {
@@ -137,7 +138,7 @@ export abstract class TransactionService {
     );
 
     return (
-      await getWallet(pkOrSigner, chainId).sendTransaction(
+      await (await getWallet(pkOrProvider, chainId)).sendTransaction(
         preparedTx
       )
     ).hash;
