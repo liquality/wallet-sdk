@@ -1,12 +1,14 @@
-import { ethers } from "ethers";
-import { CHAIN_IDS } from "../common/chain-ids";
+import { ethers, providers } from "ethers";
+import { CHAINS, CHAIN_IDS } from "../common/constants";
 import { Config } from "../common/config";
+import { ExternalProvider, JsonRpcProvider, BaseProvider, Web3Provider } from "@ethersproject/providers";
 
 
-const chainProviderCache: Record<number, ethers.providers.BaseProvider> = {};
-export function getChainProvider(chainId: number) {
-  if (chainProviderCache[chainId]) return chainProviderCache[chainId];
-  return createChainProvider(chainId);
+const chainProviderCache: Record<number, BaseProvider> = {};
+
+export async function getChainProvider(chainId: number, provider?: ExternalProvider): Promise<BaseProvider | Web3Provider> {
+  if(provider) return new Web3Provider(provider);
+  return chainProviderCache[chainId] ? chainProviderCache[chainId] : createChainProvider(chainId);
 }
 
 export function createChainProvider(chainId: number) {
@@ -22,18 +24,20 @@ export function createChainProvider(chainId: number) {
     }),
   };
 
+  
   let chainProvider;
   if (chainId === CHAIN_IDS.BNB_MAINNET) {
     chainProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/', 56);
-  } else {
+  } else if (chainId === CHAIN_IDS.MATIC_MUMBAI) {
+    chainProvider = new ethers.providers.JsonRpcProvider(CHAINS[chainId].providerRPCs.ALCHEMY+Config.ALCHEMY_API_KEY , 80001);
+  } 
+  else {
     chainProvider = ethers.getDefaultProvider(
       chainId,
       chainProviderOptions
     );
   }
 
-
   chainProviderCache[chainId] = chainProvider;
-
-  return chainProvider;
+  return chainProvider
 }

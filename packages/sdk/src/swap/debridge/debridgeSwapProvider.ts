@@ -10,12 +10,13 @@ import { ERC20, ERC20__factory } from "../../../typechain-types";
 import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import BigNumber from "bignumber.js";
 import { TX_STATUS } from "../../transaction/constants/transaction-status";
-import { JsonRpcSigner } from "@ethersproject/providers";
+import { JsonRpcSigner, ExternalProvider } from "@ethersproject/providers";
+import { Gelato } from "../../gasless-providers/gelato";
 
 export abstract class DebridgeSwapProvider {
   private static readonly config = DebridgeConfig;
 
-  public static async swap(swapRequest: SwapRequest, pkOrSigner: string | JsonRpcSigner) {
+  public static async swap(swapRequest: SwapRequest, pkOrProvider: string | ExternalProvider, isGasless: boolean) {
     // Validation
     const isSrcChainSupported = !!this.config.chains[swapRequest.srcChainId];
     const isDstChainSupported = !!this.config.chains[swapRequest.srcChainId];
@@ -26,14 +27,18 @@ export abstract class DebridgeSwapProvider {
     )
       throw Error("Swap not supported");
 
-    const wallet = getWallet(pkOrSigner, swapRequest.srcChainId);
+    const isSwapFromNative = swapRequest.srcChainTokenIn !== AddressZero;
+
+    if(isGasless && isSwapFromNative) throw Error("Gasless not supported when swapping from native");
+
+    const wallet = await getWallet(pkOrProvider, swapRequest.srcChainId);
     let fromAmountInUnits: string;
 
-    if (swapRequest.srcChainTokenIn !== AddressZero) {
+    if (isSwapFromNative) {
       // Approve token
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        getChainProvider(swapRequest.srcChainId)
+        await getChainProvider(swapRequest.srcChainId)
       ).attach(swapRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
@@ -50,8 +55,8 @@ export abstract class DebridgeSwapProvider {
     }
 
     if (swapRequest.srcChainId === swapRequest.dstChainId)
-      return this.singleChainSwap(swapRequest, fromAmountInUnits!, wallet);
-    return this.crossChainSwap(swapRequest, fromAmountInUnits!, wallet);
+      return this.singleChainSwap(swapRequest, fromAmountInUnits!, wallet, isGasless, pkOrProvider);
+    return this.crossChainSwap(swapRequest, fromAmountInUnits!, wallet, isGasless, pkOrProvider);
   }
 
   public static async getQuote(quoteRequest: QuoteRequest) {
@@ -71,7 +76,7 @@ export abstract class DebridgeSwapProvider {
     if (quoteRequest.srcChainTokenIn !== AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        getChainProvider(quoteRequest.srcChainId)
+        await getChainProvider(quoteRequest.srcChainId)
       ).attach(quoteRequest.srcChainTokenIn);
       const decimals = await contract.decimals();
 
@@ -88,7 +93,7 @@ export abstract class DebridgeSwapProvider {
     if (quoteRequest.dstChainTokenOut !== AddressZero) {
       const contract: ERC20 = ERC20__factory.connect(
         AddressZero,
-        getChainProvider(quoteRequest.dstChainId)
+        await getChainProvider(quoteRequest.dstChainId)
       ).attach(quoteRequest.dstChainTokenOut);
       dstTokenDecimals = await contract.decimals();
     } else {
@@ -131,7 +136,9 @@ export abstract class DebridgeSwapProvider {
   private static async singleChainSwap(
     swapRequest: SwapRequest,
     fromAmountInUnits: string,
-    wallet: Wallet | JsonRpcSigner
+    wallet: Wallet | JsonRpcSigner,
+    isGasless: boolean,
+    pkOrProvider: string | ExternalProvider
   ) {
     const {
       srcChainId: chainId,
@@ -149,13 +156,17 @@ export abstract class DebridgeSwapProvider {
       tokenOutRecipient,
     });
 
-    if (!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+    const tx = response.tx;
+    if (!tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+
+    const from = await wallet.getAddress();
+    if(isGasless) return Gelato.sendTx(chainId,tx.to,from,tx.data!,pkOrProvider);
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
-        from: await wallet.getAddress(),
-        ...response.tx,
-        value: EthersBigNumber.from(response.tx.value)
+        from,
+        ...tx,
+        value: EthersBigNumber.from(tx.value)
       },
       chainId
     );
@@ -169,7 +180,7 @@ export abstract class DebridgeSwapProvider {
   private static async crossChainSwapQuote(
     quoteRequest: QuoteRequest,
     fromAmountInUnits: string,
-    decimals: number,
+    decimals: number
   ) {
     const {
       srcChainId,
@@ -196,7 +207,10 @@ export abstract class DebridgeSwapProvider {
   private static async crossChainSwap(
     swapRequest: SwapRequest,
     fromAmountInUnits: string,
-    wallet: Wallet | JsonRpcSigner
+    wallet: Wallet | JsonRpcSigner,
+    isGasless: boolean,
+    pkOrProvider: string | ExternalProvider
+
   ) {
     const {
       srcChainId,
@@ -214,13 +228,18 @@ export abstract class DebridgeSwapProvider {
       dstChainTokenOutRecipient,
     });
 
-    if (!response.tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+    const tx = response.tx;
+    if (!tx) throw Error("Swap Tx Could not be created...Try again perhaps with different params");
+
+    const from = await wallet.getAddress();
+
+    if(isGasless) return Gelato.sendTx(srcChainId,tx.to,from,tx.data!,pkOrProvider);
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
-        from: await wallet.getAddress(),
-        ...response.tx,
-        value: EthersBigNumber.from(response.tx.value)
+        from,
+        ...tx,
+        value: EthersBigNumber.from(tx.value)
       },
       srcChainId
     );
@@ -310,7 +329,7 @@ export abstract class DebridgeSwapProvider {
       const signatureVerifier = new ethers.Contract(
         this.config.chains[srcChainId].signatureVerifier,
         SignatureVerifier.abi,
-        getChainProvider(srcChainId)
+        await getChainProvider(srcChainId)
       );
       const minConfirmations = await signatureVerifier.minConfirmations();
       const count = await this.getConfirmationsCount(sendTxHash);

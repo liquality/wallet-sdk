@@ -8,4 +8,6 @@ export class Config {
   public static AVERAGE_GAS_PRICE_MULTIPLIER: number;
   public static FAST_GAS_PRICE_MULTIPLIER: number;
   public static GAS_LIMIT_MARGIN: number;
+  public static GELATO_API_KEY: string
 }
+
