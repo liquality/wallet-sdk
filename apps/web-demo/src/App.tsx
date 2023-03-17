@@ -1,5 +1,5 @@
 // import { Login, CreateWallet } from "ui";
-import { useState } from "react";
+// import { useState } from "react";
 import { NftService, setup } from "@liquality/wallet-sdk";
 
 // const verifierMap: Record<string, any> = {
