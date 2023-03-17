@@ -1,24 +1,24 @@
-import { Login, CreateWallet } from "ui";
+// import { Login, CreateWallet } from "ui";
 import { useState } from "react";
 import { NftService, setup } from "@liquality/wallet-sdk";
 
-const verifierMap: Record<string, any> = {
-  google: {
-    name: "Google",
-    typeOfLogin: "google",
-    clientId:
-      "852640103435-0qhvrgpkm66c9hu0co6edkhao3hrjlv3.apps.googleusercontent.com",
-    verifier: "liquality-google-testnet",
-  },
-};
+// const verifierMap: Record<string, any> = {
+//   google: {
+//     name: "Google",
+//     typeOfLogin: "google",
+//     clientId:
+//       "852640103435-0qhvrgpkm66c9hu0co6edkhao3hrjlv3.apps.googleusercontent.com",
+//     verifier: "liquality-google-testnet",
+//   },
+// };
 
 // 1. Setup Service Provider
-const directParams = {
-  baseUrl: `http://localhost:3005/serviceworker`,
-  enableLogging: true,
-  networkUrl: "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
-  network: "testnet" as any,
-};
+// const directParams = {
+//   baseUrl: `http://localhost:3005/serviceworker`,
+//   enableLogging: true,
+//   networkUrl: "https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27",
+//   network: "testnet" as any,
+// };
 
 export default function Web() {
 
@@ -35,7 +35,7 @@ export default function Web() {
     gelatoApiKey:"",
   });
 
-  const [address, setAddress] = useState<string>();
+  // const [address, setAddress] = useState<string>();
   /*  const [nfts, setNfts] = useState<Nft[] | null>([]);
 
   async function updateNfts() {
