@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.6
+
+### Minor Changes
+
+- 7900993: feat: gasless support for ERC20 transfer, NFT(minting & transfer), and Swaps from token
+
 ## 2.2.0-next.5
 
 ### Patch Changes
