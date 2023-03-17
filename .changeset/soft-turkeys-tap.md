@@ -2,4 +2,4 @@
 "@liquality/wallet-sdk": minor
 ---
 
-new serviceworker setup
+feat: support injected signer

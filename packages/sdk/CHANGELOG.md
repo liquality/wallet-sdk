@@ -1,5 +1,74 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.8
+
+### Patch Changes
+
+- 1784bae: fix: resolve build issues
+
+## 2.2.0-next.7
+
+### Patch Changes
+
+- cbc21b2: fix: resolve build issue
+
+## 2.2.0-next.6
+
+### Minor Changes
+
+- 7900993: feat: gasless support for ERC20 transfer, NFT(minting & transfer), and Swaps from token
+
+## 2.2.0-next.5
+
+### Patch Changes
+
+- f394759: fix import path error
+
+## 2.2.0-next.4
+
+### Minor Changes
+
+- 886bf93: Add account service and method to get native balance
+
+## 2.2.0-next.3
+
+### Patch Changes
+
+- 334a764: fix: resolve import path error
+  fix: resolve error using same chain provider for cross chain swap
+
+## 2.2.0-next.2
+
+### Patch Changes
+
+- f6e23c9: Update import path
+
+## 2.2.0-next.1
+
+### Minor Changes
+
+- 79c63d9: feat: support injected signer
+
+## 2.2.0-next.0
+
+### Minor Changes
+
+- f566694: feat: add getNftsForContract to the Nft Service
+
+## 2.1.0
+
+### Minor Changes
+
+- 00f9735: add token contract address on alchemy return
+
+## 2.0.0
+
+### Minor Changes
+
+- b464847: export authservice and registerSW seperetly
+- f00c36f: do direct type definition instead of import
+- new serviceworker setup
+
 ## 2.0.0-next.1
 
 ### Minor Changes

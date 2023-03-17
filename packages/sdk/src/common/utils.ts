@@ -1,8 +1,7 @@
-import { random } from "lodash";
-import BigNumber from "bignumber.js";
-import { ERC20, ERC20__factory } from "../../typechain-types";
-import { AddressZero } from "@ethersproject/constants";
+import { random, reject, update } from "lodash";
 import { getChainProvider } from "../factory/chain-provider";
+import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
+import { Wallet } from "ethers";
 
 export async function withInterval<T>(
   func: () => Promise<T | undefined>
@@ -11,20 +10,22 @@ export async function withInterval<T>(
   if (updates) {
     return updates;
   }
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const interval = setInterval(async () => {
       const updates = await func();
       if (updates) {
         clearInterval(interval);
-        resolve(updates);
+        if(updates instanceof Error) reject(updates)
+        else resolve(updates);
       }
-    }, random(15000, 30000));
+    }, random(5000, 10000));
   });
 }
 
 
-export async function fetchGet(url: string, params: any) {
-  const response: any = await fetch(`${url}?${(new URLSearchParams(params)).toString()}`, {
+export async function fetchGet(url: string, params?: any) {
+  if(params) url =  `${url}?${(new URLSearchParams(params)).toString()}`;
+  const response: any = await fetch(url, {
     method: 'GET', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     headers: {
@@ -34,3 +35,12 @@ export async function fetchGet(url: string, params: any) {
 
   return response.json();
 }
+
+export async function getWallet(pkOrProvider: string | ExternalProvider, chainID: number) {
+  if(typeof pkOrProvider === 'string') 
+    return new Wallet(pkOrProvider, (await getChainProvider(chainID)));
+ 
+  return (await getChainProvider(chainID, pkOrProvider) as Web3Provider).getSigner()
+}
+
+

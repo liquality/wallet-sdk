@@ -5,8 +5,18 @@ import { ERC20 as ERC20Contract, ERC20__factory } from "../../typechain-types";
 import { AddressZero } from "@ethersproject/constants";
 import { getChainProvider } from "../factory/chain-provider";
 import { TransactionService } from "../transaction/transaction.service";
-import { Wallet } from "ethers";
-import { AccountToken } from "src/types";
+import { getWallet } from "../common/utils";
+import { ExternalProvider } from "@ethersproject/providers";
+import { Gelato } from "../gasless-providers/gelato";
+
+type AccountToken = {
+  tokenContractAddress: string | null
+  tokenName: string | null
+  tokenSymbol: string | null
+  rawBalance: string | null
+  formattedBalance: string | undefined
+}
+
 
 
 export abstract class ERC20Service {
@@ -38,6 +48,7 @@ export abstract class ERC20Service {
       }
 
       accountTokens.push({
+        tokenContractAddress: token.contractAddress,
         tokenName: metadata.name,
         tokenSymbol: metadata.symbol,
         rawBalance: balance,
@@ -86,15 +97,18 @@ export abstract class ERC20Service {
   public static async transfer(
     transferRequest: TransferERC20Request,
     chainId: number,
-    pk: string
+    pkOrProvider: string | ExternalProvider,
+    isGasless: boolean
   ): Promise<string> {
     const { contractAddress, owner, receiver, amount } = transferRequest;
     const contract: ERC20Contract = ERC20__factory.connect(
       AddressZero,
-      getChainProvider(chainId)
+      await getChainProvider(chainId)
     ).attach(contractAddress);
 
     const tx = await contract.populateTransaction.transfer(receiver, amount);
+
+    if(isGasless) return Gelato.sendTx(chainId,contractAddress,owner,tx.data!,pkOrProvider)
 
     const preparedTx = await TransactionService.prepareTransaction(
       {
@@ -106,7 +120,7 @@ export abstract class ERC20Service {
     );
 
     return (
-      await new Wallet(pk, getChainProvider(chainId)).sendTransaction(
+      await ( await getWallet(pkOrProvider, chainId)).sendTransaction(
         preparedTx
       )
     ).hash;
