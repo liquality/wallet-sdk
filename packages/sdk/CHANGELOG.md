@@ -1,5 +1,23 @@
 # @liquality/wallet-sdk
 
+## 2.2.0
+
+### Minor Changes
+
+- 7900993: feat: gasless support for ERC20 transfer, NFT(minting & transfer), and Swaps from token
+- f566694: feat: add getNftsForContract to the Nft Service
+- 79c63d9: feat: support injected signer
+- 886bf93: Add account service and method to get native balance
+
+### Patch Changes
+
+- 334a764: fix: resolve import path error
+  fix: resolve error using same chain provider for cross chain swap
+- cbc21b2: fix: resolve build issue
+- 1784bae: fix: resolve build issues
+- f394759: fix import path error
+- f6e23c9: Update import path
+
 ## 2.2.0-next.8
 
 ### Patch Changes
