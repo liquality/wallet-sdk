@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.0-next.7
+
+### Patch Changes
+
+- cbc21b2: fix: resolve build issue
+
 ## 2.2.0-next.6
 
 ### Minor Changes
