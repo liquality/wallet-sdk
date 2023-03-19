@@ -23,7 +23,7 @@ import { NftService, setup } from "@liquality/wallet-sdk";
 export default function Web() {
 
   setup({
-    alchemyApiKey:'JmoTKlpUIjzd1y5-8h-La50OewZULyL0',
+    alchemyApiKey:'',
     etherscanApiKey:"-",
     infuraProjectId:"-",
     pocketNetworkApplicationID:"-",
