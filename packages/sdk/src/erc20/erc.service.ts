@@ -89,7 +89,7 @@ export abstract class ERC20Service {
     return {
       tokenName: metadata.name,
       tokenSymbol: metadata.symbol,
-      rawBalance: balance,
+      rawBalance: new BigNumber(balance!).toString(10),
       formattedBalance,
     };
   }
