@@ -2,6 +2,7 @@ import { FeeData, Provider } from "@ethersproject/providers";
 import BigNumber from "bignumber.js";
 import {
   BigNumber as EthersBigNumber,
+  ethers,
   PopulatedTransaction,
 } from "ethers";
 import { parseEther } from "ethers/lib/utils";
@@ -84,14 +85,18 @@ export abstract class TransactionService {
     txRequest: PopulatedTransaction,
     chainProvider: Provider
   ) {
-    const estimation = await chainProvider.estimateGas(txRequest);
-    // do not add gas limit margin for sending native asset
-    if (estimation.eq(21000)) {
-      return estimation;
-    }
-    // gas estimation is increased with 50%
-    else {
-      return this.calculateGasMargin(estimation);
+    try {
+        const estimation = await chainProvider.estimateGas(txRequest);
+        // do not add gas limit margin for sending native asset
+        if (estimation.eq(21000)) {
+          return estimation;
+        }
+        // gas estimation is increased with 50%
+        else {
+          return this.calculateGasMargin(estimation);
+        }
+    } catch (error) {
+      return this.calculateGasMargin(ethers.BigNumber.from("72000"));
     }
   }
 
