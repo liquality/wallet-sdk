@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.2.1
+
+### Patch Changes
+
+- 692b1e2: Default to set gas, if gas estimate fails
+
 ## 2.2.0
 
 ### Minor Changes
