@@ -23,7 +23,7 @@ import { NftService, setup } from "@liquality/wallet-sdk";
 export default function Web() {
 
   setup({
-    alchemyApiKey:'',
+    alchemyApiKey:'JmoTKlpUIjzd1y5-8h-La50OewZULyL0',
     etherscanApiKey:"-",
     infuraProjectId:"-",
     pocketNetworkApplicationID:"-",
@@ -48,8 +48,8 @@ export default function Web() {
   async function updateNfts() {
     // if (!address) throw new Error("set address first");
     // alert(window.ethereum.address)
-    // const hash = await NftService.createERC721Collection({tokenName: "gaslessNft", tokenSymbol:"gnft"}, 80001,"", true);
-        const hash = await NftService.mintERC721Token({contractAddress: "0x276d843c8c7f3aa6518b6ba119d92c6262dd3577", recipient:"0x97542289b1453eb8e9c0f4af562ef7eb354db75c", uri:"spark"}, 80001,"<private key>", true);
+    const hash = await NftService.createERC721Collection({tokenName: "gaslessNft", tokenSymbol:"gnft"}, 80001,"0x836b54d4c1b1dcae45f592269752643b529e4190378aa437c32c9907da96ff52", true);
+        // const hash = await NftService.mintERC721Token({contractAddress: "0x276d843c8c7f3aa6518b6ba119d92c6262dd3577", recipient:"0x97542289b1453eb8e9c0f4af562ef7eb354db75c", uri:"spark"}, 80001,"<private key>", true);
 
     console.log("hash => ",hash);
     // console.log(nfts, "NFTS in my addr");
