@@ -3,7 +3,7 @@ import { getChainProvider } from "../../factory/chain-provider";
 import { TransactionService } from "../../transaction/transaction.service";
 import { DebridgeConfig } from "./config";
 import { FullSubmissionInfo, QuoteRequest, SwapRequest, SwapStatusRequest } from "./types";
-import { fetchGet, getWallet, withInterval } from "../../common/utils";
+import { fetchGet, getChainID, getWallet, withInterval } from "../../common/utils";
 import SignatureVerifier from "./abi/SignatureVerifier.json";
 import { AddressZero } from "@ethersproject/constants";
 import { ERC20, ERC20__factory } from "../../../typechain-types";
@@ -17,6 +17,10 @@ export abstract class DebridgeSwapProvider {
   private static readonly config = DebridgeConfig;
 
   public static async swap(swapRequest: SwapRequest, pkOrProvider: string | ExternalProvider, isGasless: boolean) {
+    const chainId = await getChainID(pkOrProvider);
+
+    if(chainId !== swapRequest.srcChainId) throw Error("External provider is connected to a different source chain");
+
     // Validation
     const isSrcChainSupported = !!this.config.chains[swapRequest.srcChainId];
     const isDstChainSupported = !!this.config.chains[swapRequest.srcChainId];
