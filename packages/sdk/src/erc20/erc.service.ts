@@ -83,7 +83,7 @@ export abstract class ERC20Service {
       formattedBalance = new BigNumber(balance).div(
         Math.pow(10, metadata.decimals)
       );
-      formattedBalance = formattedBalance.toFixed(2);
+      formattedBalance = formattedBalance.toString();
     }
 
     return {
