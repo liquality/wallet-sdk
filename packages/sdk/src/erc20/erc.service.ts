@@ -5,7 +5,7 @@ import { ERC20 as ERC20Contract, ERC20__factory } from "../../typechain-types";
 import { AddressZero } from "@ethersproject/constants";
 import { getChainProvider } from "../factory/chain-provider";
 import { TransactionService } from "../transaction/transaction.service";
-import { getWallet } from "../common/utils";
+import { getChainID, getWallet } from "../common/utils";
 import { ExternalProvider } from "@ethersproject/providers";
 import { Gelato } from "../gasless-providers/gelato";
 
@@ -100,6 +100,8 @@ export abstract class ERC20Service {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const { contractAddress, owner, receiver, amount } = transferRequest;
     const contract: ERC20Contract = ERC20__factory.connect(
       AddressZero,

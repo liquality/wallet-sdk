@@ -23,7 +23,7 @@ import {
 } from "../../typechain-types";
 import { TransactionService } from "../transaction/transaction.service";
 import { getChainProvider } from "../factory/chain-provider";
-import { getWallet } from "../common/utils";
+import { getChainID, getWallet } from "../common/utils";
 import { GELATO_RELAY_ADDRESS, GELATO_SUPPORTED_NETWORKS } from "../common/constants";
 import { Wallet } from "alchemy-sdk";
 import { Gelato } from "../gasless-providers/gelato";
@@ -51,6 +51,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const { contractAddress, receiver, tokenIDs, amounts } =
       transferRequest;
     const { schema, contract } = await this.cacheGet(contractAddress, chainId);
@@ -151,6 +153,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
 
@@ -199,6 +203,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const contract = LiqERC1155__factory.connect(
       AddressZero,
       await getChainProvider(chainId)
@@ -238,6 +244,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
 
@@ -286,6 +294,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const contract = LiqERC721__factory.connect(
       AddressZero,
       await getChainProvider(chainId)
