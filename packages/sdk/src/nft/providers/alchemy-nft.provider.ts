@@ -30,6 +30,7 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
             description: nft!.rawMetadata!.description || "",
             image: nft!.rawMetadata!.image || "",
           },
+          rawMetadata: nft!.rawMetadata,
           balance: this.isERC1155(nft) ? nft.balance : undefined,
         };
       });
