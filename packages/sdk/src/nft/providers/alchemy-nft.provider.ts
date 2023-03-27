@@ -26,7 +26,7 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
             type: this.extractNftType(nft.tokenType) || undefined,
           },
           metadata: {
-            name: nft!.rawMetadata!.name || "",
+            name: String(nft!.rawMetadata!.name) || "",
             description: nft!.rawMetadata!.description || "",
             image: nft!.rawMetadata!.image || "",
           },
