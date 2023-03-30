@@ -8,18 +8,7 @@ You can use npm or yarn to install the Liquality SDK
 npm install @liquality/wallet-sdk
 ```
 
-Authentication is handled by key shares that allow for easy recoverability without compromising security.
-
-### This is how it works:
-
-The keys are managed by creating shares of the private key via Shamir Secret Sharing.
-
-**ShareNumberOne** Could be stored on the user's device, similarly to how you usually can store a private key or seed phrase on a hardware device.
-
-**ShareNumberTwo** could be split across the Web3Auth network, only accessed by a OAuth provider login that the user owns. This could be Google SSO, or any of the other login providers that are currently supported (Facebook, Twitch, Discord)
-
-**ShareNumberThree**
-This share is a recovery share, which can be accessed through a users set password
+The Liquality Wallet SDK is a robust TypeScript library that has been purposefully designed to simplify the process of onboarding and building web3 applications. Its suite of powerful features includes the ability to facilitate self-custodial wallet creation and authentication through social single sign-on, as well as token and balance retrieval, NFT retrieval and minting, swaps, and much more.
 
 ---
 
