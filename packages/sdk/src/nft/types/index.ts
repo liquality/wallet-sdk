@@ -18,7 +18,7 @@ export interface Nft {
   balance?: number;
 }
 export interface NftsForContract {
-  tokenIDs: string[], 
+  tokens: {tokenId: string, tokenUri: string | undefined}[], 
   pageKey: string | undefined, 
 }
 
