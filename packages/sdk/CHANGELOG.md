@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.3.0
+
+### Minor Changes
+
+- 6a41f0b: Support gasless custom transactions and update NFT data
+
 ## 2.2.1
 
 ### Patch Changes
