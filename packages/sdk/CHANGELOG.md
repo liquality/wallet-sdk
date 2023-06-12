@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.3.1
+
+### Patch Changes
+
+- 7888931: some nfts return unknown as type from alchemy, you can provide the type yourself to avoid that blocker
+
 ## 2.3.0
 
 ### Minor Changes
