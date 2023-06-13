@@ -312,5 +312,20 @@ export abstract class NftService {
       )
     ).hash;
 
-}
+  }
+
+  public static async isApprovedForAll(
+    contractAddress: string,
+    owner: string,
+    operator: string,
+    chainId: number,
+  ): Promise<boolean> {
+
+    const contract = LiqERC721__factory.connect(
+      AddressZero,
+      await getChainProvider(chainId)
+    ).attach(contractAddress);
+
+    return contract.isApprovedForAll(owner, operator);
+  }
 }
