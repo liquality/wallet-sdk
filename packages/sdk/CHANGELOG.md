@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.4.0
+
+### Minor Changes
+
+- f78e057: feat: add isApprovedForAll to nft-service
+
 ## 2.3.1
 
 ### Patch Changes
