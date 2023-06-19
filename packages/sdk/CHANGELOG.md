@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.4.1
+
+### Patch Changes
+
+- db107bb: Resolve unsupported getDefaultProvider issue
+
 ## 2.4.0
 
 ### Minor Changes
