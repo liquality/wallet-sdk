@@ -28,15 +28,15 @@ export function createChainProvider(chainId: number) {
   let chainProvider;
   if (chainId === CHAIN_IDS.BNB_MAINNET) {
     chainProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/', 56);
-  } else if (chainId === CHAIN_IDS.MATIC_MUMBAI) {
+  } else {
     chainProvider = new ethers.providers.JsonRpcProvider(CHAINS[chainId].providerRPCs.ALCHEMY+Config.ALCHEMY_API_KEY , 80001);
   } 
-  else {
-    chainProvider = ethers.getDefaultProvider(
-      chainId,
-      chainProviderOptions
-    );
-  }
+  // else {
+  //   chainProvider = ethers.getDefaultProvider(
+  //     chainId,
+  //     chainProviderOptions
+  //   );
+  // }
 
   chainProviderCache[chainId] = chainProvider;
   return chainProvider
