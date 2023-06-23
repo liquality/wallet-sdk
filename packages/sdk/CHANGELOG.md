@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.4.2
+
+### Patch Changes
+
+- cf22ece: Undo changes to getDefaultProvider
+
 ## 2.4.1
 
 ### Patch Changes
