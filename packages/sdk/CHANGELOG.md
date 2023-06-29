@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.4.3
+
+### Patch Changes
+
+- d8b097e: fix: update gelato-relay-sdk
+
 ## 2.4.2
 
 ### Patch Changes
