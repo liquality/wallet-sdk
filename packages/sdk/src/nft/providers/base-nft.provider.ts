@@ -4,7 +4,8 @@ import { Nft } from "../types";
 export abstract class BaseNftProvider {
   public abstract getNfts(
     owner: string,
-    chainID: number
+    chainID: number,
+    contractAddresses?: string[]
   ): Promise<Nft[] | null>;
 
   public abstract getNftType(

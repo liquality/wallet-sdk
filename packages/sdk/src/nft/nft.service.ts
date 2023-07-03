@@ -33,9 +33,10 @@ export abstract class NftService {
   // Get all the NFTs owned by an address
   public static async getNfts(
     owner: string,
-    chainID: number
+    chainID: number, 
+    contractAddresses?: string[]
   ): Promise<Nft[] | null> {
-    return NftProvider.getNfts(owner, chainID);
+    return NftProvider.getNfts(owner, chainID, contractAddresses);
   }
 
   // Gets all Nfts minted from a contract. 
