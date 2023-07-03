@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.5.0
+
+### Minor Changes
+
+- e7405b9: filter getNfts by contract address
+
 ## 2.4.3
 
 ### Patch Changes
