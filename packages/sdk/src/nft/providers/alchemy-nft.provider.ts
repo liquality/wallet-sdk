@@ -10,11 +10,12 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
 
   public static async getNfts(
     owner: string,
-    chainID: number
+    chainID: number,
+    contractAddresses?: string[]
   ): Promise<Nft[] | null> {
     try {
       const alchemy = getAlchemyProvider(chainID);
-      const nfts = (await alchemy.nft.getNftsForOwner(owner)).ownedNfts;
+      const nfts = (await alchemy.nft.getNftsForOwner(owner, {contractAddresses})).ownedNfts;
       
       return nfts.map((nft) => {
         return {
