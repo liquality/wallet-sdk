@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.5.1
+
+### Patch Changes
+
+- 86e813d: Update chain-providers for MATIC Mainnet
+
 ## 2.5.0
 
 ### Minor Changes
