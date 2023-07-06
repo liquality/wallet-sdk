@@ -1,5 +1,11 @@
 # @liquality/wallet-sdk
 
+## 2.5.2
+
+### Patch Changes
+
+- e323da0: Update chain id for MATIC mainnet
+
 ## 2.5.1
 
 ### Patch Changes
