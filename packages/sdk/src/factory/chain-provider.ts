@@ -28,6 +28,8 @@ export function createChainProvider(chainId: number) {
   let chainProvider;
   if (chainId === CHAIN_IDS.BNB_MAINNET) {
     chainProvider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/', 56);
+  } else if (chainId === CHAIN_IDS.MATIC_MAINNET) {
+    chainProvider = new ethers.providers.JsonRpcProvider(CHAINS[chainId].providerRPCs.ALCHEMY+Config.ALCHEMY_API_KEY , 137);
   } else if (chainId === CHAIN_IDS.MATIC_MUMBAI) {
     chainProvider = new ethers.providers.JsonRpcProvider(CHAINS[chainId].providerRPCs.ALCHEMY+Config.ALCHEMY_API_KEY , 80001);
   } 
