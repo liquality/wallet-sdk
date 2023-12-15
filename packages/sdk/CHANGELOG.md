@@ -1,5 +1,65 @@
 # @liquality/wallet-sdk
 
+## 2.5.2
+
+### Patch Changes
+
+- e323da0: Update chain id for MATIC mainnet
+
+## 2.5.1
+
+### Patch Changes
+
+- 86e813d: Update chain-providers for MATIC Mainnet
+
+## 2.5.0
+
+### Minor Changes
+
+- e7405b9: filter getNfts by contract address
+
+## 2.4.3
+
+### Patch Changes
+
+- d8b097e: fix: update gelato-relay-sdk
+
+## 2.4.2
+
+### Patch Changes
+
+- cf22ece: Undo changes to getDefaultProvider
+
+## 2.4.1
+
+### Patch Changes
+
+- db107bb: Resolve unsupported getDefaultProvider issue
+
+## 2.4.0
+
+### Minor Changes
+
+- f78e057: feat: add isApprovedForAll to nft-service
+
+## 2.3.1
+
+### Patch Changes
+
+- 7888931: some nfts return unknown as type from alchemy, you can provide the type yourself to avoid that blocker
+
+## 2.3.0
+
+### Minor Changes
+
+- 6a41f0b: Support gasless custom transactions and update NFT data
+
+## 2.2.1
+
+### Patch Changes
+
+- 692b1e2: Default to set gas, if gas estimate fails
+
 ## 2.2.0
 
 ### Minor Changes

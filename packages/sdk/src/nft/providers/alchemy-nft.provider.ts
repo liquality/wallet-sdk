@@ -10,11 +10,12 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
 
   public static async getNfts(
     owner: string,
-    chainID: number
+    chainID: number,
+    contractAddresses?: string[]
   ): Promise<Nft[] | null> {
     try {
       const alchemy = getAlchemyProvider(chainID);
-      const nfts = (await alchemy.nft.getNftsForOwner(owner)).ownedNfts;
+      const nfts = (await alchemy.nft.getNftsForOwner(owner, {contractAddresses})).ownedNfts;
       
       return nfts.map((nft) => {
         return {
@@ -26,10 +27,11 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
             type: this.extractNftType(nft.tokenType) || undefined,
           },
           metadata: {
-            name: nft!.rawMetadata!.name || "",
+            name: String(nft!.rawMetadata!.name) || "",
             description: nft!.rawMetadata!.description || "",
             image: nft!.rawMetadata!.image || "",
           },
+          rawMetadata: nft!.rawMetadata,
           balance: this.isERC1155(nft) ? nft.balance : undefined,
         };
       });
@@ -47,8 +49,8 @@ export abstract class AlchemyNftProvider extends BaseNftProvider {
       const alchemy = getAlchemyProvider(chainID);
       const nftsResponse = await alchemy.nft.getNftsForContract(contractAddress, {...(options?.pageKey && {pageKey: options?.pageKey}), ...(options?.pageSize && {pageSize: options?.pageSize})});
       
-      const tokenIDs =  nftsResponse.nfts.map(nft => nft.tokenId);
-      return {tokenIDs, pageKey: nftsResponse.pageKey }
+      const tokens =  nftsResponse.nfts.map(nft =>  {return {tokenId: nft.tokenId, tokenUri: nft.tokenUri?.gateway}});
+      return {tokens, pageKey: nftsResponse.pageKey }
     } catch (error) {
       return null;
     }

@@ -14,10 +14,11 @@ export interface Nft {
     description?: string;
     image?: string;
   };
+  rawMetadata?:any;
   balance?: number;
 }
 export interface NftsForContract {
-  tokenIDs: string[], 
+  tokens: {tokenId: string, tokenUri: string | undefined}[], 
   pageKey: string | undefined, 
 }
 

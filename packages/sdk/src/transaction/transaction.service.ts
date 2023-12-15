@@ -2,6 +2,7 @@ import { FeeData, Provider } from "@ethersproject/providers";
 import BigNumber from "bignumber.js";
 import {
   BigNumber as EthersBigNumber,
+  ethers,
   PopulatedTransaction,
 } from "ethers";
 import { parseEther } from "ethers/lib/utils";
@@ -10,8 +11,9 @@ import { getChainProvider } from "../factory/chain-provider";
 import { gasMultiplier } from "./constants/gas-price-multipliers";
 import { TX_STATUS } from "./constants/transaction-status";
 import TransactionSpeed from "./types/transaction-speed";
-import { ExternalProvider } from "@ethersproject/providers";
+import { Web3Provider ,ExternalProvider } from "@ethersproject/providers";
 import { getWallet } from "../common/utils";
+import { Gelato } from "../gasless-providers/gelato"
 
 export abstract class TransactionService {
   public static async prepareTransaction(
@@ -28,6 +30,20 @@ export abstract class TransactionService {
       nonce: await chainProvider.getTransactionCount(txRequest.from!),
       ...(!!fees.maxFeePerGas && { type: 2 }),
     } as PopulatedTransaction;
+  }
+
+  public static async sendGaslessly(contractAddress:string, data: string, pkOrProvider: string | ExternalProvider, chainID?: number): Promise<string> {
+    let wallet;
+    let sender;
+    if (typeof pkOrProvider !== "string") {
+      wallet = new Web3Provider(pkOrProvider).getSigner();
+      chainID = await wallet.getChainId();
+      sender = await wallet.getAddress();
+    } else {
+      wallet = await getWallet(pkOrProvider, chainID!);
+      sender = await wallet.getAddress();
+    }
+    return Gelato.sendTx(chainID!, contractAddress, sender, data, pkOrProvider);
   }
 
   public static async getTransactionStatus(
@@ -84,14 +100,18 @@ export abstract class TransactionService {
     txRequest: PopulatedTransaction,
     chainProvider: Provider
   ) {
-    const estimation = await chainProvider.estimateGas(txRequest);
-    // do not add gas limit margin for sending native asset
-    if (estimation.eq(21000)) {
-      return estimation;
-    }
-    // gas estimation is increased with 50%
-    else {
-      return this.calculateGasMargin(estimation);
+    try {
+        const estimation = await chainProvider.estimateGas(txRequest);
+        // do not add gas limit margin for sending native asset
+        if (estimation.eq(21000)) {
+          return estimation;
+        }
+        // gas estimation is increased with 50%
+        else {
+          return this.calculateGasMargin(estimation);
+        }
+    } catch (error) {
+      return this.calculateGasMargin(ethers.BigNumber.from("72000"));
     }
   }
 

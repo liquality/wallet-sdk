@@ -23,7 +23,7 @@ import {
 } from "../../typechain-types";
 import { TransactionService } from "../transaction/transaction.service";
 import { getChainProvider } from "../factory/chain-provider";
-import { getWallet } from "../common/utils";
+import { getChainID, getWallet } from "../common/utils";
 import { GELATO_RELAY_ADDRESS, GELATO_SUPPORTED_NETWORKS } from "../common/constants";
 import { Wallet } from "alchemy-sdk";
 import { Gelato } from "../gasless-providers/gelato";
@@ -33,9 +33,10 @@ export abstract class NftService {
   // Get all the NFTs owned by an address
   public static async getNfts(
     owner: string,
-    chainID: number
+    chainID: number, 
+    contractAddresses?: string[]
   ): Promise<Nft[] | null> {
-    return NftProvider.getNfts(owner, chainID);
+    return NftProvider.getNfts(owner, chainID, contractAddresses);
   }
 
   // Gets all Nfts minted from a contract. 
@@ -51,55 +52,45 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const { contractAddress, receiver, tokenIDs, amounts } =
       transferRequest;
-    const { schema, contract } = await this.cacheGet(contractAddress, chainId);
-
+    
     const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
     let tx: PopulatedTransaction;
     const data = "0x";
 
-    switch (schema) {
-      case NftType.ERC721: {
-        if (tokenIDs.length !== 1) {
-          throw new Error(
-            `ERC 721 transfer supports exactly 1 tokenID, received ${tokenIDs.join()}`
-          );
-        }
-        const _contract: LiqERC721 = contract as LiqERC721;
-        tx = await _contract.populateTransaction[
-          "safeTransferFrom(address,address,uint256)"
-        ](owner, receiver, tokenIDs[0]);
-        break;
-      }
+    if (!amounts) { // ERC721 will not have amounts set
+      const { contract } = await this.cacheGet(contractAddress, chainId, NftType.ERC721);
 
-      case NftType.ERC1155: {
-        const _contract: LiqERC1155 = contract as LiqERC1155;
-        if (tokenIDs.length > 1) {
-          tx = await _contract.populateTransaction.safeBatchTransferFrom(
-            owner,
-            receiver,
-            tokenIDs,
-            amounts!,
-            data
-          );
-        } else {
-          tx = await _contract.populateTransaction.safeTransferFrom(
-            owner,
-            receiver,
-            tokenIDs[0],
-            amounts![0],
-            data
-          );
-        }
-        break;
-      }
-
-      default: {
-        throw new Error(`Unsupported NFT type: ${schema}`);
+      const _contract: LiqERC721 = contract as LiqERC721;
+      tx = await _contract.populateTransaction[
+        "safeTransferFrom(address,address,uint256)"
+      ](owner, receiver, tokenIDs[0]);
+    }else{
+      const { contract } = await this.cacheGet(contractAddress, chainId, NftType.ERC1155);
+      const _contract: LiqERC1155 = contract as LiqERC1155;
+      if (tokenIDs.length > 1) {  
+        tx = await _contract.populateTransaction.safeBatchTransferFrom(
+          owner,
+          receiver,
+          tokenIDs,
+          amounts!,
+          data
+        );  
+      }else{
+        tx = await _contract.populateTransaction.safeTransferFrom(
+          owner,
+          receiver,
+          tokenIDs[0],
+          amounts![0],
+          data
+        );
       }
     }
+
 
     if(isGasless) return Gelato.sendTx(chainId,contractAddress,owner,tx.data!,pkOrProvider);
 
@@ -121,13 +112,14 @@ export abstract class NftService {
 
   private static async cacheGet(
     contractAddress: string,
-    chainID: number
+    chainID: number,
+    nftType?: NftType
   ): Promise<NftInfo> {
     if (NftService.cache[contractAddress]) {
       return NftService.cache[contractAddress];
     }
 
-    const nftType = await NftProvider.getNftType(contractAddress, chainID);
+    if(!nftType) nftType = await NftProvider.getNftType(contractAddress, chainID);
 
     if (nftType !== NftType.UNKNOWN) {
       const contractFactory =
@@ -151,6 +143,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
 
@@ -199,6 +193,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const contract = LiqERC1155__factory.connect(
       AddressZero,
       await getChainProvider(chainId)
@@ -238,6 +234,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGaslessCompliant: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const wallet = await getWallet(pkOrProvider, chainId);
     const owner = await wallet.getAddress();
 
@@ -286,6 +284,8 @@ export abstract class NftService {
     pkOrProvider: string | ExternalProvider,
     isGasless: boolean
   ): Promise<string> {
+    chainId = await getChainID(pkOrProvider, chainId);
+
     const contract = LiqERC721__factory.connect(
       AddressZero,
       await getChainProvider(chainId)
@@ -313,5 +313,20 @@ export abstract class NftService {
       )
     ).hash;
 
-}
+  }
+
+  public static async isApprovedForAll(
+    contractAddress: string,
+    owner: string,
+    operator: string,
+    chainId: number,
+  ): Promise<boolean> {
+
+    const contract = LiqERC721__factory.connect(
+      AddressZero,
+      await getChainProvider(chainId)
+    ).attach(contractAddress);
+
+    return contract.isApprovedForAll(owner, operator);
+  }
 }

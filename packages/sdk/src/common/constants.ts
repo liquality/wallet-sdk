@@ -38,7 +38,7 @@ export const CHAINS = {
   },
   [CHAIN_IDS.MATIC_MAINNET] : {
     providerRPCs: {
-      ALCHEMY: "https://polygon-mumbai.g.alchemy.com/v2/",
+      ALCHEMY: "https://polygon-mainnet.g.alchemy.com/v2/",
       INFURA: "https://polygon-mainnet.infura.io/v3/"
     }
   },

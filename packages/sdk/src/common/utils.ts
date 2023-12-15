@@ -1,4 +1,4 @@
-import { random, reject, update } from "lodash";
+import { random } from "lodash";
 import { getChainProvider } from "../factory/chain-provider";
 import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
 import { Wallet } from "ethers";
@@ -41,6 +41,13 @@ export async function getWallet(pkOrProvider: string | ExternalProvider, chainID
     return new Wallet(pkOrProvider, (await getChainProvider(chainID)));
  
   return (await getChainProvider(chainID, pkOrProvider) as Web3Provider).getSigner()
+}
+
+export async function getChainID(pkOrProvider: string | ExternalProvider, chainID?: number): Promise<number> {
+  if(typeof pkOrProvider === 'string') return chainID!;
+  
+  const hexChainID = await (pkOrProvider as ExternalProvider).request!({method: 'eth_chainId'});
+  return parseInt(hexChainID);
 }
 
 

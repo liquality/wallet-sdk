@@ -1,6 +1,6 @@
 {
   "name": "@liquality/wallet-sdk",
-  "version": "2.2.0",
+  "version": "2.5.2",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "files": [
@@ -38,7 +38,7 @@
     "url": "^0.11.0"
   },
   "dependencies": {
-    "@gelatonetwork/relay-sdk": "^3.4.0",
+    "@gelatonetwork/relay-sdk": "^4.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
