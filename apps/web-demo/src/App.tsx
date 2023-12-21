@@ -100,6 +100,13 @@ export default function App() {
   const [poolAddr, setPool] = useState("");
   const [mockToken, setMockToken] = useState("");
   const [honeyPot, setHoneyPot] = useState("");
+  // add missing state for missing functions
+  const [topContributor, setTopContributor] = useState("");
+  const [reward, setReward] = useState("");
+  const [poolReward, setPoolReward] = useState("");
+  const [totalPoolContributions, setTotalPoolContributions] = useState("");
+  const [poolParticipation, setPoolParticipation] = useState({address:"", contribution:"", rewardAmount:""});
+
 
     useEffect(() => {
       async function loadWeb3() {
@@ -111,11 +118,12 @@ export default function App() {
                 setAccounts(accounts);
                 console.log(" accounts => ", accounts)
                 setWeb3(new ethers5.providers.Web3Provider((window as any).ethereum))
-                setCAddress("0x58a0cEC5D5daaE256fEC2eC07b1AefE85647AA85")
-                setCWallet("0x845D697E468336cc66dB47D4147A7a2cf99c5Ee3")
-                setNonceKey(BigInt("4422880037938569"))
-                setMockToken("0xa3b59a1080f2ae8efbe902bb03c15cb342d648fd") //mumbai - 0xE646f9783246D0Af8280A5C212486cC4091D0F8C            
-                setHoneyPot("0xaa54Cd631CEF6B0AFBD123AE5F8fE30d62A2Aedc")
+                setCAddress("0x5B6feFD04578d8e1E458f960f07abF3bEBA136e2")
+                setCWallet("0x164573AD131F2DF73Df41eFD0Ea568F5f434698C")
+                setNonceKey(BigInt("2135857501267875"))
+                setMockToken("0x288fFC62c3f4142C618B7D109E0Cf0405766F25E") //Local- 0x288fFC62c3f4142C618B7D109E0Cf0405766F25E // Zora- 0xa3b59a1080f2ae8efbe902bb03c15cb342d648fd // mumbai - 0xE646f9783246D0Af8280A5C212486cC4091D0F8C            
+                setHoneyPot("0x6C61D2D1e54e6b2a2AcFab3cCA8B85AD01F9e7c3") // Zora => 0xF64A284F04B5cF17dCa2e75501d8e835E3b25388
+                setPool("0xa16bc3f0328C1448d91eDDA0C1331171840b3445") // Local token pool - 0xfEC88143415bF6C3215a0F9CBF2c16E031c804Ce // Zora - 0xae3B9D4BEd0C5687e90A0D1a18C105CDB5C72ccf
                 // setCAddress("0xbb9077712ee90363dDE89E096e2CDb3422cb2c29")
                 // setCWallet("0x2F6f72c1B8C41f19BD553D2c567736d980064bE6")
                 // setNonceKey(BigInt("7770406593368469"))
@@ -191,17 +199,17 @@ export default function App() {
 
   async function getPools() {
     const response = await MyCollectives.Collective.getPoolByHoneyPot(web3, {address: cAddress, wallet:cWallet, nonceKey}, honeyPot)
-    setPool((response.pools)["id"])
+    setPool(response)
     console.log("!!!!! response => ", response)
   }
   
   async function poolMint() {
     const response = await MyCollectives.Pool.mint(web3, {address: cAddress, wallet:cWallet, nonceKey}, {
       recipient: await web3.getSigner().getAddress(),
-      tokenID: 1,
-      amount: ethers.parseEther("0.0005"),
+      tokenID: 6,
+      amount: ethers.parseEther("0.00001"),
       quantity: 1,
-      platform: SupportedPlatforms.Zora,
+      platform: SupportedPlatforms.LOCAL,
       tokenContract: mockToken,
       poolAddress: poolAddr,
 
@@ -212,29 +220,83 @@ export default function App() {
 
   // get participant data
   async function getParticipantData() {
-    const response = await MyCollectives.Pool.getParticipation(web3, poolAddr, accounts[2])
-    const token = new ethers5.Contract(mockToken, ["function balanceOf(address owner) view returns (uint256)"], web3.getSigner())
-    const bal = await token.balanceOf(accounts[2])
-    console.log("!!!!! bal => ", bal)
+    const response = await MyCollectives.Pool.getParticipation(poolAddr, await web3.getSigner().getAddress())
+    setPoolParticipation({address: response[0], contribution: response[1].toString(), rewardAmount: ethers5.utils.formatEther(response[2]).toString()})
+    // const token = new ethers5.Contract(mockToken, ["function balanceOf(address owner) view returns (uint256)"], web3.getSigner())
+    // const bal = await token.balanceOf(accounts[2])
+    // console.log("!!!!! bal => ", bal)
     // setPool(response.pools)
     console.log("!!!!! response => ", response)
 
-    async function checkBal() {
-      setTimeout(async () => {
-          // get balance of signer in cwallet 
-          const cWalletContract = new ethers5.Contract(cWallet, ["function balance(address) view returns (uint256)"], web3.getSigner())
-          const balance = await cWalletContract.balance(await web3.getSigner().getAddress())
-          console.log("balance 2 >>> ", ethers5.utils.formatEther(balance))
-      }, 3000)
-  }
-  await checkBal()
+    // get balance of signer in cwallet 
+    const cWalletContract = new ethers5.Contract(cWallet, ["function balance(address) view returns (uint256)"], web3.getSigner())
+    const balance = await cWalletContract.balance(await web3.getSigner().getAddress())
+    console.log("balance 2 >>> ", ethers5.utils.formatEther(balance))
+
   }
 
 
   async function createHoneyPot() {
-    const response = await MyCollectives.HoneyPot.get(web3, 188926, mockToken)
-    // setPool(response.pools)
+    const response = await MyCollectives.HoneyPot.create(web3, 180026)
+    setHoneyPot(response.honeyPot)
     console.log("!!!!! response => ", response)
+  }
+
+  // Add missing functions
+  async function getHoneyPot() {
+    const response = await MyCollectives.HoneyPot.get(web3, 180026)
+    setHoneyPot(response.honeyPot)
+    console.log("!!!!! response => ", response)
+  }
+
+  // forwardValue from mockToken to honeyPot
+  // async function forwardValue() {
+  //   const response = await MyCollectives.HoneyPot.forwardValue(web3, {address: cAddress, wallet:cWallet, nonceKey}, [mockToken, honeyPot], ethers.parseEther("0.0003"))
+  //   console.log("!!!!! response => ", response)
+  // }
+
+  async function sendreward() {
+    const response = await MyCollectives.HoneyPot.sendReward(web3, {address: cAddress, wallet:cWallet, nonceKey}, [honeyPot])
+    console.log("!!!!! response => ", response)
+  }
+
+  // get pool info from sdk function
+  async function getPoolInfo() {
+    const response = await MyCollectives.Pool.getPoolInfo(poolAddr)
+    console.log("!!!!! response => ", response)
+  }
+
+  async function setTopContributorInHoneyPot() {
+    const response = await MyCollectives.HoneyPot.setTopContributor(web3, honeyPot, cWallet)
+    console.log("!!!!! response => ", response)
+  }
+
+  async function getTopContributor() {
+    const response = await MyCollectives.HoneyPot.getTopContributor(honeyPot)
+    setTopContributor(response)
+    console.log("!!!!! response => ", response)
+  }
+
+  async function withdrawRewards() {
+    const response = await MyCollectives.Pool.withdrawRewards(web3, {address: cAddress, wallet:cWallet, nonceKey}, [poolAddr])
+    console.log("!!!!! response => ", response)
+  }
+
+  async function distributeReward() {
+    const response = await MyCollectives.Pool.distributeRewards(web3, {address: cAddress, wallet:cWallet, nonceKey}, [poolAddr])
+    console.log("!!!!! response => ", response)
+  }
+
+  async function getPoolReward() {
+    const reward = await MyCollectives.Pool.getPoolReward(poolAddr)
+    setPoolReward(reward)
+    console.log("!!!!! response => ", reward)
+  }
+
+  async function getTotalPoolContributions() {
+    const totalContributions = await MyCollectives.Pool.getTotalContributions(poolAddr)
+    setTotalPoolContributions(totalContributions.toString())
+    console.log("!!!!! response => ", totalContributions)
   }
   
 
@@ -266,10 +328,46 @@ export default function App() {
       </div>
       <div>
         <button onClick={getParticipantData}>Pool Participation</button>
+        <p>Participant Address: {poolParticipation.address}</p>
+        <p>Participant Contribution: {poolParticipation["contribution"]}</p>
+        <p>Participant Reward: {poolParticipation["rewardAmount"]}</p>
       </div>
       <div>
         <button onClick={createHoneyPot}>Create HoneyPot</button>
+        <p>{honeyPot}</p>
       </div>
+      <div>
+        <button onClick={getHoneyPot}>Get HoneyPot</button>
+        <p>{honeyPot}</p>
+      </div>
+      <div>
+        <button onClick={sendreward}>Send HoneyPot reward To TopContributor</button>
+      </div>
+      <div>
+        <button onClick={setTopContributorInHoneyPot}>Set TopContributor</button>
+      </div>
+      <div>
+        <button onClick={getTopContributor}>Get TopContributor</button>
+        <p>{topContributor}</p>
+      </div>
+      <div>
+        <button onClick={withdrawRewards}>Withdraw Reward Across Pools</button>
+      </div>
+      <div>
+        <button onClick={distributeReward}>Distribute Reward Across Pools</button>
+      </div>
+      <div>
+        <button onClick={getPoolReward}>Get Pool Reward</button>
+        <p>{poolReward}</p>
+      </div>
+      <div>
+        <button onClick={getTotalPoolContributions}>Total contributions In Pool</button>
+        <p>{totalPoolContributions}</p>
+      </div>
+      <div>
+        <button onClick={getPoolInfo}>Get Pool Info</button>
+      </div>
+      
     </div>
     </div>
   );
