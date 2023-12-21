@@ -8,6 +8,7 @@ import * as ethers5 from "ethers5";
 // import {Workflow} from "x-flow"
 import * as MyCollectives from "@koderholic/my-collectives"
 import {Config, SupportedPlatforms} from "@koderholic/my-collectives"
+import { sign } from "crypto";
 
 
 export default function App() {
@@ -98,6 +99,7 @@ export default function App() {
   const [isMember, setIsMember] = useState(false);
   const [poolAddr, setPool] = useState("");
   const [mockToken, setMockToken] = useState("");
+  const [honeyPot, setHoneyPot] = useState("");
 
     useEffect(() => {
       async function loadWeb3() {
@@ -109,10 +111,11 @@ export default function App() {
                 setAccounts(accounts);
                 console.log(" accounts => ", accounts)
                 setWeb3(new ethers5.providers.Web3Provider((window as any).ethereum))
-                setCAddress("0x64bc201eA597Bd5097858431F52D62530CB938BA")
-                setCWallet("0xa6E8A97aDC51BF2A5007cB484ca0a19419eddB83")
-                setNonceKey(BigInt("8314184071847699"))
-                setMockToken("0xE646f9783246D0Af8280A5C212486cC4091D0F8C") //mockToken                
+                setCAddress("0x58a0cEC5D5daaE256fEC2eC07b1AefE85647AA85")
+                setCWallet("0x845D697E468336cc66dB47D4147A7a2cf99c5Ee3")
+                setNonceKey(BigInt("4422880037938569"))
+                setMockToken("0xa3b59a1080f2ae8efbe902bb03c15cb342d648fd") //mumbai - 0xE646f9783246D0Af8280A5C212486cC4091D0F8C            
+                setHoneyPot("0xaa54Cd631CEF6B0AFBD123AE5F8fE30d62A2Aedc")
                 // setCAddress("0xbb9077712ee90363dDE89E096e2CDb3422cb2c29")
                 // setCWallet("0x2F6f72c1B8C41f19BD553D2c567736d980064bE6")
                 // setNonceKey(BigInt("7770406593368469"))
@@ -144,7 +147,7 @@ export default function App() {
 // userOpHash: "0x9fed14cb1000f9f36f0dffe9dce62120e015b1726cb597a955f1ae466f1ca224"
 
   async function createWallet() {
-    const response = await MyCollectives.Collective.create(web3, {tokenContracts: [mockToken], honeyPots: [accounts[2]] }, 19958870) //1202270 312270 319570 219570 119570 119587 119567
+    const response = await MyCollectives.Collective.create(web3, {tokenContracts: [mockToken], honeyPots: [honeyPot] }, 119570) //1202270 312270 319570 219570 119570 119587 119567
     console.log("!!!!! response => ", response)
     setCAddress(response.cAddress)
     setCWallet(response.cWallet)
@@ -153,7 +156,7 @@ export default function App() {
 
   // "0xb2bb96cc74a61b562d9a86792f3985888586d553d1506cf37d5536bb057b05e3"
   async function createPools() {
-    const response = await MyCollectives.Collective.createPools(web3, {address: cAddress, wallet:cWallet, nonceKey}, {tokenContracts: [mockToken], honeyPots: [accounts[2]] })
+    const response = await MyCollectives.Collective.createPools(web3, {address: cAddress, wallet:cWallet, nonceKey}, {tokenContracts: [mockToken], honeyPots: [honeyPot] })
     console.log("!!!!! response => ", response)
   }
 
@@ -187,16 +190,16 @@ export default function App() {
   }
 
   async function getPools() {
-    const response = await MyCollectives.Collective.getPoolByHoneyPot(web3, {address: cAddress, wallet:cWallet, nonceKey}, accounts[2])
+    const response = await MyCollectives.Collective.getPoolByHoneyPot(web3, {address: cAddress, wallet:cWallet, nonceKey}, honeyPot)
     setPool((response.pools)["id"])
     console.log("!!!!! response => ", response)
   }
   
   async function poolMint() {
     const response = await MyCollectives.Pool.mint(web3, {address: cAddress, wallet:cWallet, nonceKey}, {
-      recipient: accounts[2],
-      tokenID: 2,
-      amount: ethers.parseEther("1"),
+      recipient: await web3.getSigner().getAddress(),
+      tokenID: 1,
+      amount: ethers.parseEther("0.0005"),
       quantity: 1,
       platform: SupportedPlatforms.Zora,
       tokenContract: mockToken,
