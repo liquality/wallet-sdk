@@ -1,13 +1,15 @@
 // import { Login, CreateWallet } from "ui";
 import { useState, useEffect } from "react";
-import {ethers} from "ethers";
+import {ethers, id} from "ethers";
 import * as ethers5 from "ethers5";
 // import { NftService, setup } from "@liquality/wallet-sdk";
 // import WormholeBridge, { WormholeConnectConfig } from '@wormhole-foundation/wormhole-connect';
 // import {WormholeConnectConfig} from '@wormhole-foundation/wormhole-connect';
 // import {Workflow} from "x-flow"
 import * as MyCollectives from "@koderholic/my-collectives"
-import {Config} from "@koderholic/my-collectives"
+import {Config, SupportedPlatforms} from "@koderholic/my-collectives"
+
+
 export default function App() {
 
 // const verifierMap: Record<string, any> = {
@@ -94,6 +96,8 @@ export default function App() {
   const [cWallet, setCWallet] = useState("");
   const [nonceKey, setNonceKey] = useState(BigInt(0));
   const [isMember, setIsMember] = useState(false);
+  const [poolAddr, setPool] = useState("");
+  const [mockToken, setMockToken] = useState("");
 
     useEffect(() => {
       async function loadWeb3() {
@@ -105,9 +109,14 @@ export default function App() {
                 setAccounts(accounts);
                 console.log(" accounts => ", accounts)
                 setWeb3(new ethers5.providers.Web3Provider((window as any).ethereum))
-                setCAddress("0xbb9077712ee90363dDE89E096e2CDb3422cb2c29")
-                setCWallet("0x2F6f72c1B8C41f19BD553D2c567736d980064bE6")
-                setNonceKey(BigInt("7770406593368469"))
+                setCAddress("0x64bc201eA597Bd5097858431F52D62530CB938BA")
+                setCWallet("0xa6E8A97aDC51BF2A5007cB484ca0a19419eddB83")
+                setNonceKey(BigInt("8314184071847699"))
+                setMockToken("0xE646f9783246D0Af8280A5C212486cC4091D0F8C") //mockToken                
+                // setCAddress("0xbb9077712ee90363dDE89E096e2CDb3422cb2c29")
+                // setCWallet("0x2F6f72c1B8C41f19BD553D2c567736d980064bE6")
+                // setNonceKey(BigInt("7770406593368469"))
+                MyCollectives.setConfig({} as Config)
 
             });
           } catch(e) {
@@ -135,8 +144,7 @@ export default function App() {
 // userOpHash: "0x9fed14cb1000f9f36f0dffe9dce62120e015b1726cb597a955f1ae466f1ca224"
 
   async function createWallet() {
-    MyCollectives.setConfig({} as Config)
-    const response = await MyCollectives.Collectives.create(web3, {tokenContracts: [accounts[1]], honeyPots: [accounts[2]] }, 1204570) //1202270 312270 319570 219570 119570 119587 119567
+    const response = await MyCollectives.Collective.create(web3, {tokenContracts: [mockToken], honeyPots: [accounts[2]] }, 19958870) //1202270 312270 319570 219570 119570 119587 119567
     console.log("!!!!! response => ", response)
     setCAddress(response.cAddress)
     setCWallet(response.cWallet)
@@ -145,13 +153,11 @@ export default function App() {
 
   // "0xb2bb96cc74a61b562d9a86792f3985888586d553d1506cf37d5536bb057b05e3"
   async function createPools() {
-    MyCollectives.setConfig({} as Config)
-    const response = await MyCollectives.Collectives.createPools(web3, {address: cAddress, wallet:cWallet, nonceKey}, {tokenContracts: [accounts[1]], honeyPots: [accounts[2]] })
+    const response = await MyCollectives.Collective.createPools(web3, {address: cAddress, wallet:cWallet, nonceKey}, {tokenContracts: [mockToken], honeyPots: [accounts[2]] })
     console.log("!!!!! response => ", response)
   }
 
   async function joinCollective() {
-    MyCollectives.setConfig({} as Config)
     const inviteId = ethers.randomBytes(16);
     console.log("inviteId >> ", inviteId.toString())
 
@@ -165,20 +171,66 @@ export default function App() {
     let inviteSig = await web3.getSigner().signMessage(messageHashBinary);
     console.log("inviteSig >> ", inviteSig)
       alert(inviteSig)
-    const response = await MyCollectives.Collectives.join(web3, {address: cAddress, wallet:cWallet, nonceKey}, {inviteSignature: inviteSig, inviteCode: inviteId})
+    const response = await MyCollectives.Collective.join(web3, {address: cAddress, wallet:cWallet, nonceKey}, {inviteSignature: inviteSig, inviteCode: inviteId})
     console.log("!!!!! response => ", response)
   }
 
   async function leaveCollective() {
-    MyCollectives.setConfig({} as Config)
-    const response = await MyCollectives.Collectives.leave(web3, {address: cAddress, wallet:cWallet, nonceKey})
+    const response = await MyCollectives.Collective.leave(web3, {address: cAddress, wallet:cWallet, nonceKey})
     console.log("!!!!! response => ", response)
   }
 
   async function checkMembership() {
-    MyCollectives.setConfig({} as Config)
-    const response = await MyCollectives.Collectives.isMember(web3, {address: cAddress, wallet:cWallet, nonceKey}, await web3.getSigner().getAddress())
+    const response = await MyCollectives.Collective.isMember(web3, {address: cAddress, wallet:cWallet, nonceKey}, await web3.getSigner().getAddress())
     setIsMember(response.isMember)
+    console.log("!!!!! response => ", response)
+  }
+
+  async function getPools() {
+    const response = await MyCollectives.Collective.getPoolByHoneyPot(web3, {address: cAddress, wallet:cWallet, nonceKey}, accounts[2])
+    setPool((response.pools)["id"])
+    console.log("!!!!! response => ", response)
+  }
+  
+  async function poolMint() {
+    const response = await MyCollectives.Pool.mint(web3, {address: cAddress, wallet:cWallet, nonceKey}, {
+      recipient: accounts[2],
+      tokenID: 2,
+      amount: ethers.parseEther("1"),
+      quantity: 1,
+      platform: SupportedPlatforms.Zora,
+      tokenContract: mockToken,
+      poolAddress: poolAddr,
+
+    })
+    // setPool(response.pools)
+    console.log("!!!!! response => ", response)
+  }
+
+  // get participant data
+  async function getParticipantData() {
+    const response = await MyCollectives.Pool.getParticipation(web3, poolAddr, accounts[2])
+    const token = new ethers5.Contract(mockToken, ["function balanceOf(address owner) view returns (uint256)"], web3.getSigner())
+    const bal = await token.balanceOf(accounts[2])
+    console.log("!!!!! bal => ", bal)
+    // setPool(response.pools)
+    console.log("!!!!! response => ", response)
+
+    async function checkBal() {
+      setTimeout(async () => {
+          // get balance of signer in cwallet 
+          const cWalletContract = new ethers5.Contract(cWallet, ["function balance(address) view returns (uint256)"], web3.getSigner())
+          const balance = await cWalletContract.balance(await web3.getSigner().getAddress())
+          console.log("balance 2 >>> ", ethers5.utils.formatEther(balance))
+      }, 3000)
+  }
+  await checkBal()
+  }
+
+
+  async function createHoneyPot() {
+    const response = await MyCollectives.HoneyPot.get(web3, 188926, mockToken)
+    // setPool(response.pools)
     console.log("!!!!! response => ", response)
   }
   
@@ -201,6 +253,19 @@ export default function App() {
       <div>
         <button onClick={checkMembership}>Check Membership</button>
         <p>is member?: {isMember}</p>
+      </div>
+      <div>
+        <button onClick={getPools}>Get Created Pools</button>
+        <p>Pools: {poolAddr}</p>
+      </div>
+      <div>
+        <button onClick={poolMint}>Pool mint</button>
+      </div>
+      <div>
+        <button onClick={getParticipantData}>Pool Participation</button>
+      </div>
+      <div>
+        <button onClick={createHoneyPot}>Create HoneyPot</button>
       </div>
     </div>
     </div>
