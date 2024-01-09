@@ -5,6 +5,7 @@
   "dependencies": {
     "@craco/craco": "^7.0.0",
     "@koderholic/my-collectives": "^1.4.6",
+    "@liquality/my-collectives": "^2.0.0",
     "@liquality/wallet-sdk": "^2.2.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

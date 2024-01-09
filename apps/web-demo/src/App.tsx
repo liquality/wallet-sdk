@@ -6,8 +6,8 @@ import * as ethers5 from "ethers5";
 // import WormholeBridge, { WormholeConnectConfig } from '@wormhole-foundation/wormhole-connect';
 // import {WormholeConnectConfig} from '@wormhole-foundation/wormhole-connect';
 // import {Workflow} from "x-flow"
-import * as MyCollectives from "@koderholic/my-collectives"
-import {Config, SupportedPlatforms} from "@koderholic/my-collectives"
+import * as MyCollectives from "@liquality/my-collectives-sdk"
+import {AAProviders, Config, SupportedPlatforms} from "@liquality/my-collectives-sdk"
 import { sign } from "crypto";
 
 
@@ -100,12 +100,16 @@ export default function App() {
   const [poolAddr, setPool] = useState("");
   const [mockToken, setMockToken] = useState("");
   const [honeyPot, setHoneyPot] = useState("");
-  // add missing state for missing functions
   const [topContributor, setTopContributor] = useState("");
   const [reward, setReward] = useState("");
   const [poolReward, setPoolReward] = useState("");
   const [totalPoolContributions, setTotalPoolContributions] = useState("");
-  const [poolParticipation, setPoolParticipation] = useState({address:"", contribution:"", rewardAmount:""});
+  const [poolParticipation, setPoolParticipation] = useState({participant:"", contribution:"", reward:"", availableReward: ""});
+  const [mockTokenLocal, setMockTokenLocal] = useState("");
+  const [honeyPotLocal, setHoneyPotLocal] = useState("");
+  const [network, setNetwork] = useState(""); // State to store user-selected network
+  const [rpc, setRPC] = useState(""); // State to store chain ID
+
 
 
     useEffect(() => {
@@ -118,17 +122,17 @@ export default function App() {
                 setAccounts(accounts);
                 console.log(" accounts => ", accounts)
                 setWeb3(new ethers5.providers.Web3Provider((window as any).ethereum))
-                setCAddress("0x5B6feFD04578d8e1E458f960f07abF3bEBA136e2")
-                setCWallet("0x164573AD131F2DF73Df41eFD0Ea568F5f434698C")
-                setNonceKey(BigInt("2135857501267875"))
-                setMockToken("0x288fFC62c3f4142C618B7D109E0Cf0405766F25E") //Local- 0x288fFC62c3f4142C618B7D109E0Cf0405766F25E // Zora- 0xa3b59a1080f2ae8efbe902bb03c15cb342d648fd // mumbai - 0xE646f9783246D0Af8280A5C212486cC4091D0F8C            
-                setHoneyPot("0x6C61D2D1e54e6b2a2AcFab3cCA8B85AD01F9e7c3") // Zora => 0xF64A284F04B5cF17dCa2e75501d8e835E3b25388
-                setPool("0xa16bc3f0328C1448d91eDDA0C1331171840b3445") // Local token pool - 0xfEC88143415bF6C3215a0F9CBF2c16E031c804Ce // Zora - 0xae3B9D4BEd0C5687e90A0D1a18C105CDB5C72ccf
+                setCAddress("0x417b83Ea65EBaB8864235df08d6c97f3b5a6e7C4")
+                setCWallet("0xaEc4D067b4b99b9113577b9B904560a4F7f688BA")
+                setNonceKey(BigInt("7597334088966139"))
+                setMockTokenLocal("0x8bc07A56032D4caCb7A4516c016c9120908E7eab") //Local old- 0x288fFC62c3f4142C618B7D109E0Cf0405766F25E
+                setMockToken("0x288fFC62c3f4142C618B7D109E0Cf0405766F25E")  // Zora Goerli- 0xa3b59a1080f2ae8efbe902bb03c15cb342d648fd // mumbai - 0xE646f9783246D0Af8280A5C212486cC4091D0F8C            
+                setHoneyPot("0x6C61D2D1e54e6b2a2AcFab3cCA8B85AD01F9e7c3") // Zora - 0xF64A284F04B5cF17dCa2e75501d8e835E3b25388
+                setHoneyPotLocal("0x3374A9EcD75a7b8FFD6ebC5B19CeAf2330aCF246") // LOCAL token - 0x6C61D2D1e54e6b2a2AcFab3cCA8B85AD01F9e7c3 // Zora => 0xF64A284F04B5cF17dCa2e75501d8e835E3b25388
+                setPool("0x336c0f451640fba29b9e32d5758fd7921ba945d4")//0xFD60494AD110E522aDd5ACcE07500D327F61c5a0-for mockToken // Local token pool - 0x3b1E7B7754C074B807a845fBa18198574Da03068 // Zora - 0xae3B9D4BEd0C5687e90A0D1a18C105CDB5C72ccf
                 // setCAddress("0xbb9077712ee90363dDE89E096e2CDb3422cb2c29")
                 // setCWallet("0x2F6f72c1B8C41f19BD553D2c567736d980064bE6")
                 // setNonceKey(BigInt("7770406593368469"))
-                MyCollectives.setConfig({} as Config)
-
             });
           } catch(e) {
             // User has denied account access to DApp...
@@ -138,24 +142,11 @@ export default function App() {
       loadWeb3()
     }, []);
 
-// cAddress
-// : 
-// "0xeFF491FFAB85Bb15D7BCF64ca9E2d6165c95a049"
-// cWallet
-// : 
-// "0xd6efC618660082D443576CfAb76E0DA288896170"
-// nonce
-// : 
-// 1553171750399979n
-// userOp hash: "0xb528ab313493dbeae231589e970bfdec207540b3054cf812fa78a05a7f694750"
-// ====== New ========
-// cAddress: "0xc3Cb13c52b0dad0717FfF0b4D0D81307f7fC6f9B"
-// cWallet: "0xd59fC701a45FE39c033B2014E9da9B04c9C793F2"
-// nonce: 7770406593368469n
-// userOpHash: "0x9fed14cb1000f9f36f0dffe9dce62120e015b1726cb597a955f1ae466f1ca224"
+  
+
 
   async function createWallet() {
-    const response = await MyCollectives.Collective.create(web3, {tokenContracts: [mockToken], honeyPots: [honeyPot] }, 119570) //1202270 312270 319570 219570 119570 119587 119567
+    const response = await MyCollectives.Collective.create(web3, {tokenContracts: [mockToken], honeyPots: [honeyPot] }, 5099094) //last(119570)1202270 312270 319570 219570 119570 119587 119567
     console.log("!!!!! response => ", response)
     setCAddress(response.cAddress)
     setCWallet(response.cWallet)
@@ -164,7 +155,7 @@ export default function App() {
 
   // "0xb2bb96cc74a61b562d9a86792f3985888586d553d1506cf37d5536bb057b05e3"
   async function createPools() {
-    const response = await MyCollectives.Collective.createPools(web3, {address: cAddress, wallet:cWallet, nonceKey}, {tokenContracts: [mockToken], honeyPots: [honeyPot] })
+    const response = await MyCollectives.Collective.createPools(web3, {address: cAddress, wallet:cWallet, nonceKey}, {tokenContracts: [mockTokenLocal], honeyPots: [honeyPotLocal] })
     console.log("!!!!! response => ", response)
   }
 
@@ -198,7 +189,7 @@ export default function App() {
   }
 
   async function getPools() {
-    const response = await MyCollectives.Collective.getPoolByHoneyPot(web3, {address: cAddress, wallet:cWallet, nonceKey}, honeyPot)
+    const response = await MyCollectives.Collective.getPoolByHoneyPot(web3, {address: cAddress, wallet:cWallet, nonceKey}, honeyPotLocal)
     setPool(response)
     console.log("!!!!! response => ", response)
   }
@@ -206,22 +197,44 @@ export default function App() {
   async function poolMint() {
     const response = await MyCollectives.Pool.mint(web3, {address: cAddress, wallet:cWallet, nonceKey}, {
       recipient: await web3.getSigner().getAddress(),
-      tokenID: 6,
-      amount: ethers.parseEther("0.00001"),
+      tokenID: 11,
+      amount: ethers.parseEther("0.000001"),//("0.000777"),
       quantity: 1,
       platform: SupportedPlatforms.LOCAL,
-      tokenContract: mockToken,
+      tokenContract: mockTokenLocal,
       poolAddress: poolAddr,
 
     })
     // setPool(response.pools)
+
     console.log("!!!!! response => ", response)
+  }
+
+   // Function to set the user-selected network
+   function handleNetworkChange(selectedNetwork: string) {
+    setNetwork(selectedNetwork);
+
+    if (selectedNetwork == "goerli") {
+      setRPC("https://goerli.infura.io/v3/a8684b771e9e4997a567bbd7189e0b27");
+    } else if (network == "mumbai") {
+      setRPC("https://polygon-mumbai.g.alchemy.com/v2/H0uohgB1uBNmypvvHtAS-s5dd7Oj7Y6C");
+    }
+    console.log(">> rpc => ", rpc)
+    MyCollectives.setConfig({
+      RPC_URL: rpc,//"https://eth-goerli.g.alchemy.com/v2/NoipFVjRtyObPoZ1n35BPiLqY8DWsqZA",// 
+      PIMLICO_API_KEY: "60dd09aa-ef22-4c57-9ca8-d3f25d7ec047",
+      AA_PROVIDER: AAProviders.PIMLICO,
+      // BICONOMY_PAYMASTER: "https://paymaster.biconomy.io/api/v1/5/Ss9NO7p3y.ad8caffd-7726-49bf-a68e-b7fe86ad1883", 
+      // BICONOMY_BUNDLER_API_KEY: "nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44",
+    } as Config);
+    // You can also set the chainId based on the selected network if necessary
+    // setChainId(selectedChainId);
   }
 
   // get participant data
   async function getParticipantData() {
     const response = await MyCollectives.Pool.getParticipation(poolAddr, await web3.getSigner().getAddress())
-    setPoolParticipation({address: response[0], contribution: response[1].toString(), rewardAmount: ethers5.utils.formatEther(response[2]).toString()})
+    setPoolParticipation({participant: response.participant, contribution: response.contribution.toString(), reward: response.reward.toString(), availableReward: response.rewardAvailable.toString()})
     // const token = new ethers5.Contract(mockToken, ["function balanceOf(address owner) view returns (uint256)"], web3.getSigner())
     // const bal = await token.balanceOf(accounts[2])
     // console.log("!!!!! bal => ", bal)
@@ -237,14 +250,14 @@ export default function App() {
 
 
   async function createHoneyPot() {
-    const response = await MyCollectives.HoneyPot.create(web3, 180026)
+    const response = await MyCollectives.HoneyPot.create(web3, 182226)
     setHoneyPot(response.honeyPot)
     console.log("!!!!! response => ", response)
   }
 
   // Add missing functions
   async function getHoneyPot() {
-    const response = await MyCollectives.HoneyPot.get(web3, 180026)
+    const response = await MyCollectives.HoneyPot.get(web3, 182226)
     setHoneyPot(response.honeyPot)
     console.log("!!!!! response => ", response)
   }
@@ -278,7 +291,7 @@ export default function App() {
   }
 
   async function withdrawRewards() {
-    const response = await MyCollectives.Pool.withdrawRewards(web3, {address: cAddress, wallet:cWallet, nonceKey}, [poolAddr])
+    const response = await MyCollectives.Pool.withdrawRewards(web3, {address: cAddress, wallet:cWallet, nonceKey}, [poolAddr], await web3.getSigner().getAddress())
     console.log("!!!!! response => ", response)
   }
 
@@ -298,11 +311,24 @@ export default function App() {
     setTotalPoolContributions(totalContributions.toString())
     console.log("!!!!! response => ", totalContributions)
   }
+
+  //getPoolParticipants  from sdk function
+  async function getPoolParticipants() {
+    const response = await MyCollectives.Pool.getPoolParticipants(web3, poolAddr)
+    console.log("!!!!! response => ", response)
+  }
   
 
   return (
+    //
     <div>
     <div>
+      <div>NETWORK USED: {network}</div>
+      <div>CURRENT RPC USED: {rpc}</div>
+      <div>
+        <button onClick={() => handleNetworkChange("goerli")}>Select Goerli Network</button>
+        <button onClick={() => handleNetworkChange("mumbai")}>Select Mumbai Network</button>
+      </div>
       <div>
         <button onClick={createWallet}>Create Collective</button>
         <p>{cAddress}</p>
@@ -328,9 +354,10 @@ export default function App() {
       </div>
       <div>
         <button onClick={getParticipantData}>Pool Participation</button>
-        <p>Participant Address: {poolParticipation.address}</p>
+        <p>Participant Address: {poolParticipation.participant}</p>
         <p>Participant Contribution: {poolParticipation["contribution"]}</p>
-        <p>Participant Reward: {poolParticipation["rewardAmount"]}</p>
+        <p>Participant Reward: {poolParticipation["reward"]}</p>
+        <p>Participant Available Reward: {poolParticipation["availableReward"]}</p>
       </div>
       <div>
         <button onClick={createHoneyPot}>Create HoneyPot</button>
@@ -366,6 +393,9 @@ export default function App() {
       </div>
       <div>
         <button onClick={getPoolInfo}>Get Pool Info</button>
+      </div>
+      <div>
+        <button onClick={getPoolParticipants}>Get Pool Participants</button>
       </div>
       
     </div>
